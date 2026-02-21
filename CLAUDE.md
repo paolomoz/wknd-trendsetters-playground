@@ -11,6 +11,7 @@ Playground clone of wknd-trendsetters for managing a website entirely through Cl
 - **Design system:** When building visual HTML interfaces, read and follow `/Users/paolo/excat/nova/DESIGN.md`.
 - **Brand guidelines:** All content, design, and communication must follow the brand system in `brand/`. Read the relevant file before creating or modifying content.
 - **Visual UIs:** Every relevant artifact gets a visual HTML interface for business users. See `reports/README.md` for the system — includes a hub with chronological and mind map navigation. UIs must be updated when context changes.
+- **Keep context in sync:** After any change that affects multiple artifacts, run the update process (see `.claude/commands/update.md`). Reports, hub, journal, brand files, and CLAUDE.md must stay consistent. Use `/update` for a full sweep.
 - **Don't bloat this file.** Keep instructions short. Reference separate files for details.
 
 ## Tech Stack
