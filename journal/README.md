@@ -15,3 +15,4 @@ Each entry captures the human intent, the AI execution, and reflections on what 
 | # | Date | Title | Summary |
 |---|------|-------|---------|
 | 001 | 2026-02-21 | [Project Setup](./001-project-setup.md) | Cloned the original site into an isolated playground with independent Cloudflare infrastructure |
+| 002 | 2026-02-21 | [Content Gap Assessment](./002-content-gap-assessment.md) | Audited all navigation links, found 9 missing pages and 15 dead links. Set up auto-journaling with CLAUDE.md |

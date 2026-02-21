@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Gap Assessment — WKND Trendsetters</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0a; color: #e0e0e0; padding: 2rem; line-height: 1.6; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 2rem; margin-bottom: 0.25rem; color: #fff; }
+  .subtitle { color: #888; margin-bottom: 2.5rem; font-size: 1rem; }
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2.5rem; }
+  .stat-card { background: #161616; border: 1px solid #2a2a2a; border-radius: 12px; padding: 1.25rem; text-align: center; }
+  .stat-number { font-size: 2.5rem; font-weight: 700; }
+  .stat-number.green { color: #22c55e; }
+  .stat-number.red { color: #ef4444; }
+  .stat-number.yellow { color: #eab308; }
+  .stat-number.blue { color: #3b82f6; }
+  .stat-label { color: #888; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.25rem; }
+  h2 { font-size: 1.25rem; margin: 2rem 0 1rem; color: #fff; border-bottom: 1px solid #2a2a2a; padding-bottom: 0.5rem; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+  th { text-align: left; padding: 0.6rem 0.75rem; color: #888; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #2a2a2a; }
+  td { padding: 0.6rem 0.75rem; border-bottom: 1px solid #1a1a1a; font-size: 0.9rem; }
+  .badge { display: inline-block; padding: 0.15rem 0.6rem; border-radius: 99px; font-size: 0.75rem; font-weight: 600; }
+  .badge-ok { background: #052e16; color: #22c55e; }
+  .badge-missing { background: #350a0a; color: #ef4444; }
+  .badge-duplicate { background: #352a04; color: #eab308; }
+  .badge-orphan { background: #0a1a35; color: #3b82f6; }
+  .badge-dead { background: #1a1a1a; color: #888; }
+  .section-label { font-size: 0.7rem; color: #666; text-transform: uppercase; letter-spacing: 0.05em; }
+  .arrow { color: #444; margin: 0 0.25rem; }
+  .target-path { font-family: 'SF Mono', Monaco, monospace; font-size: 0.8rem; color: #888; }
+  .target-path.dead { color: #555; text-decoration: line-through; }
+  .legend { display: flex; gap: 1.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; color: #aaa; }
+  .issue-card { background: #161616; border: 1px solid #2a2a2a; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+  .issue-card h3 { font-size: 1rem; color: #fff; margin-bottom: 0.4rem; }
+  .issue-card p { color: #888; font-size: 0.9rem; }
+  .issue-severity { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+  .severity-high { color: #ef4444; }
+  .severity-medium { color: #eab308; }
+  .severity-low { color: #3b82f6; }
+  .nav-map { background: #161616; border: 1px solid #2a2a2a; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; }
+  .nav-section { margin-bottom: 1.25rem; }
+  .nav-section:last-child { margin-bottom: 0; }
+  .nav-section-title { font-size: 0.7rem; color: #666; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+  .nav-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0; font-size: 0.9rem; }
+  .nav-item .name { min-width: 140px; }
+  .connector { width: 40px; height: 1px; background: #333; position: relative; }
+  .connector::after { content: ''; position: absolute; right: 0; top: -3px; width: 7px; height: 7px; border-radius: 50%; }
+  .connector.ok::after { background: #22c55e; }
+  .connector.bad::after { background: #ef4444; }
+  .connector.dup::after { background: #eab308; }
+  .indent { padding-left: 1.5rem; }
+  .footer-note { color: #555; font-size: 0.8rem; margin-top: 3rem; text-align: center; border-top: 1px solid #1a1a1a; padding-top: 1rem; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Content Gap Assessment</h1>
+<p class="subtitle">WKND Trendsetters Playground &mdash; February 21, 2026</p>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-number green">11</div>
+    <div class="stat-label">Pages Exist</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number red">9</div>
+    <div class="stat-label">Missing Pages</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number yellow">8</div>
+    <div class="stat-label">Duplicate Links</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number blue">3</div>
+    <div class="stat-label">Orphan Pages</div>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><span class="badge badge-ok">OK</span> Link has its own page</div>
+  <div class="legend-item"><span class="badge badge-duplicate">DUPLICATE</span> Points to another item's page</div>
+  <div class="legend-item"><span class="badge badge-missing">MISSING</span> No page exists</div>
+  <div class="legend-item"><span class="badge badge-orphan">ORPHAN</span> Page exists, no nav link</div>
+  <div class="legend-item"><span class="badge badge-dead">DEAD</span> Link goes to #</div>
+</div>
+
+<!-- ==================== NAVBAR ==================== -->
+<h2>Navbar &mdash; Mega Menu: Trends</h2>
+<table>
+  <tr><th>Section</th><th>Nav Label</th><th>Status</th><th>Target</th><th>Problem</th></tr>
+  <tr>
+    <td><span class="section-label">Casual</span></td>
+    <td>Streetwear</td>
+    <td><span class="badge badge-ok">OK</span></td>
+    <td class="target-path">/fashion-trends-young-adults-casual-sport</td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td><span class="section-label">Casual</span></td>
+    <td>Sporty</td>
+    <td><span class="badge badge-duplicate">DUPLICATE</span></td>
+    <td class="target-path">/fashion-trends-young-adults-casual-sport</td>
+    <td>Same page as Streetwear &mdash; needs its own page</td>
+  </tr>
+  <tr>
+    <td><span class="section-label">Casual</span></td>
+    <td>Party</td>
+    <td><span class="badge badge-duplicate">DUPLICATE</span></td>
+    <td class="target-path">/fashion-trends-young-adults-casual-sport</td>
+    <td>Same page as Streetwear &mdash; needs its own page</td>
+  </tr>
+  <tr>
+    <td><span class="section-label">Now Trending</span></td>
+    <td>Tennis</td>
+    <td><span class="badge badge-ok">OK</span></td>
+    <td class="target-path">/fashion-trends-young-adults</td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td><span class="section-label">Now Trending</span></td>
+    <td>Beach</td>
+    <td><span class="badge badge-duplicate">DUPLICATE</span></td>
+    <td class="target-path">/fashion-trends-young-adults</td>
+    <td>Same page as Tennis &mdash; needs its own page</td>
+  </tr>
+  <tr>
+    <td><span class="section-label">Now Trending</span></td>
+    <td>Festival</td>
+    <td><span class="badge badge-duplicate">DUPLICATE</span></td>
+    <td class="target-path">/fashion-trends-young-adults</td>
+    <td>Same page as Tennis &mdash; needs its own page</td>
+  </tr>
+  <tr>
+    <td><span class="section-label">Inspo</span></td>
+    <td>Style Files</td>
+    <td><span class="badge badge-ok">OK</span></td>
+    <td class="target-path">/fashion-insights</td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td><span class="section-label">Inspo</span></td>
+    <td>Blog Watch</td>
+    <td><span class="badge badge-duplicate">DUPLICATE</span></td>
+    <td class="target-path">/fashion-insights</td>
+    <td>Same page as Style Files &mdash; needs its own page</td>
+  </tr>
+  <tr>
+    <td><span class="section-label">Inspo</span></td>
+    <td>How To</td>
+    <td><span class="badge badge-duplicate">DUPLICATE</span></td>
+    <td class="target-path">/fashion-insights</td>
+    <td>Same page as Style Files &mdash; needs its own page</td>
+  </tr>
+  <tr>
+    <td><span class="section-label">CTA Card</span></td>
+    <td>Discover (Case Studies)</td>
+    <td><span class="badge badge-ok">OK</span></td>
+    <td class="target-path">/case-studies</td>
+    <td>&mdash;</td>
+  </tr>
+</table>
+
+<h2>Navbar &mdash; Top-Level Links</h2>
+<table>
+  <tr><th>Nav Label</th><th>Status</th><th>Target</th><th>Problem</th></tr>
+  <tr>
+    <td>About</td>
+    <td><span class="badge badge-ok">OK</span></td>
+    <td class="target-path">/fashion-trends-of-the-season</td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td>Blog</td>
+    <td><span class="badge badge-ok">OK</span></td>
+    <td class="target-path">/fashion-insights</td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td>Contact</td>
+    <td><span class="badge badge-duplicate">DUPLICATE</span></td>
+    <td class="target-path">/faq</td>
+    <td>Points to FAQ page &mdash; needs a dedicated Contact page</td>
+  </tr>
+  <tr>
+    <td>FAQ</td>
+    <td><span class="badge badge-ok">OK</span></td>
+    <td class="target-path">/faq</td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td>Subscribe</td>
+    <td><span class="badge badge-dead">DEAD</span></td>
+    <td class="target-path dead">#</td>
+    <td>No subscribe page or flow exists</td>
+  </tr>
+</table>
+
+<!-- ==================== FOOTER ==================== -->
+<h2>Footer Links &mdash; All Dead</h2>
+<table>
+  <tr><th>Column</th><th>Link Label</th><th>Status</th><th>Target</th></tr>
+  <tr><td><span class="section-label">Trends</span></td><td>Style</td><td><span class="badge badge-dead">DEAD</span></td><td class="target-path dead">#</td></tr>
+  <tr><td><span class="section-label">Trends</span></td><td>Looks</td><td><span class="badge badge-dead">DEAD</span></td><td class="target-path dead">#</td></tr>
+  <tr><td><span class="section-label">Trends</span></td><td>Events</td><td><span class="badge badge-dead">DEAD</span></td><td class="target-path dead">#</td></tr>
+  <tr><td><span class="section-label">Trends</span></td><td>Brands</td><td><span class="badge badge-dead">DEAD</span></td><td class="target-path dead">#</td></tr>
+  <tr><td><span class="section-label">Trends</span></td><td>Tips</td><td><span class="badge badge-dead">DEAD</span></td><td class="target-path dead">#</td></tr>
+  <tr><td><span class="section-label">Inspire</span></td><td>Stories</td><td><span class="badge badge-dead">DEAD</span></td><td class="target-path dead">#</td></tr>
+  <tr><td><span class="section-label">Inspire</span></td><td>People</td><td><span class="badge badge-dead">DEAD</span></td><td class="target-path dead">#</td></tr>
+  <tr><td><span class="section-label">Inspire</span></td><td>Culture</td><td><span class="badge badge-dead">DEAD</span></td><td class="target-path dead">#</td></tr>
+  <tr><td><span class="section-label">Inspire</span></td><td>Vibes</td><td><span class="badge badge-dead">DEAD</span></td><td class="target-path dead">#</td></tr>
+  <tr><td><span class="section-label">Inspire</span></td><td>Fun</td><td><span class="badge badge-dead">DEAD</span></td><td class="target-path dead">#</td></tr>
+  <tr><td><span class="section-label">Explore</span></td><td>Travel</td><td><span class="badge badge-dead">DEAD</span></td><td class="target-path dead">#</td></tr>
+  <tr><td><span class="section-label">Explore</span></td><td>Beach</td><td><span class="badge badge-dead">DEAD</span></td><td class="target-path dead">#</td></tr>
+  <tr><td><span class="section-label">Explore</span></td><td>Night</td><td><span class="badge badge-dead">DEAD</span></td><td class="target-path dead">#</td></tr>
+  <tr><td><span class="section-label">Explore</span></td><td>Sport</td><td><span class="badge badge-dead">DEAD</span></td><td class="target-path dead">#</td></tr>
+  <tr><td><span class="section-label">Explore</span></td><td>Chill</td><td><span class="badge badge-dead">DEAD</span></td><td class="target-path dead">#</td></tr>
+</table>
+
+<!-- ==================== ORPHAN PAGES ==================== -->
+<h2>Orphan Pages (exist but unreachable from navigation)</h2>
+<table>
+  <tr><th>Page</th><th>Path</th><th>Note</th></tr>
+  <tr>
+    <td>Products</td>
+    <td class="target-path">/products</td>
+    <td>Full page exists &mdash; not linked anywhere in nav or footer</td>
+  </tr>
+  <tr>
+    <td>Testimonials</td>
+    <td class="target-path">/testimonial</td>
+    <td>Full page exists &mdash; not linked anywhere in nav or footer</td>
+  </tr>
+  <tr>
+    <td>Latest Trends Young Fashion</td>
+    <td class="target-path">/latest-trends-young-fashion</td>
+    <td>Full page exists &mdash; not linked anywhere in nav or footer</td>
+  </tr>
+</table>
+
+<!-- ==================== KEY ISSUES ==================== -->
+<h2>Key Issues Summary</h2>
+
+<div class="issue-card">
+  <div class="issue-severity severity-high">HIGH PRIORITY</div>
+  <h3>6 nav items share pages with other items</h3>
+  <p>Sporty, Party, Beach, Festival, Blog Watch, and How To each promise distinct content but land on the same page as their sibling. Visitors clicking "Party" expect party content, not generic casual-sport. Each needs its own dedicated page.</p>
+</div>
+
+<div class="issue-card">
+  <div class="issue-severity severity-high">HIGH PRIORITY</div>
+  <h3>15 footer links are completely dead (#)</h3>
+  <p>Every single footer link points to <code>#</code>. The footer advertises 15 content categories (Style, Looks, Events, Stories, Travel, etc.) that don't exist. This is the largest content gap on the site.</p>
+</div>
+
+<div class="issue-card">
+  <div class="issue-severity severity-medium">MEDIUM PRIORITY</div>
+  <h3>Contact page missing</h3>
+  <p>The "Contact" nav item under Support points to <code>/faq</code>. There is no dedicated contact page with a form or contact details.</p>
+</div>
+
+<div class="issue-card">
+  <div class="issue-severity severity-medium">MEDIUM PRIORITY</div>
+  <h3>Subscribe button is non-functional</h3>
+  <p>The prominent "Subscribe" CTA in the navbar links to <code>#</code> &mdash; no subscription flow, email capture, or landing page exists.</p>
+</div>
+
+<div class="issue-card">
+  <div class="issue-severity severity-low">LOW PRIORITY</div>
+  <h3>3 orphan pages exist but are unreachable</h3>
+  <p>Products, Testimonials, and Latest Trends Young Fashion are fully built pages with no links pointing to them from the navigation or footer. Either link them or remove them.</p>
+</div>
+
+<p class="footer-note">Generated by Claude Code &mdash; WKND Trendsetters Playground &mdash; Session 002</p>
+
+</div>
+</body>
+</html>
