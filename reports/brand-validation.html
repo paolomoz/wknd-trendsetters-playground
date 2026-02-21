@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brand Guidelines Validation — WKND Trendsetters</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F8F8F8; color: #292929; line-height: 1.6; }
+  .header { background: #fff; border-bottom: 1px solid #E1E1E1; padding: 1.5rem 2rem; }
+  .header-inner { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 2rem; font-weight: 800; color: #131313; }
+  .subtitle { color: #717171; margin-top: 0.25rem; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+  h2 { font-size: 1.3rem; font-weight: 700; color: #131313; margin: 2.5rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #3B63FB; display: inline-block; }
+  h3 { font-size: 1rem; font-weight: 700; color: #131313; margin: 1.25rem 0 0.5rem; }
+  .card { background: #fff; border: 1px solid #E1E1E1; border-radius: 8px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+
+  /* Scores */
+  .score-hero { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 1.5rem 0; }
+  .score-block { background: #fff; border: 1px solid #E1E1E1; border-radius: 12px; padding: 1.5rem; text-align: center; }
+  .score-ring { width: 100px; height: 100px; margin: 0 auto 0.75rem; position: relative; }
+  .score-ring svg { transform: rotate(-90deg); }
+  .score-ring circle { fill: none; stroke-width: 8; }
+  .score-ring .bg { stroke: #f0f0f0; }
+  .score-ring .fill { stroke-linecap: round; transition: stroke-dashoffset 0.6s ease; }
+  .score-value { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.75rem; font-weight: 800; }
+  .score-label { font-size: 0.8rem; color: #717171; text-transform: uppercase; letter-spacing: 0.05em; }
+  .score-source { font-size: 0.75rem; color: #aaa; margin-top: 0.25rem; }
+
+  /* Dimension table */
+  table { width: 100%; border-collapse: collapse; margin: 0.75rem 0; }
+  th { text-align: left; padding: 0.5rem 0.75rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #717171; border-bottom: 1px solid #E1E1E1; }
+  td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #f0f0f0; font-size: 0.85rem; }
+  .score-cell { font-weight: 700; text-align: center; width: 60px; }
+  .score-high { color: #059669; }
+  .score-mid { color: #D97706; }
+  .score-low { color: #DC2626; }
+
+  /* Badges */
+  .badge { display: inline-block; padding: 0.15rem 0.6rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 600; }
+  .badge-green { background: #ECFDF5; color: #059669; }
+  .badge-yellow { background: #FFFBEB; color: #D97706; }
+  .badge-red { background: #FEF2F2; color: #DC2626; }
+  .badge-blue { background: #EFF6FF; color: #2563EB; }
+  .badge-purple { background: #F5F3FF; color: #7C3AED; }
+
+  /* Bar chart */
+  .bar-row { display: flex; align-items: center; gap: 0.75rem; margin: 0.4rem 0; }
+  .bar-label { width: 160px; font-size: 0.8rem; font-weight: 500; flex-shrink: 0; }
+  .bar-track { flex: 1; height: 20px; background: #f0f0f0; border-radius: 4px; overflow: hidden; position: relative; }
+  .bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
+  .bar-fill.green { background: #059669; }
+  .bar-fill.yellow { background: #D97706; }
+  .bar-fill.red { background: #DC2626; }
+  .bar-fill.blue { background: #3B63FB; }
+  .bar-value { width: 40px; font-size: 0.8rem; font-weight: 700; text-align: right; flex-shrink: 0; }
+
+  /* Enterprise logos */
+  .benchmark-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin: 0.75rem 0; }
+  .benchmark-item { background: #fff; border: 1px solid #E1E1E1; border-radius: 8px; padding: 0.75rem; }
+  .benchmark-name { font-weight: 700; font-size: 0.9rem; }
+  .benchmark-sections { font-size: 0.75rem; color: #717171; margin-top: 0.25rem; }
+
+  /* Maturity */
+  .maturity-track { display: flex; gap: 0; margin: 1rem 0; }
+  .maturity-level { flex: 1; padding: 0.75rem; text-align: center; border: 1px solid #E1E1E1; font-size: 0.75rem; }
+  .maturity-level:first-child { border-radius: 8px 0 0 8px; }
+  .maturity-level:last-child { border-radius: 0 8px 8px 0; }
+  .maturity-level.active { background: #3B63FB; color: #fff; border-color: #3B63FB; font-weight: 700; }
+  .maturity-level.passed { background: #EFF6FF; border-color: #93C5FD; color: #2563EB; }
+  .maturity-label { font-weight: 600; font-size: 0.8rem; }
+  .maturity-desc { font-size: 0.65rem; margin-top: 0.15rem; opacity: 0.8; }
+
+  /* Gap cards */
+  .gap-card { border-left: 4px solid #DC2626; }
+  .gap-card.medium { border-left-color: #D97706; }
+  .gap-card.low { border-left-color: #3B63FB; }
+  .gap-priority { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem; }
+  .gap-priority.high { color: #DC2626; }
+  .gap-priority.medium { color: #D97706; }
+  .gap-priority.low { color: #3B63FB; }
+
+  /* Verdict */
+  .verdict { background: #131313; color: #fff; border-radius: 12px; padding: 2rem; margin: 2rem 0; }
+  .verdict h2 { color: #fff; border-bottom-color: #3B63FB; }
+  .verdict p { color: rgba(255,255,255,0.8); margin-top: 0.75rem; }
+  .verdict strong { color: #fff; }
+
+  /* Strengths */
+  .strength-item { display: flex; gap: 0.75rem; align-items: flex-start; margin: 0.5rem 0; }
+  .strength-num { background: #059669; color: #fff; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; }
+
+  .sources { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #E1E1E1; }
+  .sources h3 { font-size: 0.85rem; color: #717171; }
+  .sources ul { padding-left: 1.25rem; margin-top: 0.5rem; }
+  .sources li { font-size: 0.75rem; color: #717171; margin: 0.2rem 0; }
+  .sources a { color: #3B63FB; }
+
+  .footer-note { color: #717171; font-size: 0.8rem; margin-top: 3rem; text-align: center; border-top: 1px solid #E1E1E1; padding-top: 1rem; }
+  ul.plain { list-style: none; padding: 0; }
+  ul.plain li { padding: 0.2rem 0; font-size: 0.85rem; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <h1>Brand Guidelines Validation</h1>
+    <p class="subtitle">External validation via enterprise benchmarking, independent AI review (GPT-4o), and industry frameworks &mdash; February 21, 2026</p>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ============ OVERALL SCORES ============ -->
+<div class="score-hero">
+  <div class="score-block">
+    <div class="score-ring">
+      <svg viewBox="0 0 100 100" width="100" height="100">
+        <circle class="bg" cx="50" cy="50" r="42"/>
+        <circle class="fill" cx="50" cy="50" r="42" stroke="#D97706"
+          stroke-dasharray="264" stroke-dashoffset="66"/>
+      </svg>
+      <div class="score-value">7.5</div>
+    </div>
+    <div class="score-label">Enterprise Benchmark</div>
+    <div class="score-source">vs. 9 enterprise brand systems</div>
+  </div>
+  <div class="score-block">
+    <div class="score-ring">
+      <svg viewBox="0 0 100 100" width="100" height="100">
+        <circle class="bg" cx="50" cy="50" r="42"/>
+        <circle class="fill" cx="50" cy="50" r="42" stroke="#059669"
+          stroke-dasharray="264" stroke-dashoffset="40"/>
+      </svg>
+      <div class="score-value">8.5</div>
+    </div>
+    <div class="score-label">GPT-4o Review</div>
+    <div class="score-source">Independent AI assessment</div>
+  </div>
+  <div class="score-block">
+    <div class="score-ring">
+      <svg viewBox="0 0 100 100" width="100" height="100">
+        <circle class="bg" cx="50" cy="50" r="42"/>
+        <circle class="fill" cx="50" cy="50" r="42" stroke="#3B63FB"
+          stroke-dasharray="264" stroke-dashoffset="79"/>
+      </svg>
+      <div class="score-value">3</div>
+    </div>
+    <div class="score-label">Maturity Level</div>
+    <div class="score-source">of 5 (Microsoft MM4M365)</div>
+  </div>
+</div>
+
+<!-- ============ GPT-4o REVIEW ============ -->
+<h2>Independent AI Review (GPT-4o)</h2>
+<p style="font-size: 0.85rem; color: #717171; margin-bottom: 1rem;">Brand files sent to OpenAI GPT-4o for independent evaluation. Claude (Opus) had no influence on this assessment.</p>
+
+<div class="card">
+  <table>
+    <tr><th>Dimension</th><th>Score</th><th>Assessment</th></tr>
+    <tr><td>Completeness</td><td class="score-cell score-high">8</td><td>Covers essential dimensions. Missing: customer service tone, crisis communication.</td></tr>
+    <tr><td>Specificity</td><td class="score-cell score-high">9</td><td>Highly actionable. Typography, color, photography specs are commendable.</td></tr>
+    <tr><td>Consistency</td><td class="score-cell score-high">8</td><td>Sections align well. Minor tension between casual social voice and professional LinkedIn tone.</td></tr>
+    <tr><td>Enforceability</td><td class="score-cell score-high">9</td><td>Clear do's/don'ts and technical specs. Easily followed by team members or AI.</td></tr>
+    <tr><td>Scalability</td><td class="score-cell score-high">8</td><td>Works for 10-50 people. Could improve with training/onboarding section.</td></tr>
+    <tr><td>Differentiation</td><td class="score-cell score-high">9</td><td>Distinctive brand targeting a specific niche. Not generic.</td></tr>
+    <tr><td>Production Readiness</td><td class="score-cell score-high">9</td><td>Technical specs ready for implementation. Could use more applied examples.</td></tr>
+  </table>
+</div>
+
+<div class="card-grid">
+  <div class="card">
+    <h3 style="margin-top: 0; color: #059669;">Top 3 Strengths (GPT-4o)</h3>
+    <div class="strength-item"><div class="strength-num">1</div><div><strong>Voice & Tone Specificity</strong> — Well-defined, actionable, avoids corporate jargon</div></div>
+    <div class="strength-item"><div class="strength-num">2</div><div><strong>Visual Identity</strong> — Comprehensive color, typography, and layout ensure cohesion</div></div>
+    <div class="strength-item"><div class="strength-num">3</div><div><strong>Content Patterns</strong> — Consistent structure across content types enhances brand</div></div>
+  </div>
+  <div class="card">
+    <h3 style="margin-top: 0; color: #DC2626;">Top 3 Gaps (GPT-4o)</h3>
+    <div class="strength-item"><div class="strength-num" style="background: #DC2626;">1</div><div><strong>Customer Service Tone</strong> — No guidelines for support interactions</div></div>
+    <div class="strength-item"><div class="strength-num" style="background: #DC2626;">2</div><div><strong>Crisis Communication</strong> — No framework for negative press or social crises</div></div>
+    <div class="strength-item"><div class="strength-num" style="background: #DC2626;">3</div><div><strong>Internal Training</strong> — No onboarding materials for new team members</div></div>
+  </div>
+</div>
+
+<!-- ============ BENCHMARK ============ -->
+<h2>Enterprise Benchmark</h2>
+<p style="font-size: 0.85rem; color: #717171; margin-bottom: 1rem;">Our guidelines compared against 9 publicly available enterprise brand systems.</p>
+
+<div class="benchmark-grid">
+  <div class="benchmark-item"><div class="benchmark-name">Spotify</div><div class="benchmark-sections">Logo, Colors, Typography, Attribution, Co-branding</div></div>
+  <div class="benchmark-item"><div class="benchmark-name">Uber</div><div class="benchmark-sections">Logo, Brand architecture, Color, Typography, Photography, Iconography, Motion</div></div>
+  <div class="benchmark-item"><div class="benchmark-name">Mozilla</div><div class="benchmark-sections">Purpose, Personality, Logos, Color, Visuals, Typography</div></div>
+  <div class="benchmark-item"><div class="benchmark-name">Mailchimp</div><div class="benchmark-sections">Voice, Tone, Grammar, Web elements, Accessibility, Social, Translation (17 sections)</div></div>
+  <div class="benchmark-item"><div class="benchmark-name">IBM Design</div><div class="benchmark-sections">Philosophy, Layout, Typography, Color, Icons, Motion, Data viz, Photography</div></div>
+  <div class="benchmark-item"><div class="benchmark-name">Material Design 3</div><div class="benchmark-sections">Color, Typography, Shape, Motion, Interaction, Layout, Elevation (24+ components)</div></div>
+  <div class="benchmark-item"><div class="benchmark-name">Atlassian</div><div class="benchmark-sections">Foundations, Principles, Components, Patterns, Accessibility, AI patterns</div></div>
+  <div class="benchmark-item"><div class="benchmark-name">Fluent 2</div><div class="benchmark-sections">Elevation, Geometry, Iconography, Layout, Materials, Motion, Sound, Typography</div></div>
+  <div class="benchmark-item"><div class="benchmark-name">Salesforce SLDS</div><div class="benchmark-sections">Design tokens, Utilities, Patterns, Component blueprints, Accessibility</div></div>
+</div>
+
+<h3>Coverage by Dimension</h3>
+<div class="card">
+  <div class="bar-row"><div class="bar-label">Brand Identity</div><div class="bar-track"><div class="bar-fill green" style="width: 90%"></div></div><div class="bar-value score-high">9/10</div></div>
+  <div class="bar-row"><div class="bar-label">Voice & Tone</div><div class="bar-track"><div class="bar-fill green" style="width: 90%"></div></div><div class="bar-value score-high">9/10</div></div>
+  <div class="bar-row"><div class="bar-label">Photography</div><div class="bar-track"><div class="bar-fill green" style="width: 90%"></div></div><div class="bar-value score-high">9/10</div></div>
+  <div class="bar-row"><div class="bar-label">Social Media</div><div class="bar-track"><div class="bar-fill green" style="width: 90%"></div></div><div class="bar-value score-high">9/10</div></div>
+  <div class="bar-row"><div class="bar-label">Content Patterns</div><div class="bar-track"><div class="bar-fill green" style="width: 80%"></div></div><div class="bar-value score-high">8/10</div></div>
+  <div class="bar-row"><div class="bar-label">Visual System</div><div class="bar-track"><div class="bar-fill green" style="width: 80%"></div></div><div class="bar-value score-high">8/10</div></div>
+  <div class="bar-row"><div class="bar-label">Logo</div><div class="bar-track"><div class="bar-fill green" style="width: 80%"></div></div><div class="bar-value score-high">8/10</div></div>
+  <div class="bar-row"><div class="bar-label">Component Library</div><div class="bar-track"><div class="bar-fill red" style="width: 30%"></div></div><div class="bar-value score-low">3/10</div></div>
+  <div class="bar-row"><div class="bar-label">Accessibility</div><div class="bar-track"><div class="bar-fill red" style="width: 20%"></div></div><div class="bar-value score-low">2/10</div></div>
+  <div class="bar-row"><div class="bar-label">Iconography</div><div class="bar-track"><div class="bar-fill red" style="width: 0%"></div></div><div class="bar-value score-low">0/10</div></div>
+  <div class="bar-row"><div class="bar-label">Illustration</div><div class="bar-track"><div class="bar-fill red" style="width: 0%"></div></div><div class="bar-value score-low">0/10</div></div>
+  <div class="bar-row"><div class="bar-label">Legal / Copyright</div><div class="bar-track"><div class="bar-fill red" style="width: 0%"></div></div><div class="bar-value score-low">0/10</div></div>
+</div>
+
+<h3>What We Have That Enterprises Typically Don't</h3>
+<div class="card" style="border-left: 4px solid #059669;">
+  <ul class="plain">
+    <li><span class="badge badge-green">Rare</span> Detailed personas with names and style focuses</li>
+    <li><span class="badge badge-green">Rare</span> Explicit headline formulas with patterns</li>
+    <li><span class="badge badge-green">Rare</span> Content calendar with categories and frequencies</li>
+    <li><span class="badge badge-green">Rare</span> Per-platform social media guidelines with posting detail</li>
+    <li><span class="badge badge-green">Rare</span> Photography sourcing notes</li>
+    <li><span class="badge badge-green">Rare</span> Branded hashtag strategy in brand guidelines</li>
+  </ul>
+</div>
+
+<!-- ============ MATURITY MODEL ============ -->
+<h2>Industry Maturity Assessment</h2>
+<p style="font-size: 0.85rem; color: #717171; margin-bottom: 1rem;">Scored against the Microsoft 365 Brand Management Maturity Model (MM4M365).</p>
+
+<div class="maturity-track">
+  <div class="maturity-level passed">
+    <div class="maturity-label">Level 1</div>
+    <div class="maturity-desc">Initial</div>
+  </div>
+  <div class="maturity-level passed">
+    <div class="maturity-label">Level 2</div>
+    <div class="maturity-desc">Managed</div>
+  </div>
+  <div class="maturity-level active">
+    <div class="maturity-label">Level 3</div>
+    <div class="maturity-desc">Defined</div>
+  </div>
+  <div class="maturity-level">
+    <div class="maturity-label">Level 4</div>
+    <div class="maturity-desc">Quantitative</div>
+  </div>
+  <div class="maturity-level">
+    <div class="maturity-label">Level 5</div>
+    <div class="maturity-desc">Optimizing</div>
+  </div>
+</div>
+
+<div class="card" style="margin-top: 1rem;">
+  <table>
+    <tr><th>Level 3 Requirement</th><th>Status</th><th>Notes</th></tr>
+    <tr><td>Brand vision, mission, principles</td><td><span class="badge badge-green">Met</span></td><td>identity.md</td></tr>
+    <tr><td>Primary & secondary colors with examples</td><td><span class="badge badge-green">Met</span></td><td>visual.md</td></tr>
+    <tr><td>Tone of voice with examples</td><td><span class="badge badge-green">Met</span></td><td>voice.md — do/don't, tone spectrum</td></tr>
+    <tr><td>Logo variants (dark/light, sizes)</td><td><span class="badge badge-yellow">Partial</span></td><td>logo.md — variants defined, no downloadable files</td></tr>
+    <tr><td>Centralized brand portal</td><td><span class="badge badge-yellow">Partial</span></td><td>reports/hub.html exists but isn't a full portal</td></tr>
+    <tr><td>Brand training available</td><td><span class="badge badge-red">Not met</span></td><td>No training materials or onboarding guide</td></tr>
+    <tr><td>Trademarks actively managed</td><td><span class="badge badge-red">Not met</span></td><td>No legal/trademark section</td></tr>
+    <tr><td>Standardized templates</td><td><span class="badge badge-yellow">Partial</span></td><td>Astro components serve as templates, but not documented as such</td></tr>
+  </table>
+</div>
+
+<!-- ============ FRAMEWORKS USED ============ -->
+<h2>Industry Frameworks Referenced</h2>
+<div class="card-grid">
+  <div class="card card-sm">
+    <strong>ISO 20671</strong>
+    <p style="font-size: 0.8rem; color: #717171;">The only international standard for brand evaluation. Covers brand strength, performance, and continuous improvement. Our meta-standard anchor.</p>
+  </div>
+  <div class="card card-sm">
+    <strong>Interbrand 10 Factors</strong>
+    <p style="font-size: 0.8rem; color: #717171;">4 internal + 6 external factors. We score well on Clarity, Differentiation, Authenticity. Weak on Protection (legal) and Responsiveness (no crisis plan).</p>
+  </div>
+  <div class="card card-sm">
+    <strong>SpellBrand 4 Tiers</strong>
+    <p style="font-size: 0.8rem; color: #717171;">Mini → Visual Identity → Comprehensive → Enterprise. We sit between Comprehensive and Enterprise — missing governance workflows and legal.</p>
+  </div>
+  <div class="card card-sm">
+    <strong>Wolff Olins MVB</strong>
+    <p style="font-size: 0.8rem; color: #717171;">Minimum Viable Brand: Pitch + Assets. We exceed MVB significantly — our system is well past minimum viability.</p>
+  </div>
+</div>
+
+<!-- ============ GAPS ============ -->
+<h2>Consolidated Gaps (All Sources)</h2>
+<p style="font-size: 0.85rem; color: #717171; margin-bottom: 1rem;">Merged findings from enterprise benchmark, GPT-4o review, and industry frameworks.</p>
+
+<div class="card gap-card">
+  <div class="gap-priority high">Critical</div>
+  <h3 style="margin-top: 0;">Accessibility Guidelines</h3>
+  <p style="font-size: 0.85rem;">Flagged by: <span class="badge badge-blue">Benchmark</span> <span class="badge badge-purple">Frameworks</span></p>
+  <p style="font-size: 0.85rem; color: #717171; margin-top: 0.5rem;">Every major enterprise system (Mozilla, Material, Fluent, Mailchimp, Atlassian) has dedicated accessibility guidance. We have scattered mentions. Need: WCAG 2.1 AA compliance, contrast ratios, keyboard navigation, screen reader guidance, accessible writing.</p>
+</div>
+
+<div class="card gap-card">
+  <div class="gap-priority high">Critical</div>
+  <h3 style="margin-top: 0;">Iconography System</h3>
+  <p style="font-size: 0.85rem;">Flagged by: <span class="badge badge-blue">Benchmark</span></p>
+  <p style="font-size: 0.85rem; color: #717171; margin-top: 0.5rem;">Zero coverage. 6 of 9 benchmarked enterprises treat icons as first-class design elements with grid, stroke weight, sizing, and style rules.</p>
+</div>
+
+<div class="card gap-card medium">
+  <div class="gap-priority medium">Medium</div>
+  <h3 style="margin-top: 0;">Customer Service & Crisis Communication</h3>
+  <p style="font-size: 0.85rem;">Flagged by: <span class="badge badge-green">GPT-4o</span> <span class="badge badge-purple">Frameworks</span></p>
+  <p style="font-size: 0.85rem; color: #717171; margin-top: 0.5rem;">No guidance for support interactions or handling negative press/social crises. Interbrand's "Responsiveness" factor requires this.</p>
+</div>
+
+<div class="card gap-card medium">
+  <div class="gap-priority medium">Medium</div>
+  <h3 style="margin-top: 0;">Legal / Copyright / Trademarks</h3>
+  <p style="font-size: 0.85rem;">Flagged by: <span class="badge badge-blue">Benchmark</span> <span class="badge badge-purple">Frameworks</span></p>
+  <p style="font-size: 0.85rem; color: #717171; margin-top: 0.5rem;">No trademark usage rules, copyright notices, or co-branding guidelines. Required for Level 3 maturity and by SpellBrand Enterprise tier.</p>
+</div>
+
+<div class="card gap-card medium">
+  <div class="gap-priority medium">Medium</div>
+  <h3 style="margin-top: 0;">Downloadable Asset Package</h3>
+  <p style="font-size: 0.85rem;">Flagged by: <span class="badge badge-blue">Benchmark</span> <span class="badge badge-purple">Frameworks</span></p>
+  <p style="font-size: 0.85rem; color: #717171; margin-top: 0.5rem;">No centralized location for logo files, font files, or brand assets. Mozilla, Uber, and Atlassian all provide this.</p>
+</div>
+
+<div class="card gap-card medium">
+  <div class="gap-priority medium">Medium</div>
+  <h3 style="margin-top: 0;">Training & Onboarding</h3>
+  <p style="font-size: 0.85rem;">Flagged by: <span class="badge badge-green">GPT-4o</span> <span class="badge badge-purple">Frameworks</span></p>
+  <p style="font-size: 0.85rem; color: #717171; margin-top: 0.5rem;">No materials for onboarding new team members. Microsoft Level 4 requires brand training in employee onboarding.</p>
+</div>
+
+<div class="card gap-card low">
+  <div class="gap-priority low">Low</div>
+  <h3 style="margin-top: 0;">Illustration Style, Component Library, Data Visualization</h3>
+  <p style="font-size: 0.85rem;">Flagged by: <span class="badge badge-blue">Benchmark</span></p>
+  <p style="font-size: 0.85rem; color: #717171; margin-top: 0.5rem;">No illustration guidelines, no documented component patterns (beyond CSS), and no data visualization rules. These are common in design-system-heavy enterprises (IBM, Material, Salesforce) but less critical for a content-focused brand.</p>
+</div>
+
+<!-- ============ VERDICT ============ -->
+<div class="verdict">
+  <h2>Validation Verdict</h2>
+  <p><strong>Enterprise Benchmark: 7.5/10</strong> — Strong on content, voice, photography, and social. Critical gaps in accessibility and iconography.</p>
+  <p><strong>GPT-4o (Independent): 8.5/10</strong> — "Highly actionable, distinctive, and production-ready." Gaps in customer service, crisis comms, and training.</p>
+  <p><strong>Maturity: Level 3 of 5</strong> — "Defined" tier. Meets most Level 3 criteria. Needs legal/trademark and training to fully qualify. Level 4 requires analytics and measurement.</p>
+  <p style="margin-top: 1rem;"><strong>Combined assessment: The guidelines are strong for a content-focused brand but not yet fully enterprise-ready.</strong> Adding accessibility guidelines and a legal/trademark section would close the two most critical gaps. Adding customer service tone, crisis communication, and iconography would bring the system to a solid Level 4.</p>
+</div>
+
+<!-- ============ SOURCES ============ -->
+<div class="sources">
+  <h3>Sources & Frameworks</h3>
+  <ul>
+    <li><a href="https://www.iso.org/standard/68786.html">ISO 20671:2019 — Brand Evaluation Standard</a></li>
+    <li><a href="https://interbrand.com/thinking/wheres-the-value-in-brand-valuation-addressing-the-debate/">Interbrand — Brand Strength 10 Factors</a></li>
+    <li><a href="https://learn.microsoft.com/en-us/microsoft-365/community/maturity-model-microsoft365-ps-enhancing-brand-management">Microsoft MM4M365 — Brand Management Maturity Model</a></li>
+    <li><a href="https://bera.ai/brand-management-maturity-model/">BERA — Brand Management Maturity Model</a></li>
+    <li><a href="https://spellbrand.com/blog/brand-guidelines-style-guide-creation">SpellBrand — Brand Guidelines Tier System</a></li>
+    <li><a href="https://www.peterjthomson.com/2013/07/minimum-viable-brand-wolff-olins/">Wolff Olins — Minimum Viable Brand</a></li>
+    <li><a href="https://styleguide.mailchimp.com/">Mailchimp Content Style Guide</a> (17 sections, CC licensed)</li>
+    <li><a href="https://mozilla.design">Mozilla Design</a> | <a href="https://brand.uber.com">Uber Brand</a> | <a href="https://developer.spotify.com/documentation/design">Spotify Design</a></li>
+    <li><a href="https://m3.material.io/foundations">Material Design 3</a> | <a href="https://www.ibm.com/design/language/">IBM Design Language</a> | <a href="https://atlassian.design/">Atlassian Design</a></li>
+    <li><a href="https://fluent2.microsoft.design/">Microsoft Fluent 2</a> | <a href="https://www.lightningdesignsystem.com/">Salesforce SLDS</a></li>
+    <li>GPT-4o review conducted via OpenAI API (model: gpt-4o-2024-08-06)</li>
+  </ul>
+</div>
+
+<p class="footer-note">Generated by Claude Code &mdash; WKND Trendsetters Playground &mdash; Session 010</p>
+
+</div>
+</body>
+</html>

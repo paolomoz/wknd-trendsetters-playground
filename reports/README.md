@@ -37,6 +37,15 @@ Each entry: `id`, `file`, `title`, `date`, `category`, `related` (IDs of connect
     "category": "brand",
     "summary": "Brand identity coverage analysis: voice, visual, gaps, and proposal",
     "related": ["content-gaps"]
+  },
+  {
+    "id": "brand-validation",
+    "file": "brand-validation.html",
+    "title": "Brand Guidelines Validation",
+    "date": "2026-02-21",
+    "category": "validation",
+    "summary": "External validation: enterprise benchmark (7.5/10), GPT-4o review (8.5/10), industry maturity Level 3/5",
+    "related": ["brand-assessment"]
   }
 ]
 ```
