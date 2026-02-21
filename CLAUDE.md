@@ -9,6 +9,7 @@ Playground clone of wknd-trendsetters for managing a website entirely through Cl
 - **Auto-journal:** After every user request, write a journal entry. See `.claude/commands/journal.md` for format.
 - **Self-update:** When you learn something useful across conversations (quirks, preferences, conventions), add it to this file. Keep it short — details go in separate files.
 - **Design system:** When building visual HTML interfaces, read and follow `/Users/paolo/excat/nova/DESIGN.md`.
+- **Brand guidelines:** All content, design, and communication must follow the brand system in `brand/`. Read the relevant file before creating or modifying content.
 - **Don't bloat this file.** Keep instructions short. Reference separate files for details.
 
 ## Tech Stack
