@@ -1,0 +1,14 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  align?: 'center' | 'left';
+}
+
+const { title, subtitle, align = 'center' } = Astro.props;
+---
+
+<div class={align === 'center' ? 'utility-text-align-center' : ''} style="margin-bottom: var(--space-3xl);">
+  <h2 class="h2-heading">{title}</h2>
+  {subtitle && <p class="paragraph-lg" style="margin-top: var(--space-sm);">{subtitle}</p>}
+</div>

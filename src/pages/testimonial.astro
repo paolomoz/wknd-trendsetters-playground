@@ -1,0 +1,73 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import TestimonialCard from '../components/TestimonialCard.astro';
+import CTASection from '../components/CTASection.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+
+const testimonials = [
+  { name: 'Alex Rivera', organization: 'Urban Threads', quote: 'Loved the streetwear tips! Now my weekend fits turn heads at every party.', avatar: '/images/testimonial-alex.avif' },
+  { name: 'Taylor Kim', organization: 'Neon Lane', quote: 'The trend guides are a game changer. I finally nailed my tennis club vibe.', avatar: '/images/testimonial-taylor.avif' },
+  { name: 'Morgan Ellis', organization: 'Waveform', quote: 'Beach day style inspo? Nailed it. Got compliments all summer long.', avatar: '/images/testimonial-morgan.avif' },
+  { name: 'Jordan Blake', organization: 'Night Owl', quote: 'Your party looks are next level. I always find something bold to try.', avatar: '/images/testimonial-jordan.avif' },
+  { name: 'Casey Drew', organization: 'Fresh Fit', quote: "Sporty, casual, or glam—there's always a look for my mood.", avatar: '/images/testimonial-casey.avif' },
+  { name: 'Riley Quinn', organization: 'Sunset Crew', quote: "The blog's recs made my festival outfits pop. So many new brands to love.", avatar: '/images/testimonial-riley.avif' },
+  { name: 'Skyler Lane', organization: 'Peak Play', quote: 'I never miss a trend drop. The style edits keep my closet on point.', avatar: '/images/testimonial-skyler.avif' },
+  { name: 'Harper Fox', organization: 'Glow Up', quote: 'From tennis courts to night outs, I always find fresh outfit inspo here.', avatar: '/images/testimonial-harper.avif' },
+];
+---
+
+<PageLayout title="Testimonials - Fashion Blog">
+  <!-- Hero -->
+  <header class="section secondary-section">
+    <div class="container">
+      <div class="utility-text-align-center" style="max-width: 42rem; margin: 0 auto;">
+        <h1 class="h1-heading">Voices of Style</h1>
+        <p class="subheading" style="margin-top: var(--space-lg);">Discover the latest trends, style inspo, and stories from the coolest scenes—tennis courts, beach days, and epic night outs.</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Testimonials Grid -->
+  <section class="section">
+    <div class="container">
+      <SectionHeading title="Style stories, real voices" subtitle="See how fresh looks inspire real life fun—straight from our readers." />
+      <div class="grid-layout desktop-4-column tablet-2-column-1 mobile-portrait-1-column grid-gap-md">
+        {testimonials.map((t) => (
+          <TestimonialCard
+            name={t.name}
+            organization={t.organization}
+            quote={t.quote}
+            avatar={t.avatar}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Quote -->
+  <section class="section secondary-section">
+    <div class="container">
+      <div class="grid-layout tablet-1-column grid-gap-xxl" style="align-items: center;">
+        <div>
+          <img src="/images/testimonial-jamie.avif" alt="Jamie Rivera" class="cover-image" style="border-radius: var(--radius-card); aspect-ratio: 3/4;" loading="lazy" />
+        </div>
+        <div>
+          <blockquote style="border-left: 4px solid var(--color-yellow); padding-left: var(--space-xl);">
+            <p class="paragraph-xl" style="font-style: italic;">&ldquo;Style is my daily adventure. Fashion isn't just what I wear—it's how I live, play, and party.&rdquo;</p>
+            <footer style="margin-top: var(--space-lg);">
+              <div class="paragraph-lg"><strong>Jamie Rivera</strong></div>
+              <div class="paragraph-sm utility-text-secondary">Fashion Blogger & Trendsetter</div>
+            </footer>
+          </blockquote>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <CTASection
+    title="Ready to join the style squad?"
+    subtitle="Inspired by real stories. Fueled by fresh looks. See what our readers are loving—then make your move."
+    ctaText="Join now"
+  />
+</PageLayout>

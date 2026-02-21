@@ -1,0 +1,111 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import Hero from '../components/Hero.astro';
+import TabSection from '../components/TabSection.astro';
+import ImageGallery from '../components/ImageGallery.astro';
+import CTASection from '../components/CTASection.astro';
+
+const tabs = [
+  {
+    name: 'Alex Rivera',
+    role: 'Streetwear Enthusiast',
+    quote: 'Wearing new brands makes every day feel like a runway. I love mixing sporty vibes with bold colors—perfect for tennis or a night out!',
+    image: '/images/hero-hiphop-dance.avif',
+    avatarImage: '/images/avatar-alex.avif',
+  },
+  {
+    name: 'Taylor Kim',
+    role: 'Casual Style Blogger',
+    quote: "Fresh looks, comfy fits—my go-to for beach days and city strolls. These brands keep my style on point and effortless.",
+    image: '/images/tab-campus.avif',
+    avatarImage: '/images/avatar-taylor.avif',
+  },
+  {
+    name: 'Jordan Ellis',
+    role: 'Trend Spotter',
+    quote: "Nothing beats the confidence boost from a killer outfit. I'm always ready for spontaneous adventures in these cool threads.",
+    image: '/images/tab-staff.avif',
+    avatarImage: '/images/avatar-jordan.avif',
+  },
+  {
+    name: 'Morgan Blake',
+    role: 'Party Scene Curator',
+    quote: 'From rooftop parties to late-night hangs, these styles turn heads. Fashion should be fun, and this is pure fun!',
+    image: '/images/mobile-game-character.avif',
+    avatarImage: '/images/avatar-morgan.avif',
+  },
+];
+
+const galleryImages = [
+  { src: '/images/hero-hiphop-dance.avif', alt: 'Hip-hop dance' },
+  { src: '/images/beach-destination.avif', alt: 'Beach destination' },
+  { src: '/images/concert-crowd.avif', alt: 'Concert crowd' },
+  { src: '/images/campus-life.avif', alt: 'Campus life' },
+  { src: '/images/gaming-tournaments.avif', alt: 'Gaming tournaments' },
+  { src: '/images/mobile-game-character.avif', alt: 'Mobile game character' },
+  { src: '/images/fashion-inspiration.avif', alt: 'Fashion inspiration' },
+  { src: '/images/campus-tour.avif', alt: 'Campus tour' },
+];
+---
+
+<PageLayout title="Inspiring Case Studies | Fashion Blog">
+  <Hero
+    title="Fresh looks, bold stories, real life"
+    subtitle="Dive into our latest style adventures—see how young trendsetters own every moment, from courtside to the dance floor."
+    primaryCta={{ text: 'See case', href: '#cases' }}
+  />
+
+  <!-- Featured Case Study -->
+  <section class="section">
+    <div class="container">
+      <div class="grid-layout tablet-1-column grid-gap-lg" style="align-items: center;">
+        <div>
+          <img src="/images/adventure-spots.avif" alt="Case study featured" class="cover-image utility-aspect-3x2" style="border-radius: var(--radius-card);" loading="lazy" />
+        </div>
+        <div>
+          <div class="breadcrumbs">
+            <a href="/" class="text-link">Home</a>
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="2"></path></svg>
+            <span class="text-link secondary-text-link">Case studies</span>
+          </div>
+          <h2 class="h2-heading">Fresh looks, bold moves, real stories</h2>
+          <div style="margin-top: var(--space-md);">
+            <div class="flex-horizontal flex-gap-xxs">
+              <span class="paragraph-sm utility-text-secondary">By</span>
+              <span class="paragraph-sm utility-text-black">Taylor Brooks</span>
+            </div>
+            <div class="flex-horizontal flex-gap-xxs utility-margin-top-0-5rem">
+              <span class="paragraph-sm utility-text-secondary">June 12, 2024</span>
+              <span class="paragraph-sm utility-text-secondary">&bull;</span>
+              <span class="paragraph-sm utility-text-secondary">4 min read</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <ImageGallery
+    title="Style in every snapshot"
+    subtitle="Peek the latest looks in action"
+    images={galleryImages}
+    variant="secondary"
+  />
+
+  <!-- Case Study Profiles -->
+  <section class="section" id="cases">
+    <div class="container">
+      <TabSection tabs={tabs} />
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <CTASection
+    title="Fresh looks, bold stories, real life"
+    subtitle="Dive into our latest case study: see how young trendsetters rock new brands from courtside to the dance floor."
+    ctaText="See more"
+    image="/images/networking-event.avif"
+    variant="overlay"
+  />
+</PageLayout>

@@ -1,0 +1,73 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import Hero from '../components/Hero.astro';
+import TrendCard from '../components/TrendCard.astro';
+import CTASection from '../components/CTASection.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+
+const categories = [
+  { title: 'Tennis looks that serve', description: 'Ace your day with sporty style—see how Jamie rocks bold sneakers and a vintage tee on the court.', image: '/images/hero-hiphop-dance.avif', category: 'Casual' },
+  { title: 'Sunkissed & effortless', description: "Taylor chills seaside in breezy linen and bucket hats—get the scoop on this summer's must-haves.", image: '/images/hero-music-concert.avif', category: 'Beach' },
+  { title: 'Party after dark', description: 'Morgan lights up the night in neon and metallics—discover the best fits for your next night out.', image: '/images/celebrities-events.avif', category: 'Nightlife' },
+  { title: 'City strolls, cool fits', description: 'Jordan mixes oversized hoodies with chunky kicks—urban style made easy for every adventure.', image: '/images/networking-event.avif', category: 'Street' },
+  { title: 'Move in style', description: "Casey's athleisure edit: track pants, crop tops, and attitude—perfect for on-the-go days.", image: '/images/trending-outfits.avif', category: 'Sport' },
+  { title: 'Vibes for days', description: "Skylar's festival picks: fringe, bold prints, and all the energy—see what's trending this season.", image: '/images/successful-events.avif', category: 'Festival' },
+  { title: 'Laid-back, always cool', description: 'Riley keeps it comfy in joggers and slides—find out how to master the art of relaxed style.', image: '/images/shopping-bag.avif', category: 'Chill' },
+  { title: 'Throwback energy', description: "Avery brings back '90s flair with crop tops and baggy jeans—nostalgia never looked so fresh.", image: '/images/people-coffee.avif', category: 'Retro' },
+];
+---
+
+<PageLayout title="Fashion Trends for Young Adults | Fashion Blog">
+  <Hero
+    title="Fresh fits, bold moves, all you"
+    subtitle="From tennis courts to neon nights, we're serving up the latest trends and stories from the coolest scenes."
+    primaryCta={{ text: 'See trends', href: '#trends' }}
+    images={[
+      { src: '/images/mobile-game-character.avif', alt: 'Fashion trend' },
+      { src: '/images/customer-headshot.avif', alt: 'Trendsetter' },
+    ]}
+  />
+
+  <!-- Category Cards -->
+  <section class="section" id="trends">
+    <div class="container">
+      <SectionHeading title="Trend alert" subtitle="Fresh fits, bold moves" />
+      <div class="grid-layout desktop-4-column tablet-2-column-1 mobile-portrait-1-column grid-gap-md">
+        {categories.map((cat) => (
+          <TrendCard
+            title={cat.title}
+            description={cat.description}
+            image={cat.image}
+            category={cat.category}
+            href="/fashion-trends-young-adults"
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature Section -->
+  <section class="section secondary-section">
+    <div class="container">
+      <div class="grid-layout tablet-1-column grid-gap-lg" style="align-items: center;">
+        <div>
+          <img src="/images/bustling-pub.avif" alt="Casual style" class="cover-image utility-aspect-3x2" style="border-radius: var(--radius-card);" loading="lazy" />
+        </div>
+        <div>
+          <h2 class="h2-heading">Fresh fits, bold moves</h2>
+          <p class="paragraph-lg" style="margin-top: var(--space-md); color: var(--color-gray-700);">Dive into the latest street style, sporty looks, and party-ready outfits.</p>
+          <div class="button-group">
+            <a href="/fashion-insights" class="button">Read more</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <CTASection
+    title="Fresh fits, bold moves, all day"
+    subtitle="Discover the latest trends and get inspired."
+    ctaText="Subscribe"
+  />
+</PageLayout>

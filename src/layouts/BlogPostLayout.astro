@@ -1,0 +1,95 @@
+---
+import PageLayout from './PageLayout.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  author?: string;
+  date?: string;
+  readTime?: string;
+  category?: string;
+  image?: string;
+}
+
+const { title, description, author = 'Taylor Brooks', date = 'June 12, 2024', readTime = '4 min read', category, image } = Astro.props;
+---
+
+<PageLayout title={`${title} | Fashion Blog`} description={description}>
+  <section class="section">
+    <div class="container">
+      <div class="grid-layout tablet-1-column grid-gap-lg" style="align-items: center;">
+        {image && (
+          <div>
+            <img src={image} alt={title} class="cover-image utility-aspect-3x2" style="border-radius: var(--radius-card);" loading="lazy" />
+          </div>
+        )}
+        <div>
+          <div class="breadcrumbs">
+            <a href="/" class="text-link">Home</a>
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="2"></path></svg>
+            <a href="/fashion-insights" class="text-link secondary-text-link">Blog</a>
+          </div>
+          <h1 class="h2-heading">{title}</h1>
+          <div style="margin-top: var(--space-md);">
+            <div class="flex-horizontal flex-gap-xxs">
+              <div class="paragraph-sm utility-text-secondary utility-margin-bottom-0">By</div>
+              <div class="paragraph-sm utility-text-black utility-margin-bottom-0">{author}</div>
+            </div>
+            <div class="flex-horizontal flex-gap-xxs utility-margin-top-0-5rem">
+              <div class="paragraph-sm utility-text-secondary">{date}</div>
+              <div class="paragraph-sm utility-text-secondary">&bull;</div>
+              <div class="paragraph-sm utility-text-secondary">{readTime}</div>
+            </div>
+          </div>
+          {category && <div class="tag" style="margin-top: var(--space-md);">{category}</div>}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 0;">
+    <div class="container" style="max-width: 48rem;">
+      <div class="blog-content">
+        <slot />
+      </div>
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .blog-content :global(h2) {
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  .blog-content :global(h3) {
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+  .blog-content :global(p) {
+    margin-bottom: 1.25rem;
+    line-height: 1.7;
+  }
+  .blog-content :global(ul),
+  .blog-content :global(ol) {
+    margin-bottom: 1.25rem;
+    padding-left: 1.5rem;
+  }
+  .blog-content :global(li) {
+    margin-bottom: 0.5rem;
+    list-style: disc;
+  }
+  .blog-content :global(ol li) {
+    list-style: decimal;
+  }
+  .blog-content :global(blockquote) {
+    border-left: 4px solid var(--color-yellow);
+    padding-left: 1.5rem;
+    margin: 2rem 0;
+    font-style: italic;
+    color: var(--color-gray-700);
+  }
+  .blog-content :global(img) {
+    border-radius: var(--radius-card);
+    margin: 2rem 0;
+  }
+</style>

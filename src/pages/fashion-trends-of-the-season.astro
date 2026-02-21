@@ -1,0 +1,90 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import Hero from '../components/Hero.astro';
+import ImageGallery from '../components/ImageGallery.astro';
+import CTASection from '../components/CTASection.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+
+const trendImages = [
+  { src: '/images/mobile-game-character.avif', alt: 'Trend style 1' },
+  { src: '/images/hero-family-vacation.avif', alt: 'Trend style 2' },
+  { src: '/images/season-trend-1.avif', alt: 'Season trend' },
+];
+
+const galleryImages = [
+  { src: '/images/gallery-3.avif', alt: 'Fashion look 1' },
+  { src: '/images/gallery-4.avif', alt: 'Fashion look 2' },
+  { src: '/images/gallery-1.avif', alt: 'Fashion look 3' },
+  { src: '/images/gallery-2.avif', alt: 'Fashion look 4' },
+  { src: '/images/adventure-spots.avif', alt: 'Adventure spots' },
+  { src: '/images/gallery-6.avif', alt: 'Fashion look 6' },
+];
+---
+
+<PageLayout title="Top Fashion Trends for Young People | Fashion Blog">
+  <Hero
+    title="Fresh fits, bold moves — Trends for every vibe."
+    subtitle="From tennis whites to neon nights, we're serving up the coolest outfits and the real stories behind them. Get inspired, get noticed, and make every day a runway."
+    primaryCta={{ text: 'See trends', href: '#trends' }}
+    secondaryCta={{ text: 'Read more', href: '/fashion-insights' }}
+    images={trendImages}
+  />
+
+  <!-- Trend Alert -->
+  <section class="section" id="trends">
+    <div class="container">
+      <SectionHeading title="Trend alert" subtitle="Fresh fits, bold moves" />
+      <div class="grid-layout tablet-1-column grid-gap-lg" style="align-items: center;">
+        <div>
+          <img src="/images/networking-event.avif" alt="Networking event" class="cover-image utility-aspect-3x2" style="border-radius: var(--radius-card);" loading="lazy" />
+        </div>
+        <div>
+          <h3 class="h3-heading">Trendy looks, real moments</h3>
+          <p class="paragraph-lg" style="margin-top: var(--space-md); color: var(--color-gray-700);">Dive into the latest street style, sporty looks, and party-ready outfits. Discover how young trendsetters are rocking new brands while living their best lives—on the court, at the beach, or out all night.</p>
+          <div class="button-group">
+            <a href="/fashion-trends-young-adults" class="button">Read more</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Three Column Feature -->
+  <section class="section secondary-section">
+    <div class="container">
+      <SectionHeading title="Trends that turn heads" />
+      <div class="grid-layout desktop-3-column tablet-1-column grid-gap-lg">
+        <div>
+          <img src="/images/season-trend-2.avif" alt="Street style" class="cover-image utility-aspect-3x2" style="border-radius: var(--radius-card); margin-bottom: var(--space-lg);" loading="lazy" />
+          <h3 class="h4-heading">Street style</h3>
+          <p class="paragraph-sm utility-text-secondary" style="margin-top: var(--space-xs);">Bold sneakers, vintage tees, and oversized hoodies—the sidewalk is your runway.</p>
+        </div>
+        <div>
+          <img src="/images/season-trend-3.avif" alt="Sporty vibes" class="cover-image utility-aspect-3x2" style="border-radius: var(--radius-card); margin-bottom: var(--space-lg);" loading="lazy" />
+          <h3 class="h4-heading">Sporty vibes</h3>
+          <p class="paragraph-sm utility-text-secondary" style="margin-top: var(--space-xs);">Track pants, crop tops, and fresh kicks—move easy and look sharp doing it.</p>
+        </div>
+        <div>
+          <img src="/images/season-trend-4.avif" alt="Night out" class="cover-image utility-aspect-3x2" style="border-radius: var(--radius-card); margin-bottom: var(--space-lg);" loading="lazy" />
+          <h3 class="h4-heading">Night out</h3>
+          <p class="paragraph-sm utility-text-secondary" style="margin-top: var(--space-xs);">Neon accents, metallics, and statement pieces—turn heads after dark.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <ImageGallery
+    title="Style in every snapshot"
+    subtitle="Peek the latest looks in action"
+    images={galleryImages}
+    columns={3}
+  />
+
+  <!-- CTA -->
+  <CTASection
+    title="Fresh looks, bold vibes, endless inspo"
+    subtitle="Stay up to date with the latest trends and stories."
+    ctaText="Join now"
+  />
+</PageLayout>

@@ -1,0 +1,58 @@
+---
+interface Props {
+  title: string;
+  category?: string;
+  date?: string;
+  image: string;
+  imageAlt?: string;
+  href: string;
+}
+
+const { title, category, date, image, imageAlt = '', href } = Astro.props;
+---
+
+<a href={href} class="article-card card-link">
+  <div class="article-card-image">
+    <img src={image} alt={imageAlt || title} class="cover-image" loading="lazy" />
+  </div>
+  <div class="article-card-body">
+    <div class="article-card-meta">
+      {category && <span class="tag">{category}</span>}
+      {date && <span class="paragraph-sm utility-text-secondary">{date}</span>}
+    </div>
+    <h3 class="h4-heading" style="font-size: var(--text-lg);">{title}</h3>
+  </div>
+</a>
+
+<style>
+  .article-card {
+    display: block;
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    border: 1px solid var(--color-gray-200);
+    transition: transform 300ms ease, box-shadow 300ms ease;
+  }
+  .article-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+  .article-card-image {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+  }
+  .article-card-image img {
+    transition: transform 300ms ease;
+  }
+  .article-card:hover .article-card-image img {
+    transform: scale(1.05);
+  }
+  .article-card-body {
+    padding: var(--space-lg);
+  }
+  .article-card-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+  }
+</style>

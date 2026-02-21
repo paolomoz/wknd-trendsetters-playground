@@ -1,0 +1,31 @@
+---
+interface Props {
+  title?: string;
+  subtitle?: string;
+  images: { src: string; alt: string }[];
+  columns?: 4 | 3 | 2;
+  variant?: 'default' | 'secondary';
+}
+
+const { title, subtitle, images, columns = 4, variant = 'default' } = Astro.props;
+const colClass = columns === 3 ? 'desktop-3-column' : columns === 2 ? '' : 'desktop-4-column';
+const sectionClass = variant === 'secondary' ? 'section secondary-section' : 'section';
+---
+
+<section class={sectionClass}>
+  <div class="container">
+    {(title || subtitle) && (
+      <div class="utility-text-align-center utility-margin-bottom-8rem">
+        {title && <h2 class="h2-heading">{title}</h2>}
+        {subtitle && <p class="paragraph-lg" style="margin-top: var(--space-sm);">{subtitle}</p>}
+      </div>
+    )}
+    <div class={`grid-layout ${colClass} tablet-2-column-1 mobile-portrait-1-column grid-gap-sm`}>
+      {images.map((img) => (
+        <div class="utility-aspect-1x1">
+          <img src={img.src} alt={img.alt} class="cover-image" loading="lazy" />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,42 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  primaryCta?: { text: string; href: string };
+  secondaryCta?: { text: string; href: string };
+  images?: { src: string; alt: string }[];
+}
+
+const { title, subtitle, primaryCta, secondaryCta, images = [] } = Astro.props;
+---
+
+<header class="section secondary-section">
+  <div class="container">
+    <div class="grid-layout tablet-1-column grid-gap-xxl" style="align-items: center;">
+      <div>
+        <h1 class="h1-heading">{title}</h1>
+        {subtitle && <p class="subheading" style="margin-top: var(--space-lg);">{subtitle}</p>}
+        {(primaryCta || secondaryCta) && (
+          <div class="button-group">
+            {primaryCta && <a href={primaryCta.href} class="button">{primaryCta.text}</a>}
+            {secondaryCta && <a href={secondaryCta.href} class="button secondary-button">{secondaryCta.text}</a>}
+          </div>
+        )}
+      </div>
+      {images.length > 0 && (
+        <div class="grid-layout tablet-1-column grid-gap-xs">
+          {images.map((img) => (
+            <img
+              src={img.src}
+              alt={img.alt}
+              class="cover-image"
+              style="border-radius: var(--radius-card); aspect-ratio: 3/2;"
+              loading="lazy"
+              width="270"
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+</header>

@@ -1,0 +1,44 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  ctaText?: string;
+  ctaHref?: string;
+  image?: string;
+  variant?: 'default' | 'overlay';
+}
+
+const { title, subtitle, ctaText = 'See more', ctaHref = '#', image, variant = 'default' } = Astro.props;
+---
+
+{variant === 'overlay' && image ? (
+  <section class="section inverse-section">
+    <div class="container">
+      <div class="grid-layout desktop-1-column">
+        <div class="utility-position-relative utility-radius-card utility-overflow-clip" style="min-height: 28rem; display: flex; align-items: flex-end;">
+          <img src={image} alt="" class="cover-image utility-overlay utility-radius-all-0" loading="lazy" />
+          <div class="overlay utility-z-index-1"></div>
+          <div class="card-body utility-max-width-lg utility-text-on-overlay" style="padding: var(--space-3xl);">
+            <h2 class="h1-heading">{title}</h2>
+            {subtitle && <p class="subheading" style="margin-top: var(--space-md);">{subtitle}</p>}
+            <div class="button-group">
+              <a href={ctaHref} class="button inverse-button">{ctaText}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+) : (
+  <section class="section accent-section">
+    <div class="container">
+      <div class="utility-text-align-center" style="max-width: 36rem; margin: 0 auto;">
+        <h2 class="h2-heading">{title}</h2>
+        {subtitle && <p class="paragraph-lg" style="margin-top: var(--space-md);">{subtitle}</p>}
+        <div class="button-group" style="justify-content: center;">
+          <a href={ctaHref} class="button">{ctaText}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+)}

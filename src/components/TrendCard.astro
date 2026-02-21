@@ -1,0 +1,50 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  image: string;
+  imageAlt?: string;
+  category?: string;
+  href?: string;
+}
+
+const { title, description, image, imageAlt = '', category, href = '#' } = Astro.props;
+---
+
+<a href={href} class="trend-card card-link">
+  <div class="trend-card-image">
+    <img src={image} alt={imageAlt || title} class="cover-image" loading="lazy" />
+  </div>
+  <div class="trend-card-body">
+    {category && <span class="tag" style="margin-bottom: var(--space-sm);">{category}</span>}
+    <h3 class="h4-heading" style="font-size: var(--text-lg); margin-bottom: var(--space-xs);">{title}</h3>
+    <p class="paragraph-sm utility-text-secondary utility-margin-bottom-0">{description}</p>
+  </div>
+</a>
+
+<style>
+  .trend-card {
+    display: block;
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    border: 1px solid var(--color-gray-200);
+    transition: transform 300ms ease, box-shadow 300ms ease;
+  }
+  .trend-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+  .trend-card-image {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+  }
+  .trend-card-image img {
+    transition: transform 300ms ease;
+  }
+  .trend-card:hover .trend-card-image img {
+    transform: scale(1.05);
+  }
+  .trend-card-body {
+    padding: var(--space-lg);
+  }
+</style>

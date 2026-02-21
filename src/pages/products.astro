@@ -1,0 +1,97 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import Hero from '../components/Hero.astro';
+import ImageGallery from '../components/ImageGallery.astro';
+import CTASection from '../components/CTASection.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+
+const lookbookItems = [
+  { title: 'Trending now', subtitle: 'Casual looks for every adventure', image: '/images/hero-hiphop-dance.avif' },
+  { title: 'Sporty vibes', subtitle: 'Fresh fits for active days', image: '/images/gallery-1.avif' },
+  { title: 'Night out energy', subtitle: 'Party-ready styles to stand out', image: '/images/hero-family-vacation.avif' },
+];
+
+const moreItems = [
+  { title: 'Fresh Looks, Bold Moves', description: 'Discover trending styles for every scene.', image: '/images/networking-event.avif' },
+  { title: 'Fresh Looks, Bold Moves', description: 'Beach days, night outs, and more.', image: '/images/adventure-spots.avif' },
+  { title: 'Fresh Looks, Bold Moves', description: 'Style that speaks your language.', image: '/images/gallery-6.avif' },
+];
+
+const galleryImages = [
+  { src: '/images/gallery-3.avif', alt: 'Style snapshot 1' },
+  { src: '/images/gallery-4.avif', alt: 'Style snapshot 2' },
+  { src: '/images/gallery-1.avif', alt: 'Style snapshot 3' },
+  { src: '/images/gallery-2.avif', alt: 'Style snapshot 4' },
+];
+---
+
+<PageLayout title="Fashion Blog Products - Trendy Styles for Young Fashion Lovers">
+  <Hero
+    title="Fresh fits, bold vibes"
+    subtitle="Discover trending styles for every scene—beach days, night outs, and more."
+    primaryCta={{ text: 'Shop now', href: '#lookbook' }}
+    secondaryCta={{ text: 'See trends', href: '/fashion-trends-of-the-season' }}
+    images={[{ src: '/images/hero-hiphop-dance.avif', alt: 'Fashion products' }]}
+  />
+
+  <!-- Lookbook -->
+  <section class="section" id="lookbook">
+    <div class="container">
+      <SectionHeading title="Trend alert: must-have looks" />
+      <div class="grid-layout desktop-3-column tablet-1-column grid-gap-lg">
+        {lookbookItems.map((item) => (
+          <div class="card" style="border-radius: var(--radius-card); overflow: hidden;">
+            <div style="aspect-ratio: 3/4; overflow: hidden;">
+              <img src={item.image} alt={item.title} class="cover-image" loading="lazy" />
+            </div>
+            <div class="card-body">
+              <h3 class="h4-heading">{item.title}</h3>
+              <p class="paragraph-sm utility-text-secondary utility-margin-bottom-0" style="margin-top: var(--space-xs);">{item.subtitle}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Style Snapshots -->
+  <ImageGallery
+    title="Style snapshots: real life, real trends"
+    images={galleryImages}
+    variant="secondary"
+  />
+
+  <!-- More Looks -->
+  <section class="section">
+    <div class="container">
+      <SectionHeading title="Style that never sleeps" />
+      <div class="grid-layout desktop-3-column tablet-1-column grid-gap-lg">
+        {moreItems.map((item) => (
+          <div class="card" style="border-radius: var(--radius-card); overflow: hidden;">
+            <div style="aspect-ratio: 16/10; overflow: hidden;">
+              <img src={item.image} alt={item.title} class="cover-image" loading="lazy" />
+            </div>
+            <div class="card-body">
+              <h3 class="h4-heading">{item.title}</h3>
+              <p class="paragraph-sm utility-text-secondary utility-margin-bottom-0" style="margin-top: var(--space-xs);">{item.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Style Inspo -->
+  <section class="section secondary-section">
+    <div class="container">
+      <SectionHeading title="Style inspo: real life, real vibes" subtitle="Fresh looks, endless vibes" />
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <CTASection
+    title="Fresh looks, endless vibes"
+    subtitle="Discover the latest products and trends."
+    ctaText="Subscribe"
+  />
+</PageLayout>

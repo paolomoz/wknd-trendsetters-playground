@@ -1,0 +1,72 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import FAQAccordion from '../components/FAQAccordion.astro';
+import CTASection from '../components/CTASection.astro';
+
+const faqItems = [
+  { question: 'How do I spot the latest trends?', answer: "We keep it fresh! Check our weekly trend roundups and street style snaps for what's hot right now." },
+  { question: 'Can I share my own outfit pics?', answer: 'Absolutely! Tag us on socials or use our upload form to get featured in our next style story.' },
+  { question: 'Where do you find your style inspo?', answer: "From city streets to beach parties, we're always on the lookout for bold looks and cool creators." },
+  { question: 'How can I join your community?', answer: "Sign up for our newsletter or jump into the comments—everyone's welcome to join the fun!" },
+];
+---
+
+<PageLayout title="FAQ - The Fashion Blog">
+  <!-- Hero -->
+  <header class="section secondary-section">
+    <div class="container">
+      <div class="grid-layout tablet-1-column grid-gap-xxl" style="align-items: center;">
+        <div>
+          <h1 class="h1-heading">Got questions? We've got answers.</h1>
+          <p class="subheading" style="margin-top: var(--space-lg);">Fashion FAQs, answered fast</p>
+          <p style="margin-top: var(--space-md); color: var(--color-gray-700);">Curious about trends, tips, or our vibe? Find all the style scoop and community know-how right here.</p>
+        </div>
+        <div>
+          <img src="/images/faq-hero.avif" alt="FAQ" class="cover-image" style="border-radius: var(--radius-card); aspect-ratio: 4/3;" loading="lazy" />
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- FAQ Section -->
+  <section class="section">
+    <div class="container" style="max-width: 48rem;">
+      <FAQAccordion items={faqItems} />
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="section secondary-section">
+    <div class="container">
+      <div class="grid-layout tablet-1-column grid-gap-xxl" style="align-items: start;">
+        <div>
+          <h2 class="h2-heading">Let's connect</h2>
+          <p class="paragraph-lg" style="margin-top: var(--space-md); color: var(--color-gray-700);">Got more questions or want to chat? Reach out—we love hearing from our community.</p>
+        </div>
+        <div>
+          <div class="contact-items" style="display: flex; flex-direction: column; gap: var(--space-xl);">
+            <div>
+              <h3 class="h6-heading utility-text-secondary">Email</h3>
+              <a href="mailto:hello@fashionblog.com" class="paragraph-lg" style="margin-top: var(--space-xs); display: block;">hello@fashionblog.com</a>
+            </div>
+            <div>
+              <h3 class="h6-heading utility-text-secondary">Phone</h3>
+              <a href="tel:+15551239876" class="paragraph-lg" style="margin-top: var(--space-xs); display: block;">+1 (555) 123-9876</a>
+            </div>
+            <div>
+              <h3 class="h6-heading utility-text-secondary">Address</h3>
+              <p class="paragraph-lg" style="margin-top: var(--space-xs);">101 Trend Ave, SF, CA</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <CTASection
+    title="Fresh fits, bold moves, all day"
+    subtitle="Join our community of trendsetters."
+    ctaText="Join now"
+  />
+</PageLayout>

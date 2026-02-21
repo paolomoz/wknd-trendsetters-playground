@@ -1,0 +1,88 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import Hero from '../components/Hero.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import ImageGallery from '../components/ImageGallery.astro';
+import CTASection from '../components/CTASection.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+
+const articles = [
+  { title: 'Tennis style, redefined', category: 'Casual Cool', date: 'May 12', image: '/images/hero-hiphop-dance.avif', href: '/blog/latest-trends-young-casual-fashion' },
+  { title: 'Sunkissed and effortless', category: 'Beach Vibes', date: 'May 10', image: '/images/fundraising-event.avif', href: '/blog/fashion-trends-young-culture' },
+  { title: 'Party fits that pop', category: 'Night Out', date: 'May 8', image: '/images/hero-family-vacation.avif', href: '/blog/fashion-trends-young-style' },
+  { title: 'Game on, style up', category: 'Sport Mode', date: 'May 5', image: '/images/mobile-game-character.avif', href: '/blog/fashion-blog-post' },
+];
+
+const galleryImages = [
+  { src: '/images/gallery-3.avif', alt: 'Fashion look 1' },
+  { src: '/images/gallery-4.avif', alt: 'Fashion look 2' },
+  { src: '/images/gallery-1.avif', alt: 'Fashion look 3' },
+  { src: '/images/gallery-2.avif', alt: 'Fashion look 4' },
+  { src: '/images/adventure-spots.avif', alt: 'Adventure spots' },
+  { src: '/images/gallery-6.avif', alt: 'Fashion look 6' },
+];
+---
+
+<PageLayout title="Fashion Blog - Discover Trends in Young Fashion">
+  <Hero
+    title="WKND Trendsetters Blog"
+    subtitle="From tennis courts to neon nights, discover the latest trends, style inspo, and stories from the coolest scenes. Dive into a world where fashion meets fun—your next look starts here."
+    primaryCta={{ text: 'Read now', href: '#articles' }}
+    secondaryCta={{ text: 'See trends', href: '/fashion-trends-of-the-season' }}
+    images={[{ src: '/images/fashion-insights-hero.avif', alt: 'Fashion insights hero' }]}
+  />
+
+  <!-- Featured Article -->
+  <section class="section">
+    <div class="container">
+      <div class="grid-layout tablet-1-column grid-gap-lg" style="align-items: center;">
+        <div>
+          <img src="/images/adventure-spots.avif" alt="Fresh looks, bold moves" class="cover-image utility-aspect-3x2" style="border-radius: var(--radius-card);" loading="lazy" />
+        </div>
+        <div>
+          <div class="flex-horizontal flex-gap-xxs" style="margin-bottom: var(--space-md);">
+            <span class="tag">Featured</span>
+          </div>
+          <h2 class="h2-heading">Fresh looks, bold moves</h2>
+          <p class="paragraph-lg" style="margin-top: var(--space-md); color: var(--color-gray-700);">Dive into our latest style adventures—see how young trendsetters own every moment.</p>
+          <div class="button-group">
+            <a href="/blog/latest-trends-young-casual-fashion" class="button">Read more</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Articles Grid -->
+  <section class="section secondary-section" id="articles">
+    <div class="container">
+      <SectionHeading title="Latest Articles" subtitle="Fresh looks, bold moves" />
+      <div class="grid-layout desktop-4-column tablet-2-column-1 mobile-portrait-1-column grid-gap-md">
+        {articles.map((article) => (
+          <ArticleCard
+            title={article.title}
+            category={article.category}
+            date={article.date}
+            image={article.image}
+            href={article.href}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <ImageGallery
+    title="Style in every snapshot"
+    subtitle="Peek the latest looks in action"
+    images={galleryImages}
+    columns={3}
+  />
+
+  <!-- CTA -->
+  <CTASection
+    title="Fresh looks, bold vibes, endless inspo"
+    subtitle="Stay inspired with the latest trends and stories."
+    ctaText="Subscribe"
+  />
+</PageLayout>

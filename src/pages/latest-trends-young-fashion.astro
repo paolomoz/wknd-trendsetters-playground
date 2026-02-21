@@ -1,0 +1,126 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import Hero from '../components/Hero.astro';
+import ImageGallery from '../components/ImageGallery.astro';
+import CTASection from '../components/CTASection.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+
+const looks = [
+  { title: 'Street Style', subtitle: 'Tennis whites, city nights', description: 'Alex serves up sporty chic with a twist—effortless layers, bold sneakers.', image: '/images/street-style.avif' },
+  { title: 'Beach Day', subtitle: 'Sunkissed and carefree', description: 'Taylor rocks breezy linen and neon shades, catching waves.', image: '/images/beach-concert.avif' },
+  { title: 'Night Out', subtitle: 'Glow up after dark', description: 'Jordan lights up the party in metallics and mesh.', image: '/images/night-dancers.avif' },
+  { title: 'Casual Cool', subtitle: 'Denim days, endless ways', description: 'Morgan keeps it classic with vintage jeans and graphic tee.', image: '/images/gala-corporate.avif' },
+  { title: 'Sporty Vibes', subtitle: 'Run, jump, repeat', description: 'Casey mixes track pants with cropped hoodie.', image: '/images/headshot-trendy.avif' },
+  { title: 'Festival Fun', subtitle: 'Color, music, movement', description: "Riley's look pops with tie-dye and chunky boots.", image: '/images/store-customer.avif' },
+  { title: 'Coffee Break', subtitle: 'Chill, sip, snap', description: 'Jamie pairs oversized knits with statement sunnies.', image: '/images/community-coffee.avif' },
+  { title: 'Weekend Escape', subtitle: 'Adventure in every step', description: 'Skylar explores in cargo shorts and bucket hats.', image: '/images/city-street.avif' },
+];
+
+const galleryImages = [
+  { src: '/images/lt-gallery-1.avif', alt: 'Fashion look 1' },
+  { src: '/images/lt-gallery-2.avif', alt: 'Fashion look 2' },
+  { src: '/images/lt-gallery-3.avif', alt: 'Fashion look 3' },
+  { src: '/images/lt-gallery-4.avif', alt: 'Fashion look 4' },
+  { src: '/images/lt-gallery-5.avif', alt: 'Fashion look 5' },
+  { src: '/images/lt-gallery-6.avif', alt: 'Fashion look 6' },
+  { src: '/images/lt-gallery-7.avif', alt: 'Fashion look 7' },
+  { src: '/images/lt-gallery-9.avif', alt: 'Fashion look 8' },
+  { src: '/images/lt-gallery-10.avif', alt: 'Fashion look 9' },
+  { src: '/images/lt-gallery-11.avif', alt: 'Fashion look 10' },
+];
+---
+
+<PageLayout title="Latest Trends in Young Fashion | Fashion Blog">
+  <Hero
+    title="Fresh looks, bold moves, all you"
+    subtitle="Dive into the latest street styles, sporty vibes, and party-ready fits. See how real trendsetters wear it—on the court, at the beach, and everywhere in between."
+    primaryCta={{ text: 'Read now', href: '#looks' }}
+    secondaryCta={{ text: 'See trends', href: '/fashion-trends-of-the-season' }}
+    images={[{ src: '/images/latest-trends-hero.avif', alt: 'Latest trends' }]}
+  />
+
+  <!-- Author/Article Meta -->
+  <section class="section">
+    <div class="container">
+      <div class="grid-layout tablet-1-column grid-gap-lg" style="align-items: center;">
+        <div>
+          <img src="/images/author-taylor.avif" alt="Taylor Kim" class="cover-image utility-aspect-3x2" style="border-radius: var(--radius-card);" loading="lazy" />
+        </div>
+        <div>
+          <div class="breadcrumbs">
+            <a href="/" class="text-link">Home</a>
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="2"></path></svg>
+            <a href="/fashion-insights" class="text-link secondary-text-link">Blog</a>
+          </div>
+          <h2 class="h2-heading">Fresh fits, bold moves</h2>
+          <div style="margin-top: var(--space-md);">
+            <div class="flex-horizontal flex-gap-xxs">
+              <span class="paragraph-sm utility-text-secondary">By</span>
+              <span class="paragraph-sm utility-text-black">Taylor Kim</span>
+            </div>
+            <div class="flex-horizontal flex-gap-xxs utility-margin-top-0-5rem">
+              <span class="paragraph-sm utility-text-secondary">June 7, 2024</span>
+              <span class="paragraph-sm utility-text-secondary">&bull;</span>
+              <span class="paragraph-sm utility-text-secondary">4 min read</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content Cards -->
+  <section class="section secondary-section" id="looks">
+    <div class="container">
+      <SectionHeading title="Fresh looks, bold moves" />
+      <div class="grid-layout desktop-4-column tablet-2-column-1 mobile-portrait-1-column grid-gap-md">
+        {looks.map((look) => (
+          <div class="card" style="border-radius: var(--radius-card); overflow: hidden;">
+            <div style="aspect-ratio: 4/3; overflow: hidden;">
+              <img src={look.image} alt={look.title} class="cover-image" loading="lazy" />
+            </div>
+            <div class="card-body">
+              <span class="tag" style="margin-bottom: var(--space-xs);">{look.title}</span>
+              <h3 class="h4-heading" style="font-size: var(--text-lg); margin-top: var(--space-xs);">{look.subtitle}</h3>
+              <p class="paragraph-sm utility-text-secondary utility-margin-bottom-0" style="margin-top: var(--space-xs);">{look.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <ImageGallery
+    title="Style in every snapshot"
+    subtitle="From courtside cool to beachside vibes, see how young trendsetters rock fresh looks wherever the day takes them."
+    images={galleryImages}
+  />
+
+  <!-- Bottom Feature -->
+  <section class="section secondary-section">
+    <div class="container">
+      <div class="grid-layout desktop-3-column tablet-1-column grid-gap-lg">
+        <div>
+          <h3 class="h4-heading">Spot the latest streetwear trends.</h3>
+          <p class="paragraph-sm utility-text-secondary" style="margin-top: var(--space-xs);">Fresh brands, hot takes, and the coolest looks—all in one place.</p>
+        </div>
+        <div>
+          <h3 class="h4-heading">Chill styles for every adventure.</h3>
+          <p class="paragraph-sm utility-text-secondary" style="margin-top: var(--space-xs);">From coffee runs to beach days, find your next effortless outfit.</p>
+        </div>
+        <div>
+          <h3 class="h4-heading">Outfits that own the night.</h3>
+          <p class="paragraph-sm utility-text-secondary" style="margin-top: var(--space-xs);">Bold fits, big energy—make every night one to remember.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <CTASection
+    title="Fresh looks, bold moves"
+    subtitle="Stay inspired with the latest trends."
+    ctaText="Subscribe"
+  />
+</PageLayout>

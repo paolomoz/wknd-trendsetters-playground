@@ -1,0 +1,101 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import Hero from '../components/Hero.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import ImageGallery from '../components/ImageGallery.astro';
+import CTASection from '../components/CTASection.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+
+const trendArticles = [
+  { title: 'Tennis looks that serve', category: 'Casual', date: 'May 12', image: '/images/casual-trend.avif', href: '/blog/latest-trends-young-casual-fashion' },
+  { title: 'Streetwear on the move', category: 'Sporty', date: 'May 10', image: '/images/beach-destination.avif', href: '/blog/fashion-trends-young-culture' },
+  { title: 'Sunkissed & styled', category: 'Beach', date: 'May 8', image: '/images/networking-event.avif', href: '/blog/fashion-trends-young-style' },
+  { title: 'Night out, bold fits', category: 'Party', date: 'May 5', image: '/images/party-accessories.avif', href: '/blog/fashion-blog-post' },
+];
+
+const heroImages = [
+  { src: '/images/cycling-event.avif', alt: 'Cycling event' },
+  { src: '/images/hero-music-concert.avif', alt: 'Music concert' },
+  { src: '/images/party-vacation.avif', alt: 'Party vacation' },
+];
+
+const galleryImages = [
+  { src: '/images/game-characters.avif', alt: 'Gaming style' },
+  { src: '/images/gallery-2.avif', alt: 'Concert fans' },
+  { src: '/images/concert-crowd.avif', alt: 'Crowd style' },
+  { src: '/images/hero-hiphop-dance.avif', alt: 'Hip-hop dance' },
+];
+---
+
+<PageLayout title="Fashion Trends for Young Adults - Fashion Blog">
+  <Hero
+    title="Fresh fits, bold moves. Style that never sleeps"
+    subtitle="Dive into the latest streetwear, sport-inspired looks, and party-ready outfits. See how real people rock new brands while living their best lives—on the court, at the beach, or out all night."
+    primaryCta={{ text: 'See trends', href: '#trends' }}
+    secondaryCta={{ text: 'Read more', href: '/fashion-insights' }}
+    images={heroImages}
+  />
+
+  <!-- Trend Sections -->
+  <section class="section">
+    <div class="container">
+      <div class="grid-layout desktop-3-column tablet-1-column grid-gap-xxl">
+        <div>
+          <img src="/images/casual-trend.avif" alt="Tennis looks" class="cover-image utility-aspect-3x2" style="border-radius: var(--radius-card); margin-bottom: var(--space-lg);" loading="lazy" />
+          <h3 class="h3-heading">Tennis looks, game strong</h3>
+          <p class="paragraph-sm utility-text-secondary" style="margin-top: var(--space-xs);">Crisp polos, bold sneakers, and clean lines—serve up your best style on and off the court.</p>
+        </div>
+        <div>
+          <img src="/images/beach-destination.avif" alt="Beach vibes" class="cover-image utility-aspect-3x2" style="border-radius: var(--radius-card); margin-bottom: var(--space-lg);" loading="lazy" />
+          <h3 class="h3-heading">Beach vibes, sun-kissed style</h3>
+          <p class="paragraph-sm utility-text-secondary" style="margin-top: var(--space-xs);">Breezy linen, bucket hats, and sandals—catch waves and compliments all day long.</p>
+        </div>
+        <div>
+          <img src="/images/party-accessories.avif" alt="Party nights" class="cover-image utility-aspect-3x2" style="border-radius: var(--radius-card); margin-bottom: var(--space-lg);" loading="lazy" />
+          <h3 class="h3-heading">Party nights, trend on</h3>
+          <p class="paragraph-sm utility-text-secondary" style="margin-top: var(--space-xs);">Neon accents, metallics, and statement jackets—light up the night with your look.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Young Style -->
+  <section class="section secondary-section">
+    <div class="container">
+      <SectionHeading title="Young style, real stories" subtitle="Dive into the latest looks, street style inspo, and stories from the coolest scenes." />
+    </div>
+  </section>
+
+  <!-- Trending Now -->
+  <section class="section" id="trends">
+    <div class="container">
+      <SectionHeading title="Trends for every vibe" />
+      <div class="grid-layout desktop-4-column tablet-2-column-1 mobile-portrait-1-column grid-gap-md">
+        {trendArticles.map((article) => (
+          <ArticleCard
+            title={article.title}
+            category={article.category}
+            date={article.date}
+            image={article.image}
+            href={article.href}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <ImageGallery
+    title="Style in every snapshot"
+    subtitle="Trendy looks, real moments"
+    images={galleryImages}
+    variant="secondary"
+  />
+
+  <!-- CTA -->
+  <CTASection
+    title="Fresh fits, bold moves"
+    subtitle="Discover your next look."
+    ctaText="Subscribe"
+  />
+</PageLayout>

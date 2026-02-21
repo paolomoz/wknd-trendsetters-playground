@@ -1,0 +1,32 @@
+---
+interface Props {
+  name: string;
+  organization: string;
+  quote: string;
+  avatar: string;
+}
+
+const { name, organization, quote, avatar } = Astro.props;
+---
+
+<div class="testimonial-card">
+  <div class="flex-horizontal flex-gap-sm y-center" style="margin-bottom: var(--space-lg);">
+    <div class="avatar">
+      <img src={avatar} alt={name} class="cover-image" loading="lazy" />
+    </div>
+    <div>
+      <div class="paragraph-sm utility-margin-bottom-0"><strong>{name}</strong></div>
+      <div class="paragraph-sm utility-text-secondary utility-margin-bottom-0">{organization}</div>
+    </div>
+  </div>
+  <p class="utility-margin-bottom-0">&ldquo;{quote}&rdquo;</p>
+</div>
+
+<style>
+  .testimonial-card {
+    padding: var(--space-xl);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-card);
+    height: 100%;
+  }
+</style>

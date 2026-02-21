@@ -1,0 +1,69 @@
+---
+interface TabItem {
+  name: string;
+  role: string;
+  quote: string;
+  image: string;
+  avatarImage: string;
+}
+
+interface Props {
+  tabs: TabItem[];
+}
+
+const { tabs } = Astro.props;
+---
+
+<div class="tabs-wrapper">
+  <div class="tabs-content">
+    {tabs.map((tab, i) => (
+      <div class={`tab-pane ${i === 0 ? 'is-active' : ''}`} data-tab-index={i}>
+        <div class="grid-layout tablet-1-column grid-gap-md" style="align-items: center;">
+          <div style="aspect-ratio: 4/3; border-radius: var(--radius-card); overflow: hidden;">
+            <img src={tab.image} alt={tab.name} class="cover-image" loading="lazy" />
+          </div>
+          <div>
+            <div style="margin-bottom: var(--space-xl);">
+              <div class="paragraph-xl utility-margin-bottom-0"><strong>{tab.name}</strong></div>
+              <div>{tab.role}</div>
+            </div>
+            <p class="paragraph-xl" style="margin-bottom: var(--space-2xl);">&ldquo;{tab.quote}&rdquo;</p>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <div class="grid-layout desktop-4-column tablet-2-column-1 mobile-portrait-1-column tab-menu">
+    {tabs.map((tab, i) => (
+      <button class={`tab-menu-link ${i === 0 ? 'is-active' : ''}`} data-tab-target={i}>
+        <div class="flex-horizontal y-center flex-gap-xs">
+          <div class="avatar">
+            <img src={tab.avatarImage} alt={tab.name} class="cover-image" loading="lazy" />
+          </div>
+          <div style="text-align: left;">
+            <div class="paragraph-sm utility-margin-bottom-0"><strong>{tab.name}</strong></div>
+            <div class="paragraph-sm utility-margin-bottom-0">{tab.role}</div>
+          </div>
+        </div>
+      </button>
+    ))}
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('[data-tab-target]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const idx = btn.getAttribute('data-tab-target');
+      const wrapper = btn.closest('.tabs-wrapper');
+      if (!wrapper || !idx) return;
+
+      wrapper.querySelectorAll('.tab-pane').forEach((p) => p.classList.remove('is-active'));
+      wrapper.querySelectorAll('.tab-menu-link').forEach((b) => b.classList.remove('is-active'));
+
+      const pane = wrapper.querySelector(`[data-tab-index="${idx}"]`);
+      if (pane) pane.classList.add('is-active');
+      btn.classList.add('is-active');
+    });
+  });
+</script>

@@ -1,0 +1,211 @@
+---
+const currentPath = Astro.url.pathname;
+---
+
+<div class="navbar">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="/" class="logo">
+        <div class="nav-logo-icon">
+          <svg width="100%" height="100%" viewBox="0 0 33 33" preserveAspectRatio="xMidYMid meet">
+            <path d="M28,0H5C2.24,0,0,2.24,0,5v23c0,2.76,2.24,5,5,5h23c2.76,0,5-2.24,5-5V5c0-2.76-2.24-5-5-5ZM29,17c-6.63,0-12,5.37-12,12h-1c0-6.63-5.37-12-12-12v-1c6.63,0,12-5.37,12-12h1c0,6.63,5.37,12,12,12v1Z" fill="currentColor"></path>
+          </svg>
+        </div>
+        <div class="paragraph-xl utility-margin-bottom-0 utility-text-all-caps" style="font-family: var(--font-heading); font-weight: 700; font-size: var(--text-sm);">Fashion Blog</div>
+      </a>
+
+      <nav class="nav-menu" id="nav-menu">
+        <ul class="nav-menu-list">
+          <!-- Trends mega menu -->
+          <li class="nav-menu-list-item" style="position: relative;">
+            <a class="nav-link">
+              <div>Trends</div>
+              <div class="nav-caret">
+                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 16 16" fill="none">
+                  <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </div>
+            </a>
+            <div class="mega-menu">
+              <ul class="mega-menu-grid">
+                <li>
+                  <h3 class="h6-heading utility-text-secondary" style="margin-bottom: 0.75rem;">Casual</h3>
+                  <ul>
+                    <li><a href="/fashion-trends-young-adults-casual-sport" class="mega-nav-link-item">
+                      <div class="icon-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 32 32" fill="currentColor"><path d="M16 4a12 12 0 1 0 12 12A12 12 0 0 0 16 4Zm0 22a10 10 0 1 1 10-10 10 10 0 0 1-10 10Z"></path><path d="M16 10a6 6 0 1 0 6 6 6 6 0 0 0-6-6Zm0 10a4 4 0 1 1 4-4 4 4 0 0 1-4 4Z"></path></svg>
+                      </div>
+                      <div>
+                        <div><strong>Streetwear</strong></div>
+                        <div class="paragraph-sm utility-text-secondary">Everyday looks, always fresh.</div>
+                      </div>
+                    </a></li>
+                    <li><a href="/fashion-trends-young-adults-casual-sport" class="mega-nav-link-item">
+                      <div class="icon-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 32 32" fill="currentColor"><path d="M16 4a12 12 0 1 0 12 12A12 12 0 0 0 16 4Zm0 22a10 10 0 1 1 10-10 10 10 0 0 1-10 10Z"></path></svg>
+                      </div>
+                      <div>
+                        <div><strong>Sporty</strong></div>
+                        <div class="paragraph-sm utility-text-secondary">Move easy, look sharp.</div>
+                      </div>
+                    </a></li>
+                    <li><a href="/fashion-trends-young-adults-casual-sport" class="mega-nav-link-item">
+                      <div class="icon-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 32 32" fill="currentColor"><path d="M16 4a12 12 0 1 0 12 12A12 12 0 0 0 16 4Zm0 22a10 10 0 1 1 10-10 10 10 0 0 1-10 10Z"></path></svg>
+                      </div>
+                      <div>
+                        <div><strong>Party</strong></div>
+                        <div class="paragraph-sm utility-text-secondary">Turn heads after dark.</div>
+                      </div>
+                    </a></li>
+                  </ul>
+                </li>
+                <li>
+                  <h3 class="h6-heading utility-text-secondary" style="margin-bottom: 0.75rem;">Now Trending</h3>
+                  <ul>
+                    <li><a href="/fashion-trends-young-adults" class="mega-nav-link-item">
+                      <div class="icon-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 32 32" fill="currentColor"><path d="M16 4a12 12 0 1 0 12 12A12 12 0 0 0 16 4Zm0 22a10 10 0 1 1 10-10 10 10 0 0 1-10 10Z"></path></svg>
+                      </div>
+                      <div>
+                        <div><strong>Tennis</strong></div>
+                        <div class="paragraph-sm utility-text-secondary">Serve up cool style.</div>
+                      </div>
+                    </a></li>
+                    <li><a href="/fashion-trends-young-adults" class="mega-nav-link-item">
+                      <div class="icon-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 32 32" fill="currentColor"><path d="M16 4a12 12 0 1 0 12 12A12 12 0 0 0 16 4Zm0 22a10 10 0 1 1 10-10 10 10 0 0 1-10 10Z"></path></svg>
+                      </div>
+                      <div>
+                        <div><strong>Beach</strong></div>
+                        <div class="paragraph-sm utility-text-secondary">Chill fits, sun vibes.</div>
+                      </div>
+                    </a></li>
+                    <li><a href="/fashion-trends-young-adults" class="mega-nav-link-item">
+                      <div class="icon-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 32 32" fill="currentColor"><path d="M16 4a12 12 0 1 0 12 12A12 12 0 0 0 16 4Zm0 22a10 10 0 1 1 10-10 10 10 0 0 1-10 10Z"></path></svg>
+                      </div>
+                      <div>
+                        <div><strong>Festival</strong></div>
+                        <div class="paragraph-sm utility-text-secondary">Dance, play, repeat.</div>
+                      </div>
+                    </a></li>
+                  </ul>
+                </li>
+                <li>
+                  <h3 class="h6-heading utility-text-secondary" style="margin-bottom: 0.75rem;">Inspo</h3>
+                  <ul>
+                    <li><a href="/fashion-insights" class="mega-nav-link-item">
+                      <div class="icon-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 32 32" fill="currentColor"><path d="m25.7 9.3l-7-7A.9.9 0 0 0 18 2H8a2.006 2.006 0 0 0-2 2v24a2.006 2.006 0 0 0 2 2h16a2.006 2.006 0 0 0 2-2V10a.9.9 0 0 0-.3-.7M18 4.4l5.6 5.6H18ZM24 28H8V4h8v6a2.006 2.006 0 0 0 2 2h6Z" stroke-linejoin="round"></path></svg>
+                      </div>
+                      <div>
+                        <div><strong>Style Files</strong></div>
+                        <div class="paragraph-sm utility-text-secondary">Curated looks, daily drops.</div>
+                      </div>
+                    </a></li>
+                    <li><a href="/fashion-insights" class="mega-nav-link-item">
+                      <div class="icon-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 32 32" fill="currentColor"><path d="m25.7 9.3l-7-7A.9.9 0 0 0 18 2H8a2.006 2.006 0 0 0-2 2v24a2.006 2.006 0 0 0 2 2h16a2.006 2.006 0 0 0 2-2V10a.9.9 0 0 0-.3-.7M18 4.4l5.6 5.6H18ZM24 28H8V4h8v6a2.006 2.006 0 0 0 2 2h6Z" stroke-linejoin="round"></path></svg>
+                      </div>
+                      <div>
+                        <div><strong>Blog Watch</strong></div>
+                        <div class="paragraph-sm utility-text-secondary">Fresh brands, hot takes.</div>
+                      </div>
+                    </a></li>
+                    <li><a href="/fashion-insights" class="mega-nav-link-item">
+                      <div class="icon-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 32 32" fill="currentColor"><path d="m25.7 9.3l-7-7A.9.9 0 0 0 18 2H8a2.006 2.006 0 0 0-2 2v24a2.006 2.006 0 0 0 2 2h16a2.006 2.006 0 0 0 2-2V10a.9.9 0 0 0-.3-.7M18 4.4l5.6 5.6H18ZM24 28H8V4h8v6a2.006 2.006 0 0 0 2 2h6Z" stroke-linejoin="round"></path></svg>
+                      </div>
+                      <div>
+                        <div><strong>How To</strong></div>
+                        <div class="paragraph-sm utility-text-secondary">Trend tips, made easy.</div>
+                      </div>
+                    </a></li>
+                  </ul>
+                </li>
+                <li class="flex-horizontal">
+                  <a href="/case-studies" class="card-link inverse-card-link" style="display: flex; flex-direction: column; justify-content: center; flex: 1;">
+                    <div class="card-body">
+                      <div class="h3-heading" style="font-size: var(--text-xl);">Fresh fits, bold moves</div>
+                      <p class="paragraph-sm utility-text-inverse-secondary">See how trendsetters own every moment.</p>
+                      <div style="margin-top: auto; padding-top: var(--space-md);">
+                        <div class="text-button" style="color: var(--color-white);">
+                          <div>Discover</div>
+                          <div class="button-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 16 16" fill="none">
+                              <path d="M2 8H14.5M14.5 8L8.5 2M14.5 8L8.5 14" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path>
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="nav-menu-list-item">
+            <a href="/fashion-trends-of-the-season" class={"nav-link" + (currentPath === '/fashion-trends-of-the-season' ? ' is-active' : '')}>
+              <div>About</div>
+            </a>
+          </li>
+
+          <li class="nav-menu-list-item">
+            <a href="/fashion-insights" class={"nav-link" + (currentPath === '/fashion-insights' ? ' is-active' : '')}>
+              <div>Blog</div>
+            </a>
+          </li>
+
+          <li class="nav-menu-list-item">
+            <div class="nav-menu-dropdown">
+              <div class="nav-link" tabindex="0">
+                <div>Support</div>
+                <div class="nav-caret">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 16 16" fill="none">
+                    <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="nav-menu-dropdown-list">
+                <ul>
+                  <li><a href="/faq" class="nav-dropdown-link"><div class="button-label">Contact</div></a></li>
+                  <li><a href="/faq" class="nav-dropdown-link"><div class="button-label">FAQ</div></a></li>
+                </ul>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="nav-right">
+        <div class="button-group" style="margin-top: 0;">
+          <a href="#" class="button"><div class="button-label">Subscribe</div></a>
+        </div>
+      </div>
+
+      <button class="nav-mobile-menu-button" id="nav-toggle" aria-label="Toggle navigation">
+        <div class="icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g stroke-linecap="square" stroke-linejoin="miter" stroke-width="1.5" fill="none" stroke="currentColor" stroke-miterlimit="10">
+              <line x1="1" y1="12" x2="23" y2="12" stroke="currentColor"></line>
+              <line x1="1" y1="5" x2="23" y2="5"></line>
+              <line x1="1" y1="19" x2="23" y2="19"></line>
+            </g>
+          </svg>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const toggle = document.getElementById('nav-toggle');
+  const menu = document.getElementById('nav-menu');
+  if (toggle && menu) {
+    toggle.addEventListener('click', () => {
+      menu.classList.toggle('is-open');
+    });
+  }
+</script>

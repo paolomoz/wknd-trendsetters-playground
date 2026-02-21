@@ -1,0 +1,167 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import Hero from '../components/Hero.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import TabSection from '../components/TabSection.astro';
+import CTASection from '../components/CTASection.astro';
+import ImageGallery from '../components/ImageGallery.astro';
+import FAQAccordion from '../components/FAQAccordion.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+
+const heroImages = [
+  { src: '/images/hero-hiphop-dance.avif', alt: 'Hip-hop dance style' },
+  { src: '/images/hero-family-vacation.avif', alt: 'Family on vacation' },
+  { src: '/images/hero-music-concert.avif', alt: 'Music fans at concert' },
+];
+
+const articles = [
+  { title: 'Tennis style, redefined', category: 'Casual Cool', date: 'May 12', image: '/images/hero-hiphop-dance.avif', href: '/blog/latest-trends-young-casual-fashion' },
+  { title: 'Sunkissed and effortless', category: 'Beach Vibes', date: 'May 10', image: '/images/fundraising-event.avif', href: '/blog/fashion-trends-young-culture' },
+  { title: 'Party fits that pop', category: 'Night Out', date: 'May 8', image: '/images/hero-family-vacation.avif', href: '/blog/fashion-trends-young-style' },
+  { title: 'Game on, style up', category: 'Sport Mode', date: 'May 5', image: '/images/mobile-game-character.avif', href: '/blog/fashion-blog-post' },
+];
+
+const galleryImages = [
+  { src: '/images/hero-hiphop-dance.avif', alt: 'Hip-hop dance' },
+  { src: '/images/beach-destination.avif', alt: 'Beach destination' },
+  { src: '/images/concert-crowd.avif', alt: 'Concert crowd' },
+  { src: '/images/campus-life.avif', alt: 'Campus life' },
+  { src: '/images/gaming-tournaments.avif', alt: 'Gaming tournaments' },
+  { src: '/images/mobile-game-character.avif', alt: 'Mobile game character' },
+  { src: '/images/fashion-inspiration.avif', alt: 'Fashion inspiration' },
+  { src: '/images/campus-tour.avif', alt: 'Campus tour' },
+];
+
+const tabs = [
+  {
+    name: 'Alex Rivera',
+    role: 'Streetwear Enthusiast',
+    quote: 'Wearing new brands makes every day feel like a runway. I love mixing sporty vibes with bold colors—perfect for tennis or a night out!',
+    image: '/images/hero-hiphop-dance.avif',
+    avatarImage: '/images/avatar-alex.avif',
+  },
+  {
+    name: 'Taylor Kim',
+    role: 'Casual Style Blogger',
+    quote: "Fresh looks, comfy fits—my go-to for beach days and city strolls. These brands keep my style on point and effortless.",
+    image: '/images/tab-campus.avif',
+    avatarImage: '/images/avatar-taylor.avif',
+  },
+  {
+    name: 'Jordan Ellis',
+    role: 'Trend Spotter',
+    quote: "Nothing beats the confidence boost from a killer outfit. I'm always ready for spontaneous adventures in these cool threads.",
+    image: '/images/tab-staff.avif',
+    avatarImage: '/images/avatar-jordan.avif',
+  },
+  {
+    name: 'Morgan Blake',
+    role: 'Party Scene Curator',
+    quote: 'From rooftop parties to late-night hangs, these styles turn heads. Fashion should be fun, and this is pure fun!',
+    image: '/images/mobile-game-character.avif',
+    avatarImage: '/images/avatar-morgan.avif',
+  },
+];
+
+const faqItems = [
+  { question: 'How do I spot the latest trends?', answer: "We keep it fresh! Check our weekly trend roundups and street style snaps for what's hot right now." },
+  { question: 'Can I share my own outfit pics?', answer: 'Absolutely! Tag us on socials or use our upload form to get featured in our next style story.' },
+  { question: 'Where do you find your style inspo?', answer: "From city streets to beach parties, we're always on the lookout for bold looks and cool creators." },
+  { question: 'How can I join your community?', answer: "Sign up for our newsletter or jump into the comments—everyone's welcome to join the fun!" },
+];
+---
+
+<PageLayout title="WKND Trendsetters - Fresh Looks, Bold Stories, Real Life">
+  <Hero
+    title="Fresh looks, bold stories, real life"
+    subtitle="Dive into our latest style adventures—see how young trendsetters own every moment, from courtside to the dance floor."
+    primaryCta={{ text: 'See case', href: '/case-studies' }}
+    secondaryCta={{ text: 'All stories', href: '/fashion-insights' }}
+    images={heroImages}
+  />
+
+  <!-- Featured Case Study -->
+  <section class="section">
+    <div class="container">
+      <div class="grid-layout tablet-1-column grid-gap-lg" style="align-items: center;">
+        <div>
+          <img src="/images/adventure-spots.avif" alt="Thrilling adventure spots" class="cover-image utility-aspect-3x2" style="border-radius: var(--radius-card);" loading="lazy" />
+        </div>
+        <div>
+          <div class="breadcrumbs">
+            <a href="/" class="text-link">Home</a>
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="2"></path></svg>
+            <a href="/case-studies" class="text-link secondary-text-link">Case studies</a>
+          </div>
+          <h2 class="h2-heading">Fresh looks, bold moves, real stories</h2>
+          <div style="margin-top: var(--space-md);">
+            <div class="flex-horizontal flex-gap-xxs">
+              <span class="paragraph-sm utility-text-secondary">By</span>
+              <span class="paragraph-sm utility-text-black">Taylor Brooks</span>
+            </div>
+            <div class="flex-horizontal flex-gap-xxs utility-margin-top-0-5rem">
+              <span class="paragraph-sm utility-text-secondary">June 12, 2024</span>
+              <span class="paragraph-sm utility-text-secondary">&bull;</span>
+              <span class="paragraph-sm utility-text-secondary">4 min read</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <ImageGallery
+    title="Style in every snapshot"
+    subtitle="Peek the latest looks in action"
+    images={galleryImages}
+    variant="secondary"
+  />
+
+  <!-- Tabs / Testimonials -->
+  <section class="section">
+    <div class="container">
+      <TabSection tabs={tabs} />
+    </div>
+  </section>
+
+  <!-- Latest Articles -->
+  <section class="section secondary-section">
+    <div class="container">
+      <SectionHeading title="Latest articles" subtitle="Fresh looks, bold moves" />
+      <div class="grid-layout desktop-4-column tablet-2-column-1 mobile-portrait-1-column grid-gap-md">
+        {articles.map((article) => (
+          <ArticleCard
+            title={article.title}
+            category={article.category}
+            date={article.date}
+            image={article.image}
+            href={article.href}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section">
+    <div class="container">
+      <div class="grid-layout tablet-1-column grid-gap-xxl" style="align-items: start;">
+        <div>
+          <h2 class="h2-heading">Got questions? We've got answers.</h2>
+          <p class="subheading" style="margin-top: var(--space-md);">Fashion FAQs, answered fast</p>
+        </div>
+        <FAQAccordion items={faqItems} />
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <CTASection
+    title="Fresh looks, bold stories, real life"
+    subtitle="Dive into our latest case study: see how young trendsetters rock new brands from courtside to the dance floor. Discover the style, the vibe, and the impact—one story at a time."
+    ctaText="See more"
+    image="/images/networking-event.avif"
+    variant="overlay"
+  />
+</PageLayout>
