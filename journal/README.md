@@ -19,3 +19,4 @@ Each entry captures the human intent, the AI execution, and reflections on what 
 | 003 | 2026-02-21 | [Persistent Memory](./003-persistent-memory.md) | Made CLAUDE.md self-updating so operational knowledge accumulates across conversations |
 | 004 | 2026-02-21 | [Design System & Tooling](./004-design-system-and-tooling.md) | Integrated Spectrum 2 design system, refined /journal to be fully automatic and conversation-aware |
 | 005 | 2026-02-21 | [Config Hygiene](./005-config-hygiene.md) | Slimmed CLAUDE.md from 37 to 17 lines — reference files, don't inline content |
+| 006 | 2026-02-21 | [Cloudflare-First](./006-cloudflare-first.md) | Established Cloudflare as the default platform for all infrastructure |
