@@ -14,6 +14,10 @@ This is a playground clone of wknd-trendsetters for experimenting with managing 
 - Cloudflare Pages (via Wrangler)
 - Project name: `wknd-trendsetters-playground` (isolated from the original)
 
+## Self-Updating Instructions
+
+When you discover patterns, preferences, or operational knowledge that would be useful across future conversations (e.g., dev server quirks, user preferences, project conventions, things that failed), **add them to this CLAUDE.md file**. This file is the project's persistent memory — keep it current.
+
 ## Dev Server
 
-Run with: `npx astro dev`
+Run with: `nohup npx astro dev --port 4325 > /tmp/astro-playground.log 2>&1 &` (nohup required — background tasks without it get killed)
