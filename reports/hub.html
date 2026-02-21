@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reports Hub — WKND Trendsetters</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F8F8F8; color: #292929; line-height: 1.6; }
+
+  /* Header */
+  .header { background: #fff; border-bottom: 1px solid #E1E1E1; padding: 1.5rem 2rem; }
+  .header-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+  h1 { font-size: 1.5rem; font-weight: 800; color: #131313; }
+  .header-sub { color: #717171; font-size: 0.85rem; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 0.5rem; background: #f0f0f0; padding: 4px; border-radius: 8px; }
+  .tab { padding: 0.4rem 1rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #717171; transition: all 150ms ease; }
+  .tab.active { background: #fff; color: #131313; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .tab:hover:not(.active) { color: #292929; }
+
+  /* Container */
+  .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+
+  /* Timeline View */
+  .timeline { position: relative; padding-left: 2rem; }
+  .timeline::before { content: ''; position: absolute; left: 7px; top: 0; bottom: 0; width: 2px; background: #E1E1E1; }
+  .timeline-item { position: relative; margin-bottom: 1.5rem; }
+  .timeline-dot { position: absolute; left: -2rem; top: 0.6rem; width: 16px; height: 16px; border-radius: 50%; border: 3px solid #3B63FB; background: #fff; z-index: 1; }
+  .timeline-date { font-size: 0.75rem; color: #717171; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem; }
+
+  /* Cards */
+  .card { background: #fff; border: 1px solid #E1E1E1; border-radius: 8px; padding: 1.25rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: transform 150ms ease, box-shadow 150ms ease; display: block; text-decoration: none; color: inherit; }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .card-title { font-size: 1.1rem; font-weight: 700; color: #131313; margin-bottom: 0.25rem; }
+  .card-summary { font-size: 0.85rem; color: #717171; }
+  .card-footer { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
+  .badge { display: inline-block; padding: 0.15rem 0.6rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
+  .badge-audit { background: #EFF6FF; color: #2563EB; }
+  .badge-brand { background: #F5F3FF; color: #7C3AED; }
+  .badge-content { background: #ECFDF5; color: #059669; }
+  .badge-infrastructure { background: #FFF7ED; color: #EA580C; }
+  .badge-validation { background: #FFFBEB; color: #D97706; }
+
+  /* Mind Map View */
+  .mindmap { display: none; }
+  .mindmap.active { display: block; }
+  .timeline-view { display: block; }
+  .timeline-view.hidden { display: none; }
+
+  .map-container { position: relative; min-height: 500px; }
+  .map-node { position: absolute; background: #fff; border: 2px solid #E1E1E1; border-radius: 12px; padding: 1rem 1.25rem; min-width: 200px; max-width: 260px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); cursor: pointer; text-decoration: none; color: inherit; transition: all 150ms ease; }
+  .map-node:hover { border-color: #3B63FB; transform: scale(1.03); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+  .map-node-title { font-size: 0.9rem; font-weight: 700; color: #131313; }
+  .map-node-desc { font-size: 0.75rem; color: #717171; margin-top: 0.25rem; }
+  .map-center { position: absolute; background: #131313; color: #fff; border-radius: 16px; padding: 1.25rem 1.5rem; text-align: center; box-shadow: 0 8px 24px rgba(0,0,0,0.15); z-index: 2; }
+  .map-center-title { font-size: 1.1rem; font-weight: 800; }
+  .map-center-sub { font-size: 0.8rem; color: rgba(255,255,255,0.7); margin-top: 0.25rem; }
+
+  /* SVG connections */
+  .map-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+  .map-line { stroke: #E1E1E1; stroke-width: 2; fill: none; stroke-dasharray: 6 4; }
+
+  /* Empty state */
+  .empty-note { text-align: center; padding: 3rem; color: #717171; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div>
+      <h1>Reports Hub</h1>
+      <div class="header-sub">WKND Trendsetters Playground</div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="showView('timeline')">Timeline</button>
+      <button class="tab" onclick="showView('mindmap')">Mind Map</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ============ TIMELINE VIEW ============ -->
+  <div class="timeline-view" id="timeline-view">
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">February 21, 2026</div>
+        <a href="content-gaps.html" class="card">
+          <div class="card-title">Content Gap Assessment</div>
+          <div class="card-summary">Navigation link audit: 9 missing pages, 15 dead links, 3 orphan pages. Identified duplicate nav items and non-functional footer.</div>
+          <div class="card-footer">
+            <span class="badge badge-audit">Audit</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">February 21, 2026</div>
+        <a href="brand-assessment.html" class="card">
+          <div class="card-title">Brand Assessment</div>
+          <div class="card-summary">Brand identity coverage analysis across 8 dimensions. Found strong voice and visual identity. Proposed 7-file brand guidelines system.</div>
+          <div class="card-footer">
+            <span class="badge badge-brand">Brand</span>
+          </div>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ MIND MAP VIEW ============ -->
+  <div class="mindmap" id="mindmap-view">
+    <div class="map-container" style="height: 520px;">
+
+      <svg class="map-svg" viewBox="0 0 1200 520" preserveAspectRatio="xMidYMid meet">
+        <!-- Center to Content Gaps -->
+        <line class="map-line" x1="520" y1="260" x2="160" y2="120" />
+        <!-- Center to Brand Assessment -->
+        <line class="map-line" x1="680" y1="260" x2="880" y2="120" />
+        <!-- Content Gaps to Brand Assessment (related) -->
+        <line class="map-line" x1="300" y1="120" x2="820" y2="120" style="stroke: #3B63FB; opacity: 0.3;" />
+        <!-- Center to future nodes -->
+        <line class="map-line" x1="520" y1="290" x2="160" y2="400" style="opacity: 0.2;" />
+        <line class="map-line" x1="680" y1="290" x2="880" y2="400" style="opacity: 0.2;" />
+        <line class="map-line" x1="600" y1="310" x2="540" y2="440" style="opacity: 0.2;" />
+      </svg>
+
+      <!-- Center node -->
+      <div class="map-center" style="left: 50%; top: 50%; transform: translate(-50%, -50%);">
+        <div class="map-center-title">WKND Trendsetters</div>
+        <div class="map-center-sub">Site Management via LLM</div>
+      </div>
+
+      <!-- Content Gaps -->
+      <a href="content-gaps.html" class="map-node" style="left: 60px; top: 70px;">
+        <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.25rem;">
+          <span class="badge badge-audit">Audit</span>
+        </div>
+        <div class="map-node-title">Content Gaps</div>
+        <div class="map-node-desc">9 missing pages, 15 dead links, 3 orphan pages</div>
+      </a>
+
+      <!-- Brand Assessment -->
+      <a href="brand-assessment.html" class="map-node" style="right: 60px; top: 70px;">
+        <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.25rem;">
+          <span class="badge badge-brand">Brand</span>
+        </div>
+        <div class="map-node-title">Brand Assessment</div>
+        <div class="map-node-desc">Identity coverage, voice & visual analysis, guidelines proposal</div>
+      </a>
+
+      <!-- Future placeholders -->
+      <div class="map-node" style="left: 60px; bottom: 50px; opacity: 0.3; pointer-events: none; border-style: dashed;">
+        <div class="map-node-title" style="color: #aaa;">Content Expansion</div>
+        <div class="map-node-desc">Upcoming</div>
+      </div>
+
+      <div class="map-node" style="right: 60px; bottom: 50px; opacity: 0.3; pointer-events: none; border-style: dashed;">
+        <div class="map-node-title" style="color: #aaa;">Brand Validation</div>
+        <div class="map-node-desc">Upcoming</div>
+      </div>
+
+      <div class="map-node" style="left: 50%; bottom: 30px; transform: translateX(-50%); opacity: 0.3; pointer-events: none; border-style: dashed;">
+        <div class="map-node-title" style="color: #aaa;">Infrastructure</div>
+        <div class="map-node-desc">Upcoming</div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showView(view) {
+  const tabs = document.querySelectorAll('.tab');
+  tabs.forEach(t => t.classList.remove('active'));
+
+  if (view === 'timeline') {
+    document.getElementById('timeline-view').classList.remove('hidden');
+    document.getElementById('mindmap-view').classList.remove('active');
+    tabs[0].classList.add('active');
+  } else {
+    document.getElementById('timeline-view').classList.add('hidden');
+    document.getElementById('mindmap-view').classList.add('active');
+    tabs[1].classList.add('active');
+  }
+}
+</script>
+
+</body>
+</html>
