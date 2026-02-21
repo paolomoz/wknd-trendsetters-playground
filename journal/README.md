@@ -17,3 +17,4 @@ Each entry captures the human intent, the AI execution, and reflections on what 
 | 001 | 2026-02-21 | [Project Setup](./001-project-setup.md) | Cloned the original site into an isolated playground with independent Cloudflare infrastructure |
 | 002 | 2026-02-21 | [Content Gap Assessment](./002-content-gap-assessment.md) | Audited all navigation links, found 9 missing pages and 15 dead links. Set up auto-journaling with CLAUDE.md |
 | 003 | 2026-02-21 | [Persistent Memory](./003-persistent-memory.md) | Made CLAUDE.md self-updating so operational knowledge accumulates across conversations |
+| 004 | 2026-02-21 | [Design System & Tooling](./004-design-system-and-tooling.md) | Integrated Spectrum 2 design system, refined /journal to be fully automatic and conversation-aware |
