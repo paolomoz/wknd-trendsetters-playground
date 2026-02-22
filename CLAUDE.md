@@ -27,3 +27,8 @@ Astro static site on Cloudflare Pages (Wrangler). Project name: `wknd-trendsette
 - **Live domain:** `wknd-trendsetters.pages.dev` (not `-playground` — the CF Pages project is `wknd-trendsetters`)
 - **PSI API key:** `GOOGLE_PSI_API_KEY` in `.env`. Required for PageSpeed Insights — anonymous quota is unreliable.
 - **Report HTML polish:** Reports must match hub/mindmap patterns: Source Sans Pro font via Google Fonts, CSS custom properties (design tokens), `:focus-visible`, `prefers-reduced-motion`, `shadow-emphasized` on cards.
+- **Astro config:** `trailingSlash: 'never'` + `build: { format: 'file' }` — generates flat HTML files (`page.html` not `page/index.html`), avoids Cloudflare 308 redirects. Both settings required in Astro 5.x.
+- **Fonts are self-hosted:** woff2 files in `public/fonts/`, `@font-face` inlined in `BaseLayout.astro`. Do NOT re-add Google Fonts external links.
+- **Images:** All .avif at 800px max width, quality 50. Use `sharp` for resizing/compression.
+- **Color contrast:** `--color-gray-500` is `#666666` globally but overridden to `#999999` inside `.inverse-footer` for WCAG AA on black backgrounds. Don't use a single gray for both light and dark contexts.
+- **PageSpeed status:** All 15 pages score 100/100/100/100 (Perf/A11y/BP/SEO). Run `node scripts/pagespeed-collect.mjs --force` after any change that could affect scores.
