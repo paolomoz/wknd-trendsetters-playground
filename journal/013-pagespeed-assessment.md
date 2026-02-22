@@ -101,3 +101,30 @@ After the initial build, a systematic `/impeccable:polish` pass was applied to t
 - Added live domain (`wknd-trendsetters.pages.dev`, not `-playground`)
 - Added PSI API key reference
 - Added report HTML polish conventions for future reports
+
+---
+
+## Deploy & Rerun
+
+After the polish pass, the user requested a deploy + fresh PageSpeed rerun to get post-deploy scores.
+
+### Process
+1. `npx astro build` — 15 pages built in 1.01s
+2. `npx wrangler pages deploy dist --project-name wknd-trendsetters` — uploaded 16 new files (80 cached)
+3. Waited for propagation, verified 200 on production
+4. `node scripts/pagespeed-collect.mjs --force` — all 15 pages collected successfully
+
+### Post-Deploy Results
+
+| Category | Pre-Deploy | Post-Deploy | Delta |
+|---|---|---|---|
+| Performance | 90 | 90 | — |
+| Accessibility | 95 | 96 | +1 |
+| Best Practices | 100 | 100 | — |
+| SEO | 98 | 98 | — |
+
+Scores are essentially identical — the +1 A11y is within normal Lighthouse variability. This confirms the site's performance characteristics are stable and not an artifact of caching or CDN warming.
+
+### Thesis Note
+
+The deploy-test cycle — build, deploy to edge CDN, run external performance audit, review results — took under 4 minutes end-to-end. In a traditional workflow this would be: merge PR, wait for CI build, wait for deploy pipeline, manually trigger Lighthouse CI or wait for scheduled run, check a separate dashboard. The LLM collapsed five handoffs into a single conversation turn.
