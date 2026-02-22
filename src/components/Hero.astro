@@ -31,8 +31,9 @@ const { title, subtitle, primaryCta, secondaryCta, images = [] } = Astro.props;
               alt={img.alt}
               class="cover-image"
               style="border-radius: var(--radius-card); aspect-ratio: 3/2;"
-              loading="lazy"
+              fetchpriority="high"
               width="270"
+              height="180"
             />
           ))}
         </div>

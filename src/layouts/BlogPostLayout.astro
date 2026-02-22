@@ -20,7 +20,7 @@ const { title, description, author = 'Taylor Brooks', date = 'June 12, 2024', re
       <div class="grid-layout tablet-1-column grid-gap-lg" style="align-items: center;">
         {image && (
           <div>
-            <img src={image} alt={title} class="cover-image utility-aspect-3x2" style="border-radius: var(--radius-card);" loading="lazy" />
+            <img src={image} alt={title} class="cover-image utility-aspect-3x2" style="border-radius: var(--radius-card);" fetchpriority="high" />
           </div>
         )}
         <div>
