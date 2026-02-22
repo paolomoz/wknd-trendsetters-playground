@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mind Map — WKND Trendsetters</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ─── Design System: Spectrum 2 (DESIGN.md) ─── */
+  :root {
+    --bg:             #F8F8F8;
+    --bg-2:           #FFFFFF;
+    --primary:        #3B63FB;
+    --primary-fg:     #FFFFFF;
+    --fg:             #292929;
+    --fg-heading:     #131313;
+    --fg-muted:       #717171;
+    --border:         #E1E1E1;
+    --positive:       #12805C;
+    --notice:         #E68619;
+    --negative:       #D7373F;
+    --shadow-emphasized: 0 2px 8px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04), 0 0 1px rgba(0,0,0,0.08);
+    --shadow-elevated:  0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08), 0 0 1px rgba(0,0,0,0.08);
+    --font: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); background: var(--bg); color: var(--fg); line-height: 1.5; font-size: 14px; }
+
+  /* ─── Focus ─── */
+  :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+  /* ─── Header ─── */
+  .header { background: var(--bg-2); border-bottom: 1px solid var(--border); padding: 16px 24px; }
+  .header-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+  h1 { font-size: 25px; font-weight: 700; line-height: 30px; color: var(--fg-heading); }
+  .header-sub { color: var(--fg-muted); font-size: 14px; margin-top: 2px; }
+
+  /* ─── Nav ─── */
+  .nav { display: flex; gap: 4px; padding: 3px; background: var(--bg); border-radius: 9999px; border: 1px solid var(--border); }
+  .nav a {
+    padding: 6px 16px; border-radius: 9999px; font-size: 14px; font-weight: 600;
+    text-decoration: none; color: var(--fg-muted);
+    transition: all 150ms ease-out;
+  }
+  .nav a.active { background: var(--primary); color: var(--primary-fg); box-shadow: var(--shadow-emphasized); }
+  .nav a:hover:not(.active) { color: var(--fg-heading); background: rgba(0,0,0,0.04); }
+
+  /* ─── Container ─── */
+  .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+
+  /* ═══════════════════════════════
+     MIND MAP — Spectrum 2 Aesthetic
+     ═══════════════════════════════ */
+  .map-canvas {
+    position: relative;
+    width: 100%;
+    height: 580px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--shadow-emphasized);
+    overflow: hidden;
+  }
+
+  /* Subtle grid background */
+  .map-canvas::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, var(--border) 0.75px, transparent 0.75px);
+    background-size: 32px 32px;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* ─── Edges ─── */
+  .map-edges { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+  .map-edge { fill: none; stroke-linecap: round; transition: opacity 200ms ease-out, stroke-width 200ms ease-out, filter 200ms ease-out; }
+  .map-edge-related { stroke: var(--border); stroke-width: 1.5; stroke-dasharray: 5 7; }
+  .map-edge-derived { stroke: var(--primary); stroke-width: 2.5; stroke-dasharray: 0; opacity: 0.35; }
+
+  /* Arrow markers — larger, bolder */
+  .map-arrow { fill: var(--primary); opacity: 0.7; }
+
+  /* ─── Nodes ─── */
+  .map-node-w {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+  }
+
+  .map-node {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    min-width: 155px;
+    max-width: 220px;
+    box-shadow: var(--shadow-emphasized);
+    transition: transform 200ms ease-out, box-shadow 200ms ease-out, border-color 200ms ease-out;
+  }
+  .map-node:hover {
+    transform: scale(1.03);
+    box-shadow: var(--shadow-elevated);
+    border-color: var(--primary);
+  }
+
+  .map-node-cat {
+    display: inline-flex;
+    align-items: center;
+    padding: 1px 8px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .map-node-cat.audit      { background: #EFF6FF; color: #2563EB; }
+  .map-node-cat.brand      { background: #F5F3FF; color: #7C3AED; }
+  .map-node-cat.validation { background: #FFF7ED; color: #EA580C; }
+  .map-node-cat.hub        { background: #3B63FB; color: #fff; }
+
+  .map-node-title { font-size: 14px; font-weight: 700; color: var(--fg-heading); line-height: 1.3; }
+  .map-node-sub { font-size: 13px; color: var(--fg-muted); margin-top: 4px; line-height: 1.4; }
+
+  /* ─── Hub ─── */
+  .map-node.hub {
+    min-width: 190px;
+    border: 2px solid var(--primary);
+    background: linear-gradient(135deg, var(--bg-2) 0%, #F5F9FF 100%);
+    position: relative;
+  }
+  .map-node.hub:hover { border-color: var(--primary); }
+  .map-node.hub .map-node-title { font-size: 16px; font-weight: 800; }
+
+  /* Soft accent ring */
+  .map-node.hub::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 14px;
+    border: 1.5px solid rgba(59,99,251,0.12);
+    pointer-events: none;
+    animation: hubRing 4s ease-in-out infinite;
+  }
+  @keyframes hubRing {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.02); }
+  }
+
+  /* ─── Placeholder ─── */
+  .map-node.placeholder {
+    background: var(--bg);
+    border: 1.5px dashed var(--border);
+    box-shadow: none;
+    cursor: default;
+    min-width: 130px;
+    opacity: 0.6;
+  }
+  .map-node.placeholder:hover { transform: none; box-shadow: none; border-color: var(--border); }
+  .map-node.placeholder .map-node-title { color: var(--fg-muted); font-size: 13px; }
+  .map-node.placeholder .map-node-sub { color: #b0b0b0; }
+  .map-node.placeholder .map-node-cat { background: var(--bg); color: var(--fg-muted); border: 1px solid var(--border); }
+
+  /* ─── Hover fading (unconnected) ─── */
+  .map-node-w.faded { opacity: 0.12; transition: opacity 200ms ease-out; }
+  .map-node-w.faded .map-node { pointer-events: none; }
+  .map-edge.faded { opacity: 0.04 !important; filter: none !important; stroke-width: 1.5 !important; }
+
+  /* ─── Edge highlight on hover ─── */
+  .map-edge.highlighted-related {
+    stroke: var(--primary);
+    stroke-width: 2.5;
+    opacity: 0.7;
+    filter: drop-shadow(0 0 3px rgba(59,99,251,0.3));
+    animation: dashFlow 0.8s linear infinite;
+  }
+  .map-edge.highlighted-derived {
+    stroke-width: 3.5;
+    opacity: 0.85;
+    filter: drop-shadow(0 0 5px rgba(59,99,251,0.4));
+    animation: derivedPulse 1.2s ease-in-out infinite;
+  }
+
+  @keyframes dashFlow {
+    to { stroke-dashoffset: -12; }
+  }
+  @keyframes derivedPulse {
+    0%, 100% { opacity: 0.65; stroke-width: 3; }
+    50% { opacity: 1; stroke-width: 4; }
+  }
+
+  /* ─── Entrance ─── */
+  .map-node-w { opacity: 0; transform: translate(-50%, -50%) translateY(12px); }
+  .map-node-w.entered { opacity: 1; transform: translate(-50%, -50%) translateY(0); transition: opacity 0.35s ease-out, transform 0.35s ease-out; }
+  .map-edge { opacity: 0; }
+  .map-edge.entered { transition: opacity 0.3s ease-out, stroke-width 200ms ease-out, filter 200ms ease-out; }
+  .map-edge-related.entered { opacity: 0.4; }
+  .map-edge-derived.entered { opacity: 0.35; }
+
+  /* ─── Legend ─── */
+  .map-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; flex-wrap: wrap; gap: 12px; }
+  .map-legend { display: flex; gap: 20px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--fg-muted); font-weight: 500; }
+  .legend-swatch { width: 20px; height: 2.5px; border-radius: 2px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .map-hint { font-size: 13px; color: #b0b0b0; }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 768px) {
+    .map-canvas { height: 480px; }
+    .map-node { min-width: 120px; max-width: 165px; padding: 10px 12px; }
+    .map-node-title { font-size: 12px; }
+    .map-node.hub { min-width: 155px; }
+    .map-node.hub .map-node-title { font-size: 14px; }
+    .container { padding: 24px 16px; }
+    .header-inner { flex-direction: column; align-items: flex-start; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div>
+      <h1>Reports Hub</h1>
+      <div class="header-sub">WKND Trendsetters Playground</div>
+    </div>
+    <nav class="nav" aria-label="View navigation">
+      <a href="hub.html">Timeline</a>
+      <a href="mindmap.html" class="active" aria-current="page">Mind Map</a>
+    </nav>
+  </div>
+</div>
+
+<div class="container">
+  <div class="map-canvas" id="map-canvas">
+    <svg class="map-edges" id="map-edges">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="10" markerHeight="8" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 3.5 L 0 7 Z" class="map-arrow" />
+        </marker>
+        <marker id="arrow-highlight" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="12" markerHeight="9" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 3.5 L 0 7 Z" fill="var(--primary)" opacity="1" />
+        </marker>
+      </defs>
+    </svg>
+  </div>
+  <div class="map-footer">
+    <div class="map-legend">
+      <div class="legend-item"><div class="legend-dot" style="background: var(--primary);"></div> Hub</div>
+      <div class="legend-item"><div class="legend-dot" style="background: #2563EB; opacity: 0.6;"></div> Audit</div>
+      <div class="legend-item"><div class="legend-dot" style="background: #7C3AED; opacity: 0.6;"></div> Brand</div>
+      <div class="legend-item"><div class="legend-dot" style="background: #EA580C; opacity: 0.6;"></div> Validation</div>
+      <div class="legend-item"><div class="legend-swatch" style="background: var(--primary);"></div> Derived from</div>
+      <div class="legend-item"><div class="legend-swatch" style="background: var(--border);"></div> Related</div>
+    </div>
+    <div class="map-hint">Hover to explore &middot; Click to open</div>
+  </div>
+</div>
+
+<script>
+/* ──────────────────────────────
+   DATA
+   ────────────────────────────── */
+const NODES = [
+  { id: 'hub',              label: 'WKND Trendsetters',    sub: 'Site Management via LLM',              cat: 'hub',        catLabel: 'Hub',        href: null,                           x: 50, y: 48 },
+  { id: 'content-gaps',     label: 'Content Gaps',         sub: '9 missing pages, 15 dead links',       cat: 'audit',      catLabel: 'Audit',      href: 'content-gaps.html',            x: 14, y: 22 },
+  { id: 'brand-assessment', label: 'Brand Assessment',     sub: 'Voice & visual analysis, 7-file system', cat: 'brand',    catLabel: 'Brand',      href: 'brand-assessment.html',        x: 79, y: 18 },
+  { id: 'brand-validation', label: 'Brand Validation',     sub: 'Benchmark 7.5, GPT-4o 8.5, L3/5',     cat: 'validation', catLabel: 'Validation', href: 'brand-validation.html',        x: 83, y: 73 },
+  { id: 'a11y-icons',       label: 'A11y & Iconography',   sub: 'WCAG AA, ARIA, icons. 2\u21928, 0\u21927', cat: 'validation', catLabel: 'Validation', href: 'accessibility-iconography.html', x: 16, y: 76 },
+  { id: 'infrastructure',   label: 'Infrastructure',       sub: 'Upcoming',                              cat: 'placeholder', catLabel: 'Planned',   href: null,                           x: 50, y: 92 },
+];
+
+const EDGES = [
+  { src: 'hub', tgt: 'content-gaps',     type: 'related',  curve: 0 },
+  { src: 'hub', tgt: 'brand-assessment', type: 'related',  curve: 0 },
+  { src: 'hub', tgt: 'infrastructure',   type: 'related',  curve: 0 },
+  { src: 'content-gaps', tgt: 'brand-assessment',  type: 'derived', curve: -30 },
+  { src: 'brand-assessment', tgt: 'brand-validation', type: 'derived', curve: 20 },
+  { src: 'brand-validation', tgt: 'a11y-icons',       type: 'derived', curve: -40 },
+  { src: 'brand-assessment', tgt: 'a11y-icons',       type: 'derived', curve: 15 },
+];
+
+/* ──────────────────────────────
+   ADJACENCY
+   ────────────────────────────── */
+const adj = {};
+NODES.forEach(n => adj[n.id] = new Set());
+EDGES.forEach(e => { adj[e.src].add(e.tgt); adj[e.tgt].add(e.src); });
+
+/* ──────────────────────────────
+   RENDER NODES
+   ────────────────────────────── */
+const canvas  = document.getElementById('map-canvas');
+const svgEl   = document.getElementById('map-edges');
+const nodeEls = [];
+
+NODES.forEach(n => {
+  const w = document.createElement('div');
+  w.className = 'map-node-w';
+  w.dataset.id = n.id;
+  w.style.left = n.x + '%';
+  w.style.top  = n.y + '%';
+
+  const isLink = n.href && n.cat !== 'placeholder';
+  const el = document.createElement(isLink ? 'a' : 'div');
+  el.className = `map-node ${n.cat}`;
+  if (isLink) el.href = n.href;
+
+  el.innerHTML =
+    `<div class="map-node-cat ${n.cat}">${n.catLabel}</div>` +
+    `<div class="map-node-title">${n.label}</div>` +
+    (n.sub ? `<div class="map-node-sub">${n.sub}</div>` : '');
+
+  w.appendChild(el);
+  canvas.appendChild(w);
+  nodeEls.push(w);
+
+  if (n.cat === 'placeholder') return;
+
+  w.addEventListener('mouseenter', () => {
+    const connected = adj[n.id];
+    /* Fade unconnected nodes */
+    nodeEls.forEach(ow => {
+      const oid = ow.dataset.id;
+      if (oid !== n.id && !connected.has(oid)) ow.classList.add('faded');
+    });
+    /* Fade unconnected edges, highlight connected ones */
+    document.querySelectorAll('.map-edge').forEach(p => {
+      const isMine = p.dataset.src === n.id || p.dataset.tgt === n.id;
+      if (!isMine) {
+        p.classList.add('faded');
+      } else {
+        const edgeType = p.classList.contains('map-edge-derived') ? 'derived' : 'related';
+        p.classList.add(edgeType === 'derived' ? 'highlighted-derived' : 'highlighted-related');
+        if (edgeType === 'derived') p.setAttribute('marker-end', 'url(#arrow-highlight)');
+      }
+    });
+  });
+
+  w.addEventListener('mouseleave', () => {
+    nodeEls.forEach(ow => ow.classList.remove('faded'));
+    document.querySelectorAll('.map-edge').forEach(p => {
+      p.classList.remove('faded', 'highlighted-related', 'highlighted-derived');
+      if (p.classList.contains('map-edge-derived')) p.setAttribute('marker-end', 'url(#arrow)');
+    });
+  });
+});
+
+/* ──────────────────────────────
+   EDGES
+   ────────────────────────────── */
+function drawEdges() {
+  const cw = canvas.offsetWidth;
+  const ch = canvas.offsetHeight;
+  svgEl.setAttribute('viewBox', `0 0 ${cw} ${ch}`);
+
+  /* Keep defs, clear paths */
+  svgEl.querySelectorAll('path.map-edge').forEach(p => p.remove());
+
+  const pos = {};
+  NODES.forEach(n => { pos[n.id] = { x: n.x / 100 * cw, y: n.y / 100 * ch }; });
+
+  EDGES.forEach(e => {
+    const s = pos[e.src], t = pos[e.tgt];
+    const dx = t.x - s.x, dy = t.y - s.y;
+    const len = Math.sqrt(dx * dx + dy * dy) || 1;
+    const px = -dy / len * e.curve, py = dx / len * e.curve;
+    const mx = (s.x + t.x) / 2 + px, my = (s.y + t.y) / 2 + py;
+
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', `M ${s.x} ${s.y} Q ${mx} ${my} ${t.x} ${t.y}`);
+    path.classList.add('map-edge', e.type === 'derived' ? 'map-edge-derived' : 'map-edge-related');
+    if (e.type === 'derived') path.setAttribute('marker-end', 'url(#arrow)');
+    path.dataset.src = e.src;
+    path.dataset.tgt = e.tgt;
+    svgEl.appendChild(path);
+  });
+}
+
+/* ──────────────────────────────
+   ENTRANCE
+   ────────────────────────────── */
+function animateEntrance() {
+  const hubI = nodeEls.findIndex(w => w.dataset.id === 'hub');
+  const order = [hubI, ...nodeEls.map((_, i) => i).filter(i => i !== hubI)];
+
+  order.forEach((idx, seq) => {
+    setTimeout(() => nodeEls[idx].classList.add('entered'), seq * 100);
+  });
+  setTimeout(() => {
+    document.querySelectorAll('.map-edge').forEach((p, i) => {
+      setTimeout(() => p.classList.add('entered'), i * 60);
+    });
+  }, order.length * 100 + 150);
+}
+
+/* ──────────────────────────────
+   INIT
+   ────────────────────────────── */
+drawEdges();
+requestAnimationFrame(animateEntrance);
+
+/* ──────────────────────────────
+   RESIZE
+   ────────────────────────────── */
+let rt;
+window.addEventListener('resize', () => {
+  clearTimeout(rt);
+  rt = setTimeout(drawEdges, 120);
+});
+</script>
+</body>
+</html>
