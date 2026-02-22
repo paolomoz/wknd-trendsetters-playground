@@ -32,3 +32,4 @@ Astro static site on Cloudflare Pages (Wrangler). Project name: `wknd-trendsette
 - **Images:** All .avif at 800px max width, quality 50. Use `sharp` for resizing/compression.
 - **Color contrast:** `--color-gray-500` is `#666666` globally but overridden to `#999999` inside `.inverse-footer` for WCAG AA on black backgrounds. Don't use a single gray for both light and dark contexts.
 - **PageSpeed status:** All 15 pages score 100/100/100/100 (Perf/A11y/BP/SEO). Run `node scripts/pagespeed-collect.mjs --force` after any change that could affect scores.
+- **Content graph:** Run `npm run content-graph` after adding/changing content to rebuild the semantic graph and report. Uses Voyage AI embeddings (`VOYAGE_API_KEY` in `.env`).
