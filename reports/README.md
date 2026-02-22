@@ -55,6 +55,15 @@ Each entry: `id`, `file`, `title`, `date`, `category`, `related` (IDs of connect
     "category": "validation",
     "summary": "WCAG 2.1 AA compliance: accessibility 2→8, iconography 0→7. CSS enforcement, ARIA fixes, validation scripts.",
     "related": ["brand-validation", "brand-assessment"]
+  },
+  {
+    "id": "pagespeed",
+    "file": "pagespeed.html",
+    "title": "PageSpeed Insights Assessment",
+    "date": "2026-02-22",
+    "category": "audit",
+    "summary": "Google Lighthouse analysis across 15 pages (mobile): Perf 90, A11y 95, Best Practices 100, SEO 97",
+    "related": ["content-gaps", "accessibility-iconography"]
   }
 ]
 ```

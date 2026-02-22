@@ -278,17 +278,19 @@ const NODES = [
   { id: 'brand-assessment', label: 'Brand Assessment',     sub: 'Voice & visual analysis, 7-file system', cat: 'brand',    catLabel: 'Brand',      href: 'brand-assessment.html',        x: 79, y: 18 },
   { id: 'brand-validation', label: 'Brand Validation',     sub: 'Benchmark 7.5, GPT-4o 8.5, L3/5',     cat: 'validation', catLabel: 'Validation', href: 'brand-validation.html',        x: 83, y: 73 },
   { id: 'a11y-icons',       label: 'A11y & Iconography',   sub: 'WCAG AA, ARIA, icons. 2\u21928, 0\u21927', cat: 'validation', catLabel: 'Validation', href: 'accessibility-iconography.html', x: 16, y: 76 },
-  { id: 'infrastructure',   label: 'Infrastructure',       sub: 'Upcoming',                              cat: 'placeholder', catLabel: 'Planned',   href: null,                           x: 50, y: 92 },
+  { id: 'pagespeed',         label: 'PageSpeed Insights',   sub: 'Perf 90, A11y 95, BP 100, SEO 97',     cat: 'audit',      catLabel: 'Audit',      href: 'pagespeed.html',               x: 50, y: 92 },
 ];
 
 const EDGES = [
   { src: 'hub', tgt: 'content-gaps',     type: 'related',  curve: 0 },
   { src: 'hub', tgt: 'brand-assessment', type: 'related',  curve: 0 },
-  { src: 'hub', tgt: 'infrastructure',   type: 'related',  curve: 0 },
+  { src: 'hub', tgt: 'pagespeed',         type: 'related',  curve: 0 },
   { src: 'content-gaps', tgt: 'brand-assessment',  type: 'derived', curve: -30 },
   { src: 'brand-assessment', tgt: 'brand-validation', type: 'derived', curve: 20 },
   { src: 'brand-validation', tgt: 'a11y-icons',       type: 'derived', curve: -40 },
   { src: 'brand-assessment', tgt: 'a11y-icons',       type: 'derived', curve: 15 },
+  { src: 'a11y-icons', tgt: 'pagespeed',      type: 'derived',  curve: -30 },
+  { src: 'content-gaps', tgt: 'pagespeed',    type: 'related',  curve: 30 },
 ];
 
 /* ──────────────────────────────

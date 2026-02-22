@@ -24,3 +24,6 @@ Thumbs.db
 
 # scraped content (temporary)
 scraped/
+
+# raw API data (ephemeral)
+data/

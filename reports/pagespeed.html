@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PageSpeed Insights Assessment &mdash; WKND Trendsetters</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F8F8F8; color: #292929; line-height: 1.6; }
+  .header { background: #fff; border-bottom: 1px solid #E1E1E1; padding: 1.5rem 2rem; }
+  .header-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  h1 { font-size: 2rem; font-weight: 800; color: #131313; }
+  .subtitle { color: #717171; margin-top: 0.25rem; }
+  .back-link { font-size: 0.85rem; color: #3B63FB; text-decoration: none; font-weight: 600; }
+  .back-link:hover { text-decoration: underline; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+  h2 { font-size: 1.3rem; font-weight: 700; color: #131313; margin: 2.5rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #3B63FB; display: inline-block; }
+  h3 { font-size: 1rem; font-weight: 700; color: #131313; margin: 1.25rem 0 0.5rem; }
+  .card { background: #fff; border: 1px solid #E1E1E1; border-radius: 8px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+
+  /* Scores */
+  .score-hero { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin: 1.5rem 0; }
+  .score-block { background: #fff; border: 1px solid #E1E1E1; border-radius: 12px; padding: 1.25rem; text-align: center; }
+  .score-ring { width: 100px; height: 100px; margin: 0 auto 0.75rem; position: relative; }
+  .score-ring svg { transform: rotate(-90deg); }
+  .score-ring circle { fill: none; stroke-width: 8; }
+  .score-ring .bg { stroke: #f0f0f0; }
+  .score-ring .fill { stroke-linecap: round; }
+  .score-value { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.75rem; font-weight: 800; }
+  .score-label { font-size: 0.8rem; color: #717171; text-transform: uppercase; letter-spacing: 0.05em; }
+  .score-source { font-size: 0.75rem; color: #aaa; margin-top: 0.25rem; }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; margin: 0.75rem 0; }
+  th { text-align: left; padding: 0.5rem 0.75rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #717171; border-bottom: 1px solid #E1E1E1; }
+  td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #f0f0f0; font-size: 0.85rem; }
+  .score-cell { font-weight: 700; text-align: center; width: 60px; }
+  .score-high { color: #059669; }
+  .score-mid { color: #D97706; }
+  .score-low { color: #DC2626; }
+
+  /* Badges */
+  .badge { display: inline-block; padding: 0.15rem 0.6rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 600; }
+  .badge-green { background: #ECFDF5; color: #059669; }
+  .badge-orange { background: #FFFBEB; color: #D97706; }
+  .badge-red { background: #FEF2F2; color: #DC2626; }
+
+  /* Bar chart */
+  .bar-row { display: flex; align-items: center; gap: 0.75rem; margin: 0.4rem 0; }
+  .bar-label { width: 200px; font-size: 0.8rem; font-weight: 500; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar-track { flex: 1; height: 20px; background: #f0f0f0; border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; }
+  .bar-fill.green { background: #059669; }
+  .bar-fill.yellow { background: #D97706; }
+  .bar-fill.red { background: #DC2626; }
+  .bar-value { width: 55px; font-size: 0.8rem; font-weight: 700; text-align: right; flex-shrink: 0; }
+
+  /* Details */
+  .page-detail { background: #fff; border: 1px solid #E1E1E1; border-radius: 8px; margin-bottom: 0.75rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+  .page-detail summary { padding: 1rem 1.25rem; cursor: pointer; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .page-detail summary::-webkit-details-marker { display: none; }
+  .page-detail summary::before { content: '▸'; font-size: 0.85rem; color: #717171; transition: transform 150ms; }
+  .page-detail[open] summary::before { transform: rotate(90deg); }
+  .detail-scores { display: flex; gap: 6px; flex-wrap: wrap; }
+  .detail-body { padding: 0 1.25rem 1.25rem; border-top: 1px solid #f0f0f0; }
+  .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.5rem; margin-top: 1rem; font-size: 0.85rem; }
+
+  .footer-note { color: #717171; font-size: 0.8rem; margin-top: 3rem; text-align: center; border-top: 1px solid #E1E1E1; padding-top: 1rem; }
+
+  @media (max-width: 768px) {
+    .score-hero { grid-template-columns: repeat(2, 1fr); }
+    .container { padding: 1.5rem 1rem; }
+    .bar-label { width: 120px; }
+    .header-inner { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div>
+      <h1>PageSpeed Insights Assessment</h1>
+      <p class="subtitle">Google Lighthouse analysis across all 15 pages (mobile) &mdash; February 22, 2026</p>
+    </div>
+    <a href="hub.html" class="back-link">&larr; Reports Hub</a>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ═══════ SITE-WIDE AVERAGES ═══════ -->
+<h2>Site-Wide Averages</h2>
+<div class="score-hero">
+  
+      <div class="score-block">
+        <div class="score-ring">
+          <svg viewBox="0 0 100 100" width="100" height="100">
+            <circle class="bg" cx="50" cy="50" r="42"/>
+            <circle class="fill" cx="50" cy="50" r="42" stroke="#059669"
+              stroke-dasharray="264" stroke-dashoffset="26"/>
+          </svg>
+          <div class="score-value">90</div>
+        </div>
+        <div class="score-label">Performance</div>
+        <div class="score-source">15-page avg</div>
+      </div>
+  
+      <div class="score-block">
+        <div class="score-ring">
+          <svg viewBox="0 0 100 100" width="100" height="100">
+            <circle class="bg" cx="50" cy="50" r="42"/>
+            <circle class="fill" cx="50" cy="50" r="42" stroke="#059669"
+              stroke-dasharray="264" stroke-dashoffset="13"/>
+          </svg>
+          <div class="score-value">95</div>
+        </div>
+        <div class="score-label">Accessibility</div>
+        <div class="score-source">15-page avg</div>
+      </div>
+  
+      <div class="score-block">
+        <div class="score-ring">
+          <svg viewBox="0 0 100 100" width="100" height="100">
+            <circle class="bg" cx="50" cy="50" r="42"/>
+            <circle class="fill" cx="50" cy="50" r="42" stroke="#059669"
+              stroke-dasharray="264" stroke-dashoffset="0"/>
+          </svg>
+          <div class="score-value">100</div>
+        </div>
+        <div class="score-label">Best Practices</div>
+        <div class="score-source">15-page avg</div>
+      </div>
+  
+      <div class="score-block">
+        <div class="score-ring">
+          <svg viewBox="0 0 100 100" width="100" height="100">
+            <circle class="bg" cx="50" cy="50" r="42"/>
+            <circle class="fill" cx="50" cy="50" r="42" stroke="#059669"
+              stroke-dasharray="264" stroke-dashoffset="5"/>
+          </svg>
+          <div class="score-value">98</div>
+        </div>
+        <div class="score-label">SEO</div>
+        <div class="score-source">15-page avg</div>
+      </div>
+</div>
+
+<!-- ═══════ PER-PAGE SCORES ═══════ -->
+<h2>Per-Page Scores</h2>
+<div class="card">
+  <table>
+    <tr>
+      <th>Page</th>
+      <th style="text-align:center;">Perf</th>
+      <th style="text-align:center;">A11y</th>
+      <th style="text-align:center;">BP</th>
+      <th style="text-align:center;">SEO</th>
+      <th style="text-align:center;">FCP</th>
+      <th style="text-align:center;">LCP</th>
+      <th style="text-align:center;">CLS</th>
+    </tr>
+    <tr><td colspan="8" style="background:#f8f8f8;font-weight:700;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.04em;color:#717171;padding:0.6rem 0.75rem;">Static Pages</td></tr><tr>
+        <td style="font-weight:600;font-size:0.8rem;">Home (/)</td>
+        <td class="score-cell score-high">94</td>
+        <td class="score-cell score-high">95</td>
+        <td class="score-cell score-high">100</td>
+        <td class="score-cell score-high">100</td>
+        <td style="font-size:0.8rem;text-align:center;">2.4 s</td>
+        <td style="font-size:0.8rem;text-align:center;">2.6 s</td>
+        <td style="font-size:0.8rem;text-align:center;">0.025</td>
+      </tr><tr>
+        <td style="font-weight:600;font-size:0.8rem;">/fashion-trends-young-adults</td>
+        <td class="score-cell score-mid">88</td>
+        <td class="score-cell score-high">93</td>
+        <td class="score-cell score-high">100</td>
+        <td class="score-cell score-high">92</td>
+        <td style="font-size:0.8rem;text-align:center;">2.6 s</td>
+        <td style="font-size:0.8rem;text-align:center;">3.4 s</td>
+        <td style="font-size:0.8rem;text-align:center;">0.001</td>
+      </tr><tr>
+        <td style="font-weight:600;font-size:0.8rem;">/fashion-trends-young-adults-casual-sport</td>
+        <td class="score-cell score-mid">89</td>
+        <td class="score-cell score-high">95</td>
+        <td class="score-cell score-high">100</td>
+        <td class="score-cell score-high">92</td>
+        <td style="font-size:0.8rem;text-align:center;">2.6 s</td>
+        <td style="font-size:0.8rem;text-align:center;">3.2 s</td>
+        <td style="font-size:0.8rem;text-align:center;">0.001</td>
+      </tr><tr>
+        <td style="font-weight:600;font-size:0.8rem;">/fashion-insights</td>
+        <td class="score-cell score-mid">78</td>
+        <td class="score-cell score-high">95</td>
+        <td class="score-cell score-high">100</td>
+        <td class="score-cell score-high">92</td>
+        <td style="font-size:0.8rem;text-align:center;">2.6 s</td>
+        <td style="font-size:0.8rem;text-align:center;">4.9 s</td>
+        <td style="font-size:0.8rem;text-align:center;">0.025</td>
+      </tr><tr>
+        <td style="font-weight:600;font-size:0.8rem;">/fashion-trends-of-the-season</td>
+        <td class="score-cell score-mid">87</td>
+        <td class="score-cell score-high">95</td>
+        <td class="score-cell score-high">100</td>
+        <td class="score-cell score-high">92</td>
+        <td style="font-size:0.8rem;text-align:center;">2.6 s</td>
+        <td style="font-size:0.8rem;text-align:center;">3.5 s</td>
+        <td style="font-size:0.8rem;text-align:center;">0.001</td>
+      </tr><tr>
+        <td style="font-weight:600;font-size:0.8rem;">/latest-trends-young-fashion</td>
+        <td class="score-cell score-high">90</td>
+        <td class="score-cell score-high">95</td>
+        <td class="score-cell score-high">100</td>
+        <td class="score-cell score-high">100</td>
+        <td style="font-size:0.8rem;text-align:center;">2.6 s</td>
+        <td style="font-size:0.8rem;text-align:center;">3.1 s</td>
+        <td style="font-size:0.8rem;text-align:center;">0.025</td>
+      </tr><tr>
+        <td style="font-weight:600;font-size:0.8rem;">/faq</td>
+        <td class="score-cell score-high">90</td>
+        <td class="score-cell score-high">95</td>
+        <td class="score-cell score-high">100</td>
+        <td class="score-cell score-high">100</td>
+        <td style="font-size:0.8rem;text-align:center;">2.6 s</td>
+        <td style="font-size:0.8rem;text-align:center;">3.0 s</td>
+        <td style="font-size:0.8rem;text-align:center;">0.023</td>
+      </tr><tr>
+        <td style="font-weight:600;font-size:0.8rem;">/testimonial</td>
+        <td class="score-cell score-high">93</td>
+        <td class="score-cell score-high">95</td>
+        <td class="score-cell score-high">100</td>
+        <td class="score-cell score-high">100</td>
+        <td style="font-size:0.8rem;text-align:center;">2.6 s</td>
+        <td style="font-size:0.8rem;text-align:center;">2.6 s</td>
+        <td style="font-size:0.8rem;text-align:center;">0.028</td>
+      </tr><tr>
+        <td style="font-weight:600;font-size:0.8rem;">/products</td>
+        <td class="score-cell score-high">90</td>
+        <td class="score-cell score-high">95</td>
+        <td class="score-cell score-high">100</td>
+        <td class="score-cell score-high">100</td>
+        <td style="font-size:0.8rem;text-align:center;">2.6 s</td>
+        <td style="font-size:0.8rem;text-align:center;">3.0 s</td>
+        <td style="font-size:0.8rem;text-align:center;">0.025</td>
+      </tr><tr>
+        <td style="font-weight:600;font-size:0.8rem;">/case-studies</td>
+        <td class="score-cell score-mid">88</td>
+        <td class="score-cell score-high">95</td>
+        <td class="score-cell score-high">100</td>
+        <td class="score-cell score-high">100</td>
+        <td style="font-size:0.8rem;text-align:center;">2.6 s</td>
+        <td style="font-size:0.8rem;text-align:center;">3.3 s</td>
+        <td style="font-size:0.8rem;text-align:center;">0.026</td>
+      </tr>
+    <tr><td colspan="8" style="background:#f8f8f8;font-weight:700;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.04em;color:#717171;padding:0.6rem 0.75rem;">Blog Posts</td></tr><tr>
+        <td style="font-weight:600;font-size:0.8rem;">/blog/fashion-blog-post</td>
+        <td class="score-cell score-high">92</td>
+        <td class="score-cell score-high">95</td>
+        <td class="score-cell score-high">100</td>
+        <td class="score-cell score-high">100</td>
+        <td style="font-size:0.8rem;text-align:center;">2.6 s</td>
+        <td style="font-size:0.8rem;text-align:center;">2.7 s</td>
+        <td style="font-size:0.8rem;text-align:center;">0.001</td>
+      </tr><tr>
+        <td style="font-weight:600;font-size:0.8rem;">/blog/fashion-trends-young-culture</td>
+        <td class="score-cell score-high">92</td>
+        <td class="score-cell score-high">95</td>
+        <td class="score-cell score-high">100</td>
+        <td class="score-cell score-high">100</td>
+        <td style="font-size:0.8rem;text-align:center;">2.6 s</td>
+        <td style="font-size:0.8rem;text-align:center;">2.7 s</td>
+        <td style="font-size:0.8rem;text-align:center;">0.016</td>
+      </tr><tr>
+        <td style="font-weight:600;font-size:0.8rem;">/blog/fashion-trends-young-style</td>
+        <td class="score-cell score-high">92</td>
+        <td class="score-cell score-high">95</td>
+        <td class="score-cell score-high">100</td>
+        <td class="score-cell score-high">100</td>
+        <td style="font-size:0.8rem;text-align:center;">2.6 s</td>
+        <td style="font-size:0.8rem;text-align:center;">2.7 s</td>
+        <td style="font-size:0.8rem;text-align:center;">0.001</td>
+      </tr><tr>
+        <td style="font-weight:600;font-size:0.8rem;">/blog/latest-trends-young-casual-fashion</td>
+        <td class="score-cell score-high">92</td>
+        <td class="score-cell score-high">95</td>
+        <td class="score-cell score-high">100</td>
+        <td class="score-cell score-high">100</td>
+        <td style="font-size:0.8rem;text-align:center;">2.6 s</td>
+        <td style="font-size:0.8rem;text-align:center;">2.7 s</td>
+        <td style="font-size:0.8rem;text-align:center;">0.009</td>
+      </tr><tr>
+        <td style="font-weight:600;font-size:0.8rem;">/blog/street-style-trends</td>
+        <td class="score-cell score-high">92</td>
+        <td class="score-cell score-high">95</td>
+        <td class="score-cell score-high">100</td>
+        <td class="score-cell score-high">100</td>
+        <td style="font-size:0.8rem;text-align:center;">2.6 s</td>
+        <td style="font-size:0.8rem;text-align:center;">2.7 s</td>
+        <td style="font-size:0.8rem;text-align:center;">0.009</td>
+      </tr>
+  </table>
+</div>
+
+<!-- ═══════ CORE WEB VITALS ═══════ -->
+<h2>Core Web Vitals Breakdown</h2>
+<h3>First Contentful Paint (FCP)</h3><div class="card" style="margin-bottom:1.5rem;">
+        <div class="bar-row">
+          <div class="bar-label">Home</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:91.1%"></div></div>
+          <div class="bar-value">2.4 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-trends-young-adults</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:97.0%"></div></div>
+          <div class="bar-value">2.6 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-trends-young-adults-casual-sport</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:100.0%"></div></div>
+          <div class="bar-value">2.6 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-insights</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:98.0%"></div></div>
+          <div class="bar-value">2.6 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-trends-of-the-season</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:96.9%"></div></div>
+          <div class="bar-value">2.6 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">latest-trends-young-fashion</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:99.1%"></div></div>
+          <div class="bar-value">2.6 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">faq</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:97.1%"></div></div>
+          <div class="bar-value">2.6 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">testimonial</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:98.4%"></div></div>
+          <div class="bar-value">2.6 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">products</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:97.2%"></div></div>
+          <div class="bar-value">2.6 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">case-studies</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:97.0%"></div></div>
+          <div class="bar-value">2.6 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-blog-post</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:97.9%"></div></div>
+          <div class="bar-value">2.6 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-trends-young-culture</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:96.9%"></div></div>
+          <div class="bar-value">2.6 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-trends-young-style</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:96.9%"></div></div>
+          <div class="bar-value">2.6 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">latest-trends-young-casual-fashion</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:96.8%"></div></div>
+          <div class="bar-value">2.6 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">street-style-trends</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:96.8%"></div></div>
+          <div class="bar-value">2.6 s</div>
+        </div></div>
+<h3>Largest Contentful Paint (LCP)</h3><div class="card" style="margin-bottom:1.5rem;">
+        <div class="bar-row">
+          <div class="bar-label">Home</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:53.7%"></div></div>
+          <div class="bar-value">2.6 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-trends-young-adults</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:69.4%"></div></div>
+          <div class="bar-value">3.4 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-trends-young-adults-casual-sport</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:64.6%"></div></div>
+          <div class="bar-value">3.2 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-insights</div>
+          <div class="bar-track"><div class="bar-fill red" style="width:100.0%"></div></div>
+          <div class="bar-value">4.9 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-trends-of-the-season</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:70.7%"></div></div>
+          <div class="bar-value">3.5 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">latest-trends-young-fashion</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:62.6%"></div></div>
+          <div class="bar-value">3.1 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">faq</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:62.2%"></div></div>
+          <div class="bar-value">3.0 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">testimonial</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:53.0%"></div></div>
+          <div class="bar-value">2.6 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">products</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:61.6%"></div></div>
+          <div class="bar-value">3.0 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">case-studies</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:67.6%"></div></div>
+          <div class="bar-value">3.3 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-blog-post</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:55.8%"></div></div>
+          <div class="bar-value">2.7 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-trends-young-culture</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:55.3%"></div></div>
+          <div class="bar-value">2.7 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-trends-young-style</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:55.3%"></div></div>
+          <div class="bar-value">2.7 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">latest-trends-young-casual-fashion</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:55.3%"></div></div>
+          <div class="bar-value">2.7 s</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">street-style-trends</div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:55.2%"></div></div>
+          <div class="bar-value">2.7 s</div>
+        </div></div>
+<h3>Cumulative Layout Shift (CLS)</h3><div class="card" style="margin-bottom:1.5rem;">
+        <div class="bar-row">
+          <div class="bar-label">Home</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:2.5%"></div></div>
+          <div class="bar-value">0.025</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-trends-young-adults</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:0.1%"></div></div>
+          <div class="bar-value">0.001</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-trends-young-adults-casual-sport</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:0.1%"></div></div>
+          <div class="bar-value">0.001</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-insights</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:2.5%"></div></div>
+          <div class="bar-value">0.025</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-trends-of-the-season</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:0.1%"></div></div>
+          <div class="bar-value">0.001</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">latest-trends-young-fashion</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:2.5%"></div></div>
+          <div class="bar-value">0.025</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">faq</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:2.3%"></div></div>
+          <div class="bar-value">0.023</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">testimonial</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:2.8%"></div></div>
+          <div class="bar-value">0.028</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">products</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:2.5%"></div></div>
+          <div class="bar-value">0.025</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">case-studies</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:2.6%"></div></div>
+          <div class="bar-value">0.026</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-blog-post</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:0.1%"></div></div>
+          <div class="bar-value">0.001</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-trends-young-culture</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:1.6%"></div></div>
+          <div class="bar-value">0.016</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-trends-young-style</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:0.1%"></div></div>
+          <div class="bar-value">0.001</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">latest-trends-young-casual-fashion</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:0.9%"></div></div>
+          <div class="bar-value">0.009</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">street-style-trends</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:0.9%"></div></div>
+          <div class="bar-value">0.009</div>
+        </div></div>
+<h3>Total Blocking Time (TBT)</h3><div class="card" style="margin-bottom:1.5rem;">
+        <div class="bar-row">
+          <div class="bar-label">Home</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:0.0%"></div></div>
+          <div class="bar-value">0 ms</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-trends-young-adults</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:0.0%"></div></div>
+          <div class="bar-value">0 ms</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-trends-young-adults-casual-sport</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:0.0%"></div></div>
+          <div class="bar-value">0 ms</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-insights</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:0.0%"></div></div>
+          <div class="bar-value">0 ms</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-trends-of-the-season</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:0.0%"></div></div>
+          <div class="bar-value">0 ms</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">latest-trends-young-fashion</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:0.0%"></div></div>
+          <div class="bar-value">0 ms</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">faq</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:0.0%"></div></div>
+          <div class="bar-value">0 ms</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">testimonial</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:0.0%"></div></div>
+          <div class="bar-value">0 ms</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">products</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:0.0%"></div></div>
+          <div class="bar-value">0 ms</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">case-studies</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:0.0%"></div></div>
+          <div class="bar-value">0 ms</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-blog-post</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:0.0%"></div></div>
+          <div class="bar-value">0 ms</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-trends-young-culture</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:0.0%"></div></div>
+          <div class="bar-value">0 ms</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">fashion-trends-young-style</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:0.0%"></div></div>
+          <div class="bar-value">0 ms</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">latest-trends-young-casual-fashion</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:0.0%"></div></div>
+          <div class="bar-value">0 ms</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">street-style-trends</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:0.0%"></div></div>
+          <div class="bar-value">0 ms</div>
+        </div></div>
+
+<!-- ═══════ TOP OPPORTUNITIES ═══════ -->
+<h2>Top Improvement Opportunities</h2>
+<p style="font-size:0.85rem;color:#717171;margin-bottom:1rem;">Aggregated across all pages, sorted by total estimated savings.</p>
+<div class="card">
+  <table><tr><th>Opportunity</th><th style="text-align:right;">Total Est. Savings</th><th style="text-align:center;">Pages Affected</th></tr><tr>
+        <td style="font-size:0.85rem;"><strong>Avoid multiple page redirects</strong></td>
+        <td style="font-size:0.85rem;text-align:right;font-weight:700;">10.6 s</td>
+        <td style="font-size:0.8rem;text-align:center;">14 / 15</td>
+      </tr></table>
+</div>
+
+<!-- ═══════ PER-PAGE DETAILS ═══════ -->
+<h2>Per-Page Details</h2>
+
+      <details class="page-detail">
+        <summary>
+          <strong>Home (/)</strong>
+          <span class="detail-scores">
+            <span class="badge badge-green">Perf 94</span>
+            <span class="badge badge-green">A11y 95</span>
+            <span class="badge badge-green">BP 100</span>
+            <span class="badge badge-green">SEO 100</span>
+          </span>
+        </summary>
+        <div class="detail-body">
+          <div class="detail-grid">
+            <div><strong>FCP:</strong> 2.4 s</div>
+            <div><strong>LCP:</strong> 2.6 s</div>
+            <div><strong>CLS:</strong> 0.025</div>
+            <div><strong>TBT:</strong> 0 ms</div>
+            <div><strong>Speed Index:</strong> 2.4 s</div>
+          </div>
+          <p style="color:#717171;font-size:0.85rem;margin-top:0.75rem;">No improvement opportunities flagged.</p>
+        </div>
+      </details>
+      <details class="page-detail">
+        <summary>
+          <strong>/fashion-trends-young-adults</strong>
+          <span class="detail-scores">
+            <span class="badge badge-orange">Perf 88</span>
+            <span class="badge badge-green">A11y 93</span>
+            <span class="badge badge-green">BP 100</span>
+            <span class="badge badge-green">SEO 92</span>
+          </span>
+        </summary>
+        <div class="detail-body">
+          <div class="detail-grid">
+            <div><strong>FCP:</strong> 2.6 s</div>
+            <div><strong>LCP:</strong> 3.4 s</div>
+            <div><strong>CLS:</strong> 0.001</div>
+            <div><strong>TBT:</strong> 0 ms</div>
+            <div><strong>Speed Index:</strong> 2.6 s</div>
+          </div>
+          
+          <h4 style="margin-top:1rem;font-size:0.85rem;">Improvement Opportunities</h4>
+          <table style="margin-top:0.5rem;">
+            <tr><th>Opportunity</th><th style="text-align:right;">Est. Savings</th></tr>
+            <tr><td style="font-size:0.8rem;">Avoid multiple page redirects</td><td style="font-size:0.8rem;text-align:right;font-weight:600;">757 ms</td></tr>
+          </table>
+        </div>
+      </details>
+      <details class="page-detail">
+        <summary>
+          <strong>/fashion-trends-young-adults-casual-sport</strong>
+          <span class="detail-scores">
+            <span class="badge badge-orange">Perf 89</span>
+            <span class="badge badge-green">A11y 95</span>
+            <span class="badge badge-green">BP 100</span>
+            <span class="badge badge-green">SEO 92</span>
+          </span>
+        </summary>
+        <div class="detail-body">
+          <div class="detail-grid">
+            <div><strong>FCP:</strong> 2.6 s</div>
+            <div><strong>LCP:</strong> 3.2 s</div>
+            <div><strong>CLS:</strong> 0.001</div>
+            <div><strong>TBT:</strong> 0 ms</div>
+            <div><strong>Speed Index:</strong> 2.6 s</div>
+          </div>
+          
+          <h4 style="margin-top:1rem;font-size:0.85rem;">Improvement Opportunities</h4>
+          <table style="margin-top:0.5rem;">
+            <tr><th>Opportunity</th><th style="text-align:right;">Est. Savings</th></tr>
+            <tr><td style="font-size:0.8rem;">Avoid multiple page redirects</td><td style="font-size:0.8rem;text-align:right;font-weight:600;">795 ms</td></tr>
+          </table>
+        </div>
+      </details>
+      <details class="page-detail">
+        <summary>
+          <strong>/fashion-insights</strong>
+          <span class="detail-scores">
+            <span class="badge badge-orange">Perf 78</span>
+            <span class="badge badge-green">A11y 95</span>
+            <span class="badge badge-green">BP 100</span>
+            <span class="badge badge-green">SEO 92</span>
+          </span>
+        </summary>
+        <div class="detail-body">
+          <div class="detail-grid">
+            <div><strong>FCP:</strong> 2.6 s</div>
+            <div><strong>LCP:</strong> 4.9 s</div>
+            <div><strong>CLS:</strong> 0.025</div>
+            <div><strong>TBT:</strong> 0 ms</div>
+            <div><strong>Speed Index:</strong> 2.6 s</div>
+          </div>
+          
+          <h4 style="margin-top:1rem;font-size:0.85rem;">Improvement Opportunities</h4>
+          <table style="margin-top:0.5rem;">
+            <tr><th>Opportunity</th><th style="text-align:right;">Est. Savings</th></tr>
+            <tr><td style="font-size:0.8rem;">Avoid multiple page redirects</td><td style="font-size:0.8rem;text-align:right;font-weight:600;">754 ms</td></tr>
+          </table>
+        </div>
+      </details>
+      <details class="page-detail">
+        <summary>
+          <strong>/fashion-trends-of-the-season</strong>
+          <span class="detail-scores">
+            <span class="badge badge-orange">Perf 87</span>
+            <span class="badge badge-green">A11y 95</span>
+            <span class="badge badge-green">BP 100</span>
+            <span class="badge badge-green">SEO 92</span>
+          </span>
+        </summary>
+        <div class="detail-body">
+          <div class="detail-grid">
+            <div><strong>FCP:</strong> 2.6 s</div>
+            <div><strong>LCP:</strong> 3.5 s</div>
+            <div><strong>CLS:</strong> 0.001</div>
+            <div><strong>TBT:</strong> 0 ms</div>
+            <div><strong>Speed Index:</strong> 2.6 s</div>
+          </div>
+          
+          <h4 style="margin-top:1rem;font-size:0.85rem;">Improvement Opportunities</h4>
+          <table style="margin-top:0.5rem;">
+            <tr><th>Opportunity</th><th style="text-align:right;">Est. Savings</th></tr>
+            <tr><td style="font-size:0.8rem;">Avoid multiple page redirects</td><td style="font-size:0.8rem;text-align:right;font-weight:600;">755 ms</td></tr>
+          </table>
+        </div>
+      </details>
+      <details class="page-detail">
+        <summary>
+          <strong>/latest-trends-young-fashion</strong>
+          <span class="detail-scores">
+            <span class="badge badge-green">Perf 90</span>
+            <span class="badge badge-green">A11y 95</span>
+            <span class="badge badge-green">BP 100</span>
+            <span class="badge badge-green">SEO 100</span>
+          </span>
+        </summary>
+        <div class="detail-body">
+          <div class="detail-grid">
+            <div><strong>FCP:</strong> 2.6 s</div>
+            <div><strong>LCP:</strong> 3.1 s</div>
+            <div><strong>CLS:</strong> 0.025</div>
+            <div><strong>TBT:</strong> 0 ms</div>
+            <div><strong>Speed Index:</strong> 2.6 s</div>
+          </div>
+          
+          <h4 style="margin-top:1rem;font-size:0.85rem;">Improvement Opportunities</h4>
+          <table style="margin-top:0.5rem;">
+            <tr><th>Opportunity</th><th style="text-align:right;">Est. Savings</th></tr>
+            <tr><td style="font-size:0.8rem;">Avoid multiple page redirects</td><td style="font-size:0.8rem;text-align:right;font-weight:600;">753 ms</td></tr>
+          </table>
+        </div>
+      </details>
+      <details class="page-detail">
+        <summary>
+          <strong>/faq</strong>
+          <span class="detail-scores">
+            <span class="badge badge-green">Perf 90</span>
+            <span class="badge badge-green">A11y 95</span>
+            <span class="badge badge-green">BP 100</span>
+            <span class="badge badge-green">SEO 100</span>
+          </span>
+        </summary>
+        <div class="detail-body">
+          <div class="detail-grid">
+            <div><strong>FCP:</strong> 2.6 s</div>
+            <div><strong>LCP:</strong> 3.0 s</div>
+            <div><strong>CLS:</strong> 0.023</div>
+            <div><strong>TBT:</strong> 0 ms</div>
+            <div><strong>Speed Index:</strong> 2.6 s</div>
+          </div>
+          
+          <h4 style="margin-top:1rem;font-size:0.85rem;">Improvement Opportunities</h4>
+          <table style="margin-top:0.5rem;">
+            <tr><th>Opportunity</th><th style="text-align:right;">Est. Savings</th></tr>
+            <tr><td style="font-size:0.8rem;">Avoid multiple page redirects</td><td style="font-size:0.8rem;text-align:right;font-weight:600;">758 ms</td></tr>
+          </table>
+        </div>
+      </details>
+      <details class="page-detail">
+        <summary>
+          <strong>/testimonial</strong>
+          <span class="detail-scores">
+            <span class="badge badge-green">Perf 93</span>
+            <span class="badge badge-green">A11y 95</span>
+            <span class="badge badge-green">BP 100</span>
+            <span class="badge badge-green">SEO 100</span>
+          </span>
+        </summary>
+        <div class="detail-body">
+          <div class="detail-grid">
+            <div><strong>FCP:</strong> 2.6 s</div>
+            <div><strong>LCP:</strong> 2.6 s</div>
+            <div><strong>CLS:</strong> 0.028</div>
+            <div><strong>TBT:</strong> 0 ms</div>
+            <div><strong>Speed Index:</strong> 2.6 s</div>
+          </div>
+          
+          <h4 style="margin-top:1rem;font-size:0.85rem;">Improvement Opportunities</h4>
+          <table style="margin-top:0.5rem;">
+            <tr><th>Opportunity</th><th style="text-align:right;">Est. Savings</th></tr>
+            <tr><td style="font-size:0.8rem;">Avoid multiple page redirects</td><td style="font-size:0.8rem;text-align:right;font-weight:600;">760 ms</td></tr>
+          </table>
+        </div>
+      </details>
+      <details class="page-detail">
+        <summary>
+          <strong>/products</strong>
+          <span class="detail-scores">
+            <span class="badge badge-green">Perf 90</span>
+            <span class="badge badge-green">A11y 95</span>
+            <span class="badge badge-green">BP 100</span>
+            <span class="badge badge-green">SEO 100</span>
+          </span>
+        </summary>
+        <div class="detail-body">
+          <div class="detail-grid">
+            <div><strong>FCP:</strong> 2.6 s</div>
+            <div><strong>LCP:</strong> 3.0 s</div>
+            <div><strong>CLS:</strong> 0.025</div>
+            <div><strong>TBT:</strong> 0 ms</div>
+            <div><strong>Speed Index:</strong> 2.6 s</div>
+          </div>
+          
+          <h4 style="margin-top:1rem;font-size:0.85rem;">Improvement Opportunities</h4>
+          <table style="margin-top:0.5rem;">
+            <tr><th>Opportunity</th><th style="text-align:right;">Est. Savings</th></tr>
+            <tr><td style="font-size:0.8rem;">Avoid multiple page redirects</td><td style="font-size:0.8rem;text-align:right;font-weight:600;">759 ms</td></tr>
+          </table>
+        </div>
+      </details>
+      <details class="page-detail">
+        <summary>
+          <strong>/case-studies</strong>
+          <span class="detail-scores">
+            <span class="badge badge-orange">Perf 88</span>
+            <span class="badge badge-green">A11y 95</span>
+            <span class="badge badge-green">BP 100</span>
+            <span class="badge badge-green">SEO 100</span>
+          </span>
+        </summary>
+        <div class="detail-body">
+          <div class="detail-grid">
+            <div><strong>FCP:</strong> 2.6 s</div>
+            <div><strong>LCP:</strong> 3.3 s</div>
+            <div><strong>CLS:</strong> 0.026</div>
+            <div><strong>TBT:</strong> 0 ms</div>
+            <div><strong>Speed Index:</strong> 2.6 s</div>
+          </div>
+          
+          <h4 style="margin-top:1rem;font-size:0.85rem;">Improvement Opportunities</h4>
+          <table style="margin-top:0.5rem;">
+            <tr><th>Opportunity</th><th style="text-align:right;">Est. Savings</th></tr>
+            <tr><td style="font-size:0.8rem;">Avoid multiple page redirects</td><td style="font-size:0.8rem;text-align:right;font-weight:600;">754 ms</td></tr>
+          </table>
+        </div>
+      </details>
+      <details class="page-detail">
+        <summary>
+          <strong>/blog/fashion-blog-post</strong>
+          <span class="detail-scores">
+            <span class="badge badge-green">Perf 92</span>
+            <span class="badge badge-green">A11y 95</span>
+            <span class="badge badge-green">BP 100</span>
+            <span class="badge badge-green">SEO 100</span>
+          </span>
+        </summary>
+        <div class="detail-body">
+          <div class="detail-grid">
+            <div><strong>FCP:</strong> 2.6 s</div>
+            <div><strong>LCP:</strong> 2.7 s</div>
+            <div><strong>CLS:</strong> 0.001</div>
+            <div><strong>TBT:</strong> 0 ms</div>
+            <div><strong>Speed Index:</strong> 2.6 s</div>
+          </div>
+          
+          <h4 style="margin-top:1rem;font-size:0.85rem;">Improvement Opportunities</h4>
+          <table style="margin-top:0.5rem;">
+            <tr><th>Opportunity</th><th style="text-align:right;">Est. Savings</th></tr>
+            <tr><td style="font-size:0.8rem;">Avoid multiple page redirects</td><td style="font-size:0.8rem;text-align:right;font-weight:600;">753 ms</td></tr>
+          </table>
+        </div>
+      </details>
+      <details class="page-detail">
+        <summary>
+          <strong>/blog/fashion-trends-young-culture</strong>
+          <span class="detail-scores">
+            <span class="badge badge-green">Perf 92</span>
+            <span class="badge badge-green">A11y 95</span>
+            <span class="badge badge-green">BP 100</span>
+            <span class="badge badge-green">SEO 100</span>
+          </span>
+        </summary>
+        <div class="detail-body">
+          <div class="detail-grid">
+            <div><strong>FCP:</strong> 2.6 s</div>
+            <div><strong>LCP:</strong> 2.7 s</div>
+            <div><strong>CLS:</strong> 0.016</div>
+            <div><strong>TBT:</strong> 0 ms</div>
+            <div><strong>Speed Index:</strong> 2.6 s</div>
+          </div>
+          
+          <h4 style="margin-top:1rem;font-size:0.85rem;">Improvement Opportunities</h4>
+          <table style="margin-top:0.5rem;">
+            <tr><th>Opportunity</th><th style="text-align:right;">Est. Savings</th></tr>
+            <tr><td style="font-size:0.8rem;">Avoid multiple page redirects</td><td style="font-size:0.8rem;text-align:right;font-weight:600;">754 ms</td></tr>
+          </table>
+        </div>
+      </details>
+      <details class="page-detail">
+        <summary>
+          <strong>/blog/fashion-trends-young-style</strong>
+          <span class="detail-scores">
+            <span class="badge badge-green">Perf 92</span>
+            <span class="badge badge-green">A11y 95</span>
+            <span class="badge badge-green">BP 100</span>
+            <span class="badge badge-green">SEO 100</span>
+          </span>
+        </summary>
+        <div class="detail-body">
+          <div class="detail-grid">
+            <div><strong>FCP:</strong> 2.6 s</div>
+            <div><strong>LCP:</strong> 2.7 s</div>
+            <div><strong>CLS:</strong> 0.001</div>
+            <div><strong>TBT:</strong> 0 ms</div>
+            <div><strong>Speed Index:</strong> 2.6 s</div>
+          </div>
+          
+          <h4 style="margin-top:1rem;font-size:0.85rem;">Improvement Opportunities</h4>
+          <table style="margin-top:0.5rem;">
+            <tr><th>Opportunity</th><th style="text-align:right;">Est. Savings</th></tr>
+            <tr><td style="font-size:0.8rem;">Avoid multiple page redirects</td><td style="font-size:0.8rem;text-align:right;font-weight:600;">754 ms</td></tr>
+          </table>
+        </div>
+      </details>
+      <details class="page-detail">
+        <summary>
+          <strong>/blog/latest-trends-young-casual-fashion</strong>
+          <span class="detail-scores">
+            <span class="badge badge-green">Perf 92</span>
+            <span class="badge badge-green">A11y 95</span>
+            <span class="badge badge-green">BP 100</span>
+            <span class="badge badge-green">SEO 100</span>
+          </span>
+        </summary>
+        <div class="detail-body">
+          <div class="detail-grid">
+            <div><strong>FCP:</strong> 2.6 s</div>
+            <div><strong>LCP:</strong> 2.7 s</div>
+            <div><strong>CLS:</strong> 0.009</div>
+            <div><strong>TBT:</strong> 0 ms</div>
+            <div><strong>Speed Index:</strong> 2.6 s</div>
+          </div>
+          
+          <h4 style="margin-top:1rem;font-size:0.85rem;">Improvement Opportunities</h4>
+          <table style="margin-top:0.5rem;">
+            <tr><th>Opportunity</th><th style="text-align:right;">Est. Savings</th></tr>
+            <tr><td style="font-size:0.8rem;">Avoid multiple page redirects</td><td style="font-size:0.8rem;text-align:right;font-weight:600;">753 ms</td></tr>
+          </table>
+        </div>
+      </details>
+      <details class="page-detail">
+        <summary>
+          <strong>/blog/street-style-trends</strong>
+          <span class="detail-scores">
+            <span class="badge badge-green">Perf 92</span>
+            <span class="badge badge-green">A11y 95</span>
+            <span class="badge badge-green">BP 100</span>
+            <span class="badge badge-green">SEO 100</span>
+          </span>
+        </summary>
+        <div class="detail-body">
+          <div class="detail-grid">
+            <div><strong>FCP:</strong> 2.6 s</div>
+            <div><strong>LCP:</strong> 2.7 s</div>
+            <div><strong>CLS:</strong> 0.009</div>
+            <div><strong>TBT:</strong> 0 ms</div>
+            <div><strong>Speed Index:</strong> 2.6 s</div>
+          </div>
+          
+          <h4 style="margin-top:1rem;font-size:0.85rem;">Improvement Opportunities</h4>
+          <table style="margin-top:0.5rem;">
+            <tr><th>Opportunity</th><th style="text-align:right;">Est. Savings</th></tr>
+            <tr><td style="font-size:0.8rem;">Avoid multiple page redirects</td><td style="font-size:0.8rem;text-align:right;font-weight:600;">753 ms</td></tr>
+          </table>
+        </div>
+      </details>
+
+<p class="footer-note">Generated by Claude Code &mdash; WKND Trendsetters Playground &mdash; Session 013</p>
+
+</div>
+</body>
+</html>
