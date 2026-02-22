@@ -12,12 +12,14 @@ Steps:
 
 5. **Update CLAUDE.md.** If new operational knowledge was discovered, add it. Keep it short per existing rules.
 
-6. **Cross-reference consistency.** Check that:
+6. **Run validation.** Execute `npm run validate` to check accessibility and icon compliance across all components.
+
+7. **Cross-reference consistency.** Check that:
    - Brand guidelines in `brand/` still match what's in the CSS (`src/styles/global.css`)
    - Report data matches current site state (e.g., content gaps report reflects actual pages)
    - No broken internal links between reports
 
-7. **Commit** all updates with message: "Update context — [brief description of what changed]"
+8. **Commit** all updates with message: "Update context — [brief description of what changed]"
 
 If the user provides specific context about what changed, focus on that. Otherwise, do a full sweep.
 

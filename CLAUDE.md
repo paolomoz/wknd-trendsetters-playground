@@ -23,3 +23,4 @@ Astro static site on Cloudflare Pages (Wrangler). Project name: `wknd-trendsette
 ## Operational Notes
 
 - Dev server: `nohup npx astro dev --port 4325 > /tmp/astro-playground.log 2>&1 &` (nohup required — background tasks without it get killed)
+- **Accessibility & icons:** When modifying components, reference `brand/accessibility.md` and `brand/iconography.md`. Run `npm run validate` before committing component changes.

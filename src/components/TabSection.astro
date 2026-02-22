@@ -17,7 +17,15 @@ const { tabs } = Astro.props;
 <div class="tabs-wrapper">
   <div class="tabs-content">
     {tabs.map((tab, i) => (
-      <div class={`tab-pane ${i === 0 ? 'is-active' : ''}`} data-tab-index={i}>
+      <div
+        class={`tab-pane ${i === 0 ? 'is-active' : ''}`}
+        data-tab-index={i}
+        role="tabpanel"
+        id={`tabpanel-${i}`}
+        aria-labelledby={`tab-${i}`}
+        tabindex="0"
+        hidden={i !== 0 ? true : undefined}
+      >
         <div class="grid-layout tablet-1-column grid-gap-md" style="align-items: center;">
           <div style="aspect-ratio: 4/3; border-radius: var(--radius-card); overflow: hidden;">
             <img src={tab.image} alt={tab.name} class="cover-image" loading="lazy" />
@@ -34,12 +42,20 @@ const { tabs } = Astro.props;
     ))}
   </div>
 
-  <div class="grid-layout desktop-4-column tablet-2-column-1 mobile-portrait-1-column tab-menu">
+  <div class="grid-layout desktop-4-column tablet-2-column-1 mobile-portrait-1-column tab-menu" role="tablist" aria-label="Testimonials">
     {tabs.map((tab, i) => (
-      <button class={`tab-menu-link ${i === 0 ? 'is-active' : ''}`} data-tab-target={i}>
+      <button
+        class={`tab-menu-link ${i === 0 ? 'is-active' : ''}`}
+        data-tab-target={i}
+        role="tab"
+        id={`tab-${i}`}
+        aria-selected={i === 0 ? 'true' : 'false'}
+        aria-controls={`tabpanel-${i}`}
+        tabindex={i === 0 ? '0' : '-1'}
+      >
         <div class="flex-horizontal y-center flex-gap-xs">
           <div class="avatar">
-            <img src={tab.avatarImage} alt={tab.name} class="cover-image" loading="lazy" />
+            <img src={tab.avatarImage} alt="" class="cover-image" loading="lazy" />
           </div>
           <div style="text-align: left;">
             <div class="paragraph-sm utility-margin-bottom-0"><strong>{tab.name}</strong></div>
@@ -52,18 +68,65 @@ const { tabs } = Astro.props;
 </div>
 
 <script>
-  document.querySelectorAll('[data-tab-target]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const idx = btn.getAttribute('data-tab-target');
-      const wrapper = btn.closest('.tabs-wrapper');
-      if (!wrapper || !idx) return;
+  function initTabs(wrapper: Element) {
+    const tabs = Array.from(wrapper.querySelectorAll<HTMLElement>('[role="tab"]'));
+    const panels = Array.from(wrapper.querySelectorAll<HTMLElement>('[role="tabpanel"]'));
 
-      wrapper.querySelectorAll('.tab-pane').forEach((p) => p.classList.remove('is-active'));
-      wrapper.querySelectorAll('.tab-menu-link').forEach((b) => b.classList.remove('is-active'));
+    function activateTab(tab: HTMLElement) {
+      const idx = tab.getAttribute('data-tab-target');
+      if (!idx) return;
 
-      const pane = wrapper.querySelector(`[data-tab-index="${idx}"]`);
-      if (pane) pane.classList.add('is-active');
-      btn.classList.add('is-active');
+      // Deactivate all
+      tabs.forEach((t) => {
+        t.classList.remove('is-active');
+        t.setAttribute('aria-selected', 'false');
+        t.setAttribute('tabindex', '-1');
+      });
+      panels.forEach((p) => {
+        p.classList.remove('is-active');
+        p.setAttribute('hidden', '');
+      });
+
+      // Activate selected
+      tab.classList.add('is-active');
+      tab.setAttribute('aria-selected', 'true');
+      tab.setAttribute('tabindex', '0');
+      tab.focus();
+
+      const panel = wrapper.querySelector(`[data-tab-index="${idx}"]`) as HTMLElement | null;
+      if (panel) {
+        panel.classList.add('is-active');
+        panel.removeAttribute('hidden');
+      }
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => activateTab(tab));
+
+      tab.addEventListener('keydown', (e: KeyboardEvent) => {
+        const currentIndex = tabs.indexOf(tab);
+        let newIndex = -1;
+
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          newIndex = (currentIndex + 1) % tabs.length;
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          newIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+        } else if (e.key === 'Home') {
+          e.preventDefault();
+          newIndex = 0;
+        } else if (e.key === 'End') {
+          e.preventDefault();
+          newIndex = tabs.length - 1;
+        }
+
+        if (newIndex >= 0) {
+          activateTab(tabs[newIndex]);
+        }
+      });
     });
-  });
+  }
+
+  document.querySelectorAll('.tabs-wrapper').forEach(initTabs);
 </script>

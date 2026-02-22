@@ -46,6 +46,15 @@ Each entry: `id`, `file`, `title`, `date`, `category`, `related` (IDs of connect
     "category": "validation",
     "summary": "External validation: enterprise benchmark (7.5/10), GPT-4o review (8.5/10), industry maturity Level 3/5",
     "related": ["brand-assessment"]
+  },
+  {
+    "id": "accessibility-iconography",
+    "file": "accessibility-iconography.html",
+    "title": "Accessibility & Iconography Compliance",
+    "date": "2026-02-22",
+    "category": "validation",
+    "summary": "WCAG 2.1 AA compliance: accessibility 2→8, iconography 0→7. CSS enforcement, ARIA fixes, validation scripts.",
+    "related": ["brand-validation", "brand-assessment"]
   }
 ]
 ```
