@@ -64,6 +64,24 @@ Each entry: `id`, `file`, `title`, `date`, `category`, `related` (IDs of connect
     "category": "audit",
     "summary": "Google Lighthouse analysis across 15 pages (mobile): Perf 100, A11y 100, Best Practices 100, SEO 100",
     "related": ["content-gaps", "accessibility-iconography"]
+  },
+  {
+    "id": "content-neural-network",
+    "file": "content-neural-network.html",
+    "title": "Content Neural Network",
+    "date": "2026-02-22",
+    "category": "content",
+    "summary": "Semantic content graph: 108 content pieces, 4643 semantic + 197 structural edges. Interactive force-directed visualization with search, filters, and detail panel.",
+    "related": ["content-gaps", "brand-assessment"]
+  },
+  {
+    "id": "brand-alignment",
+    "file": "brand-alignment.html",
+    "title": "Brand Alignment Assessment",
+    "date": "2026-02-22",
+    "category": "brand",
+    "summary": "Content assessment of submitted flip flops article against all 7 brand guidelines. Score: 3.4/10 — major voice, image, and structure rework required.",
+    "related": ["brand-assessment", "brand-validation"]
   }
 ]
 ```

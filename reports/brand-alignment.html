@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brand Alignment Assessment — WKND Trendsetters</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:             #F8F8F8;
+    --bg-2:           #FFFFFF;
+    --primary:        #3B63FB;
+    --primary-fg:     #FFFFFF;
+    --fg:             #292929;
+    --fg-heading:     #131313;
+    --fg-muted:       #717171;
+    --border:         #E1E1E1;
+    --positive:       #12805C;
+    --positive-bg:    #ECFDF5;
+    --notice:         #E68619;
+    --notice-bg:      #FFF7ED;
+    --negative:       #D7373F;
+    --negative-bg:    #FEF2F2;
+    --shadow-emphasized: 0 2px 8px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04), 0 0 1px rgba(0,0,0,0.08);
+    --shadow-elevated: 0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08), 0 0 1px rgba(0,0,0,0.08);
+    --font: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); background: var(--bg); color: var(--fg); line-height: 1.6; font-size: 14px; }
+
+  :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+
+  /* ─── Header ─── */
+  .header { background: var(--bg-2); border-bottom: 1px solid var(--border); padding: 16px 24px; }
+  .header-inner { max-width: 960px; margin: 0 auto; }
+  .back-link { font-size: 13px; color: var(--fg-muted); text-decoration: none; transition: color 150ms; }
+  .back-link:hover { color: var(--fg-heading); }
+  h1 { font-size: 25px; font-weight: 700; line-height: 1.2; color: var(--fg-heading); margin-top: 8px; }
+  .header-sub { color: var(--fg-muted); font-size: 14px; margin-top: 4px; }
+
+  /* ─── Container ─── */
+  .container { max-width: 960px; margin: 0 auto; padding: 32px 24px; }
+
+  /* ─── Score Ring ─── */
+  .score-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 32px; }
+  .score-block {
+    flex: 1; min-width: 140px; background: var(--bg-2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px; text-align: center; box-shadow: var(--shadow-emphasized);
+  }
+  .score-ring {
+    width: 80px; height: 80px; margin: 0 auto 8px; position: relative;
+  }
+  .score-ring svg { transform: rotate(-90deg); }
+  .score-ring circle { fill: none; stroke-width: 6; }
+  .score-ring .track { stroke: var(--border); }
+  .score-ring .fill { stroke-linecap: round; transition: stroke-dashoffset 600ms ease-out; }
+  .score-value {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 800;
+  }
+  .score-label { font-size: 13px; font-weight: 600; color: var(--fg-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+
+  /* ─── Verdict Banner ─── */
+  .verdict {
+    background: var(--negative-bg); border: 1px solid var(--negative); border-radius: 12px;
+    padding: 20px 24px; margin-bottom: 32px; display: flex; gap: 16px; align-items: flex-start;
+  }
+  .verdict-icon { font-size: 28px; flex-shrink: 0; line-height: 1; }
+  .verdict h2 { font-size: 18px; font-weight: 700; color: var(--negative); margin-bottom: 4px; }
+  .verdict p { font-size: 14px; color: var(--fg); }
+
+  /* ─── Section ─── */
+  .section { margin-bottom: 32px; }
+  .section-title { font-size: 18px; font-weight: 700; color: var(--fg-heading); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--border); }
+
+  /* ─── Issue Card ─── */
+  .issue {
+    background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px 20px; margin-bottom: 12px; box-shadow: var(--shadow-emphasized);
+  }
+  .issue-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .issue-severity {
+    display: inline-flex; padding: 2px 10px; border-radius: 9999px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .sev-high { background: var(--negative-bg); color: var(--negative); }
+  .sev-medium { background: var(--notice-bg); color: var(--notice); }
+  .sev-low { background: #F0FDF4; color: var(--positive); }
+  .issue-title { font-size: 15px; font-weight: 700; color: var(--fg-heading); }
+  .issue-guideline { font-size: 12px; color: var(--fg-muted); font-style: italic; margin-bottom: 6px; }
+  .issue-body { font-size: 14px; line-height: 1.6; }
+  .issue-body p { margin-bottom: 8px; }
+
+  /* ─── Comparison ─── */
+  .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; }
+  @media (max-width: 600px) { .comparison { grid-template-columns: 1fr; } }
+  .comp-box {
+    border-radius: 8px; padding: 12px 16px; font-size: 13px; line-height: 1.5;
+  }
+  .comp-before { background: var(--negative-bg); border: 1px solid rgba(215,55,63,0.2); }
+  .comp-after { background: var(--positive-bg); border: 1px solid rgba(18,128,92,0.2); }
+  .comp-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .comp-before .comp-label { color: var(--negative); }
+  .comp-after .comp-label { color: var(--positive); }
+
+  /* ─── Image Assessment ─── */
+  .image-assessment { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 12px 0; }
+  @media (max-width: 600px) { .image-assessment { grid-template-columns: 1fr; } }
+  .image-box {
+    border-radius: 8px; overflow: hidden; border: 1px solid var(--border);
+  }
+  .image-box img { width: 100%; display: block; }
+  .image-caption { padding: 10px 14px; font-size: 12px; background: var(--bg-2); }
+
+  /* ─── Score Table ─── */
+  .score-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  .score-table th, .score-table td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .score-table th { font-weight: 700; color: var(--fg-heading); font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .score-table .score-cell { text-align: center; font-weight: 700; width: 60px; }
+
+  /* ─── Checklist ─── */
+  .checklist { list-style: none; }
+  .checklist li { padding: 6px 0; font-size: 14px; display: flex; align-items: flex-start; gap: 8px; }
+  .check-pass { color: var(--positive); font-weight: 700; }
+  .check-fail { color: var(--negative); font-weight: 700; }
+  .check-warn { color: var(--notice); font-weight: 700; }
+
+  /* ─── Summary ─── */
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 16px 0; }
+  .summary-stat {
+    background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 18px; box-shadow: var(--shadow-emphasized);
+  }
+  .summary-stat-value { font-size: 28px; font-weight: 800; color: var(--fg-heading); }
+  .summary-stat-label { font-size: 12px; color: var(--fg-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+
+  /* ─── Quote ─── */
+  .brand-quote {
+    border-left: 4px solid var(--primary); padding: 12px 20px; margin: 16px 0;
+    background: rgba(59,99,251,0.04); border-radius: 0 8px 8px 0;
+    font-size: 14px; font-style: italic; color: var(--fg-muted);
+  }
+  .brand-quote cite { display: block; margin-top: 4px; font-style: normal; font-weight: 600; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <a href="hub.html" class="back-link">&larr; Back to Hub</a>
+    <h1>Brand Alignment Assessment</h1>
+    <div class="header-sub">Content: "Flip Flops: The Unsung Heroes of Summer" &mdash; assessed February 22, 2026</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Overall Scores -->
+  <div class="score-row">
+    <div class="score-block">
+      <div class="score-ring">
+        <svg viewBox="0 0 80 80"><circle class="track" cx="40" cy="40" r="34"/><circle class="fill" cx="40" cy="40" r="34" stroke="#D7373F" stroke-dasharray="213.6" stroke-dashoffset="149.5"/></svg>
+        <div class="score-value" style="color: var(--negative);">3</div>
+      </div>
+      <div class="score-label">Voice</div>
+    </div>
+    <div class="score-block">
+      <div class="score-ring">
+        <svg viewBox="0 0 80 80"><circle class="track" cx="40" cy="40" r="34"/><circle class="fill" cx="40" cy="40" r="34" stroke="#E68619" stroke-dasharray="213.6" stroke-dashoffset="107.0"/></svg>
+        <div class="score-value" style="color: var(--notice);">5</div>
+      </div>
+      <div class="score-label">Structure</div>
+    </div>
+    <div class="score-block">
+      <div class="score-ring">
+        <svg viewBox="0 0 80 80"><circle class="track" cx="40" cy="40" r="34"/><circle class="fill" cx="40" cy="40" r="34" stroke="#D7373F" stroke-dasharray="213.6" stroke-dashoffset="171.0"/></svg>
+        <div class="score-value" style="color: var(--negative);">2</div>
+      </div>
+      <div class="score-label">Image</div>
+    </div>
+    <div class="score-block">
+      <div class="score-ring">
+        <svg viewBox="0 0 80 80"><circle class="track" cx="40" cy="40" r="34"/><circle class="fill" cx="40" cy="40" r="34" stroke="#E68619" stroke-dasharray="213.6" stroke-dashoffset="128.0"/></svg>
+        <div class="score-value" style="color: var(--notice);">4</div>
+      </div>
+      <div class="score-label">SEO</div>
+    </div>
+    <div class="score-block">
+      <div class="score-ring">
+        <svg viewBox="0 0 80 80"><circle class="track" cx="40" cy="40" r="34"/><circle class="fill" cx="40" cy="40" r="34" stroke="#D7373F" stroke-dasharray="213.6" stroke-dashoffset="149.5"/></svg>
+        <div class="score-value" style="color: var(--negative);">3</div>
+      </div>
+      <div class="score-label">Brand Values</div>
+    </div>
+  </div>
+
+  <!-- Verdict -->
+  <div class="verdict">
+    <div class="verdict-icon">&#9888;</div>
+    <div>
+      <h2>Major Rework Required &mdash; Overall 3.4 / 10</h2>
+      <p>This content reads like a lifestyle magazine essay, not a WKND Trendsetters blog post. The voice is too formal, the image is stock photography with a watermark, the structure is too long-form, and there are zero references to the brand's personas or community. The topic (flip flops / beach style) is on-brand, but the execution misses the voice, energy, and visual identity across every dimension.</p>
+    </div>
+  </div>
+
+  <!-- ════════ VOICE ════════ -->
+  <div class="section">
+    <h2 class="section-title">Voice &amp; Tone &mdash; 3 / 10</h2>
+
+    <div class="brand-quote">
+      "The voice has four pillars: Fresh, Bold, Real, Playful. Tone should be conversational, like texting a friend."
+      <cite>&mdash; brand/voice.md</cite>
+    </div>
+
+    <div class="issue">
+      <div class="issue-header">
+        <span class="issue-severity sev-high">High</span>
+        <span class="issue-title">Tone is literary/essayistic, not conversational</span>
+      </div>
+      <div class="issue-guideline">voice.md: "Blog posts are conversational. Sentence style: short sentences for impact, contractions always, fragments are fine."</div>
+      <div class="issue-body">
+        <p>The article uses long, complex sentences with subordinate clauses, semicolons, and em dashes in a reflective/philosophical tone. This reads like a travel magazine feature, not a Gen-Z fashion blog. Paragraphs routinely hit 4&ndash;6 sentences.</p>
+        <div class="comparison">
+          <div class="comp-box comp-before">
+            <div class="comp-label">Submitted</div>
+            "There's something almost philosophical about the flip flop's enduring appeal. In a world of increasingly complicated, technology-laden footwear &mdash; with carbon fiber plates, smart cushioning systems, and app-connected insoles &mdash; the flip flop remains stubbornly, beautifully simple."
+          </div>
+          <div class="comp-box comp-after">
+            <div class="comp-label">On-brand rewrite</div>
+            "Here's why flip flops hit different. While sneaker brands stack carbon plates and Bluetooth insoles, your favorite slides stay simple. Slip on, walk to the water, done. That's the whole vibe."
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue">
+      <div class="issue-header">
+        <span class="issue-severity sev-high">High</span>
+        <span class="issue-title">Missing brand power words</span>
+      </div>
+      <div class="issue-guideline">voice.md: "Power words: Fresh, bold, real, vibes, style, looks, fits, trends, effortless, cool, energy, confidence, fun, serve, own, rock, pop, glow up."</div>
+      <div class="issue-body">
+        <p>Zero brand power words appear in the article. Instead it uses literary vocabulary: "philosophical," "cultural fabric," "gloriously impractical," "synonymous with," "enduring appeal." These belong in The New Yorker, not WKND Trendsetters.</p>
+      </div>
+    </div>
+
+    <div class="issue">
+      <div class="issue-header">
+        <span class="issue-severity sev-high">High</span>
+        <span class="issue-title">No persona references or real stories</span>
+      </div>
+      <div class="issue-guideline">voice.md: "Real &mdash; Grounded in authentic stories and real people." identity.md defines 8 brand personas.</div>
+      <div class="issue-body">
+        <p>The article is entirely impersonal &mdash; no named trendsetters, no quotes, no "Taylor rocks her slides at the beach." Compare to the existing blog post "Sunkissed and effortless" which references Taylor Kim by name in the second section and includes a direct quote.</p>
+      </div>
+    </div>
+
+    <div class="issue">
+      <div class="issue-header">
+        <span class="issue-severity sev-medium">Medium</span>
+        <span class="issue-title">Passive voice and hedging</span>
+      </div>
+      <div class="issue-guideline">voice.md: "Avoid: passive voice, hedging."</div>
+      <div class="issue-body">
+        <p>Multiple instances: "are among the most popular materials," "tend to be overlooked," "have found ways to deliver both." Brand voice calls for definitive, bold statements: "EVA foam wins" not "EVA foam is among the most popular."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ STRUCTURE ════════ -->
+  <div class="section">
+    <h2 class="section-title">Content Structure &mdash; 5 / 10</h2>
+
+    <div class="brand-quote">
+      "Title: Short, punchy, follows headline formulas. Paragraphs: 2&ndash;4 sentences max. Subheadings: every 2&ndash;3 paragraphs, action-oriented. Length: 600&ndash;1,000 words. End with community-oriented CTA."
+      <cite>&mdash; brand/content.md</cite>
+    </div>
+
+    <table class="score-table">
+      <thead>
+        <tr><th>Criterion</th><th>Guideline</th><th>Submitted</th><th class="score-cell">Pass</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Word count</td><td>600&ndash;1,000</td><td>~900</td>
+          <td class="score-cell check-pass">&#10003;</td>
+        </tr>
+        <tr>
+          <td>Title length</td><td>Short, punchy (&le;8 words)</td><td>"Flip Flops: The Unsung Heroes of Summer" (7 words)</td>
+          <td class="score-cell check-warn">~</td>
+        </tr>
+        <tr>
+          <td>Title style</td><td>Headline formula: "[Adj]+[noun], [adj]+[noun]"</td><td>Subtitle/literary style with colon</td>
+          <td class="score-cell check-fail">&#10007;</td>
+        </tr>
+        <tr>
+          <td>Opening</td><td>Jump straight in, no "In this article"</td><td>Jumps in with scene-setting</td>
+          <td class="score-cell check-pass">&#10003;</td>
+        </tr>
+        <tr>
+          <td>Paragraph length</td><td>2&ndash;4 sentences max</td><td>Many 5&ndash;6 sentence paragraphs</td>
+          <td class="score-cell check-fail">&#10007;</td>
+        </tr>
+        <tr>
+          <td>Subheadings</td><td>Action-oriented, every 2&ndash;3 paragraphs</td><td>Questions/descriptive titles, spacing OK</td>
+          <td class="score-cell check-warn">~</td>
+        </tr>
+        <tr>
+          <td>Images</td><td>Minimum 2 per post</td><td>1 image</td>
+          <td class="score-cell check-fail">&#10007;</td>
+        </tr>
+        <tr>
+          <td>Blockquote</td><td>Standout quotes with yellow border</td><td>None</td>
+          <td class="score-cell check-fail">&#10007;</td>
+        </tr>
+        <tr>
+          <td>CTA</td><td>Community-oriented ending</td><td>No CTA at all</td>
+          <td class="score-cell check-fail">&#10007;</td>
+        </tr>
+        <tr>
+          <td>Category tag</td><td>Required frontmatter</td><td>Missing</td>
+          <td class="score-cell check-fail">&#10007;</td>
+        </tr>
+        <tr>
+          <td>Heading hierarchy</td><td>One H1, H2s for sections</td><td>Correct (H1 + H2s)</td>
+          <td class="score-cell check-pass">&#10003;</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="issue">
+      <div class="issue-header">
+        <span class="issue-severity sev-high">High</span>
+        <span class="issue-title">Title doesn't follow brand headline formulas</span>
+      </div>
+      <div class="issue-body">
+        <div class="comparison">
+          <div class="comp-box comp-before">
+            <div class="comp-label">Submitted</div>
+            "Flip Flops: The Unsung Heroes of Summer"
+          </div>
+          <div class="comp-box comp-after">
+            <div class="comp-label">On-brand alternatives</div>
+            "Beach kicks, zero stress"<br>
+            "Slides on, vibes up"<br>
+            "Flip flop season, no rules"
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue">
+      <div class="issue-header">
+        <span class="issue-severity sev-high">High</span>
+        <span class="issue-title">Subheadings are descriptive, not action-oriented</span>
+      </div>
+      <div class="issue-body">
+        <div class="comparison">
+          <div class="comp-box comp-before">
+            <div class="comp-label">Submitted</div>
+            "A Brief History of the World's Most Casual Shoe"<br>
+            "What Makes a Great Beach Flip Flop?"<br>
+            "The Flip Flop Debate: Style vs. Function"<br>
+            "Caring for Your Flip Flops"<br>
+            "Why We Keep Coming Back to Them"
+          </div>
+          <div class="comp-box comp-after">
+            <div class="comp-label">On-brand rewrites</div>
+            "From papyrus to poolside"<br>
+            "Find your perfect pair"<br>
+            "Style or comfort? Both."<br>
+            "Keep them fresh all summer"<br>
+            "The simplest flex"
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue">
+      <div class="issue-header">
+        <span class="issue-severity sev-high">High</span>
+        <span class="issue-title">No closing CTA</span>
+      </div>
+      <div class="issue-guideline">content.md: "CTA: Community-oriented ending." Button text: "Under 3 words, action verbs."</div>
+      <div class="issue-body">
+        <p>The article ends with an italicized quip but no CTA button, no community engagement prompt, no link to related content. Every WKND Trendsetters blog post ends with a call to action like "Subscribe" or "Join now."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ IMAGE ════════ -->
+  <div class="section">
+    <h2 class="section-title">Image &amp; Photography &mdash; 2 / 10</h2>
+
+    <div class="brand-quote">
+      "Photography should feel like a friend's Instagram feed, not a stock photo library. Ask: would a real 22-year-old share this?"
+      <cite>&mdash; brand/photography.md</cite>
+    </div>
+
+    <div class="issue">
+      <div class="issue-header">
+        <span class="issue-severity sev-high">High</span>
+        <span class="issue-title">Stock photo with visible watermark</span>
+      </div>
+      <div class="issue-body">
+        <p>The image is a DepositPhotos stock photo with a visible watermark. This is the single biggest brand violation &mdash; the photography guidelines explicitly state "no stock photo cliches" and require imagery that feels like a friend's Instagram feed.</p>
+      </div>
+    </div>
+
+    <ul class="checklist">
+      <li><span class="check-fail">&#10007;</span> <strong>Natural/candid:</strong> Staged product arrangement (posed flip flops, starfish, message in bottle)</li>
+      <li><span class="check-fail">&#10007;</span> <strong>People present:</strong> No people at all &mdash; brand requires "subjects 18&ndash;30, approachable"</li>
+      <li><span class="check-fail">&#10007;</span> <strong>Not stock cliche:</strong> Starfish + shells + message-in-a-bottle is peak stock photography</li>
+      <li><span class="check-fail">&#10007;</span> <strong>Format:</strong> JPG, not AVIF (brand standard)</li>
+      <li><span class="check-fail">&#10007;</span> <strong>No watermark:</strong> DepositPhotos watermark visible</li>
+      <li><span class="check-pass">&#10003;</span> <strong>Color vibrancy:</strong> Bright, saturated colors</li>
+      <li><span class="check-pass">&#10003;</span> <strong>Natural light:</strong> Outdoor, bright daylight</li>
+      <li><span class="check-fail">&#10007;</span> <strong>Young energy:</strong> No human subjects, no energy or movement</li>
+      <li><span class="check-fail">&#10007;</span> <strong>Aspect ratio:</strong> Non-standard &mdash; should be 3:2 (hero) or 1:1 (card)</li>
+    </ul>
+
+    <div class="issue">
+      <div class="issue-header">
+        <span class="issue-severity sev-high">High</span>
+        <span class="issue-title">Image doesn't match brand photography direction</span>
+      </div>
+      <div class="issue-body">
+        <p>An on-brand image for this article would show <strong>a real person wearing flip flops on a beach</strong> &mdash; candid, mid-stride, sun-kissed. Think: Casey walking the boardwalk in slides and a linen shirt, phone in hand, laughing. Not arranged product photography with seashells.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ SEO ════════ -->
+  <div class="section">
+    <h2 class="section-title">SEO &amp; Meta Readiness &mdash; 4 / 10</h2>
+
+    <ul class="checklist">
+      <li><span class="check-pass">&#10003;</span> <strong>Heading hierarchy:</strong> Single H1, H2s for sections &mdash; correct</li>
+      <li><span class="check-fail">&#10007;</span> <strong>Title tag format:</strong> Should be "[Topic] &mdash; WKND Trendsetters" &mdash; missing brand suffix</li>
+      <li><span class="check-fail">&#10007;</span> <strong>Meta description:</strong> Not provided &mdash; needs 1 sentence, &lt;155 chars, keyword-aware</li>
+      <li><span class="check-fail">&#10007;</span> <strong>URL slug:</strong> Not provided &mdash; should be lowercase, hyphenated (e.g., "beach-flip-flop-style")</li>
+      <li><span class="check-fail">&#10007;</span> <strong>Image alt text:</strong> Not provided for the hero image</li>
+      <li><span class="check-fail">&#10007;</span> <strong>Category tag:</strong> Missing &mdash; should be "Beach Vibes" or "Casual Cool"</li>
+      <li><span class="check-fail">&#10007;</span> <strong>Frontmatter:</strong> No title, description, author, date, readTime, category, image fields</li>
+      <li><span class="check-pass">&#10003;</span> <strong>Keyword density:</strong> "flip flops" appears frequently, good for search</li>
+    </ul>
+  </div>
+
+  <!-- ════════ BRAND VALUES ════════ -->
+  <div class="section">
+    <h2 class="section-title">Brand Value Expression &mdash; 3 / 10</h2>
+
+    <div class="brand-quote">
+      "If WKND Trendsetters were a person: 24 years old, the friend who always knows what to wear, confident but not arrogant."
+      <cite>&mdash; brand/identity.md</cite>
+    </div>
+
+    <table class="score-table">
+      <thead>
+        <tr><th>Brand Value</th><th>Assessment</th><th class="score-cell">Score</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Freshness</strong><br><span style="font-size:12px;color:var(--fg-muted);">Always current, moving with culture</span></td>
+          <td>References 4,000 BC Egypt, 1950s history, WWII soldiers. Tone is timeless/reflective rather than "right now." Zero trend references.</td>
+          <td class="score-cell" style="color:var(--negative);">2</td>
+        </tr>
+        <tr>
+          <td><strong>Boldness</strong><br><span style="font-size:12px;color:var(--fg-muted);">Unapologetic about style</span></td>
+          <td>"Both camps are right" and "honestly, both are right" &mdash; this is hedging. Brand voice makes definitive statements.</td>
+          <td class="score-cell" style="color:var(--negative);">3</td>
+        </tr>
+        <tr>
+          <td><strong>Authenticity</strong><br><span style="font-size:12px;color:var(--fg-muted);">Real people, real stories</span></td>
+          <td>No named people, no quotes, no specific experiences. Reads as a detached observer, not someone living it.</td>
+          <td class="score-cell" style="color:var(--negative);">2</td>
+        </tr>
+        <tr>
+          <td><strong>Inclusivity</strong><br><span style="font-size:12px;color:var(--fg-muted);">Everyone's welcome</span></td>
+          <td>Neutral and inoffensive, but doesn't actively celebrate diverse representation. No community language.</td>
+          <td class="score-cell" style="color:var(--notice);">4</td>
+        </tr>
+        <tr>
+          <td><strong>Fun</strong><br><span style="font-size:12px;color:var(--fg-muted);">Fashion is play, not homework</span></td>
+          <td>Closing line has charm, but overall tone is instructional and reflective rather than playful. "Caring for Your Flip Flops" reads like a product manual.</td>
+          <td class="score-cell" style="color:var(--negative);">3</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ════════ WHAT'S SALVAGEABLE ════════ -->
+  <div class="section">
+    <h2 class="section-title">What's Salvageable</h2>
+    <ul class="checklist">
+      <li><span class="check-pass">&#10003;</span> <strong>Topic:</strong> Beach flip flops are a perfect WKND Trendsetters topic &mdash; summer, casual, accessible, fun</li>
+      <li><span class="check-pass">&#10003;</span> <strong>Word count:</strong> ~900 words is within the 600&ndash;1,000 target</li>
+      <li><span class="check-pass">&#10003;</span> <strong>Knowledge:</strong> Good product insight (EVA foam, strap comfort, traction) &mdash; keep the substance, rewrite the voice</li>
+      <li><span class="check-pass">&#10003;</span> <strong>Opening concept:</strong> "The snap-slap sound of flip flops hitting a boardwalk" is sensory and evocative &mdash; can be adapted</li>
+      <li><span class="check-pass">&#10003;</span> <strong>Closing concept:</strong> "No one looked back on a beach vacation and wished they'd worn more practical footwear" &mdash; playful, could be a great sign-off</li>
+    </ul>
+  </div>
+
+  <!-- ════════ SUMMARY ════════ -->
+  <div class="section">
+    <h2 class="section-title">Summary of Required Changes</h2>
+
+    <div class="summary-grid">
+      <div class="summary-stat">
+        <div class="summary-stat-value" style="color: var(--negative);">14</div>
+        <div class="summary-stat-label">Issues found</div>
+      </div>
+      <div class="summary-stat">
+        <div class="summary-stat-value" style="color: var(--negative);">8</div>
+        <div class="summary-stat-label">High severity</div>
+      </div>
+      <div class="summary-stat">
+        <div class="summary-stat-value" style="color: var(--notice);">4</div>
+        <div class="summary-stat-label">Medium severity</div>
+      </div>
+      <div class="summary-stat">
+        <div class="summary-stat-value" style="color: var(--positive);">5</div>
+        <div class="summary-stat-label">Passing checks</div>
+      </div>
+    </div>
+
+    <table class="score-table">
+      <thead>
+        <tr><th>#</th><th>Action</th><th>Priority</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td><strong>Replace the image.</strong> Need a candid photo of a real person in flip flops on a beach, AVIF format, 3:2 aspect ratio, no watermark.</td><td><span class="issue-severity sev-high">High</span></td></tr>
+        <tr><td>2</td><td><strong>Rewrite in brand voice.</strong> Shorten sentences, add contractions, use power words, inject personality and humor. Read existing post "Sunkissed and effortless" as reference.</td><td><span class="issue-severity sev-high">High</span></td></tr>
+        <tr><td>3</td><td><strong>Rewrite the title.</strong> Use a headline formula: "Beach kicks, zero stress" or "Slides on, vibes up."</td><td><span class="issue-severity sev-high">High</span></td></tr>
+        <tr><td>4</td><td><strong>Add persona references.</strong> Feature at least one named trendsetter (e.g., Casey's flip flop picks, Taylor's beach-to-bar transition).</td><td><span class="issue-severity sev-high">High</span></td></tr>
+        <tr><td>5</td><td><strong>Rewrite subheadings.</strong> Make them action-oriented and punchy: "Find your perfect pair," "The simplest flex."</td><td><span class="issue-severity sev-high">High</span></td></tr>
+        <tr><td>6</td><td><strong>Add a CTA.</strong> Community-oriented ending with button: "See more beach looks" or "Join the crew."</td><td><span class="issue-severity sev-high">High</span></td></tr>
+        <tr><td>7</td><td><strong>Add a blockquote.</strong> At least one standout quote from a persona: "Slides + linen &mdash; that's my whole summer uniform." &mdash; Casey Drew</td><td><span class="issue-severity sev-medium">Medium</span></td></tr>
+        <tr><td>8</td><td><strong>Break paragraphs.</strong> Max 2&ndash;4 sentences per paragraph. The "What Makes a Great Beach Flip Flop?" section needs splitting.</td><td><span class="issue-severity sev-medium">Medium</span></td></tr>
+        <tr><td>9</td><td><strong>Add frontmatter.</strong> title, description, author, date, readTime, category ("Beach Vibes"), image, imageAlt.</td><td><span class="issue-severity sev-medium">Medium</span></td></tr>
+        <tr><td>10</td><td><strong>Add a second image.</strong> Minimum 2 per post. Inline image showing flip flop details or beach style outfit.</td><td><span class="issue-severity sev-medium">Medium</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+</body>
+</html>
