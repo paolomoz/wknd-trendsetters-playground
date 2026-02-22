@@ -76,3 +76,59 @@ This session shows the LLM operating as a **performance engineer** — analyzing
 **Key insight: the LLM self-corrected.** The plan assumed `trailingSlash: 'never'` would generate flat files. The build output showed otherwise. Rather than deploying and hoping, Claude Code verified the output, diagnosed the gap, added the missing `build.format` config, and rebuilt. This mirrors what a developer would do — the plan isn't sacred, the outcome is.
 
 **Performance ceiling question:** The site now averages 93 Performance on mobile. Getting to 100 would likely require image optimization (WebP/AVIF, responsive `srcset`), edge caching headers, and potentially inlining critical CSS — diminishing returns territory. The jump from 78→91 on the worst page and 90→93 average with three targeted fixes shows the highest-leverage optimizations are identifiable and implementable through conversation.
+
+---
+
+## Round 2: Self-Hosted Fonts + Image Compression → Performance 100
+
+The user said "it is not 100 yet, lots of CLS, some high LCPs fix it for good" — pushing for the perfect score. Claude Code analyzed the raw Lighthouse data and identified two remaining bottlenecks:
+
+1. **External Google Fonts chain** — DNS lookup + TLS + CSS download + font file discovery + font download = ~1,500ms of network chain on simulated mobile. This was the dominant cause of the ~2.4s FCP.
+2. **Oversized images** — 76 .avif files totaling 6.9MB, many at original resolution (800-1200px wide) when mobile viewport only needs ~400px (800px at 2x retina).
+
+### Fixes Applied
+
+**Self-hosted fonts:**
+- Downloaded 3 woff2 files (Instrument Sans variable, Syncopate 400, Syncopate 700) — 49KB total
+- Inlined `@font-face` declarations directly in `<head>` via `<style>` block
+- Added `<link rel="preload">` for the font files — browser fetches them immediately from same origin
+- Removed all Google Fonts external links (preconnect, preload, stylesheet)
+- Result: fonts now load from the same CDN as the HTML, no cross-origin chains
+
+**Image compression:**
+- Resized all 76 .avif images to max 800px width (retina-ready for mobile viewport)
+- Re-encoded at AVIF quality 50 (perceptually transparent for web content)
+- Total payload: **6.9MB → 1.9MB** (73% reduction)
+
+### Results
+
+| Metric | Round 1 (prev) | Round 2 (now) |
+|---|---|---|
+| **Performance** | 93 | **100** |
+| FCP | ~2,400ms | **~900ms** |
+| LCP | ~2,800ms avg | **~1,300ms avg** |
+| CLS | 0.025 | 0.025 (unchanged, under threshold) |
+
+**All 15 pages score Performance 100.**
+
+The FCP improvement (2,400ms → 900ms) was entirely from self-hosting fonts. Eliminating the external font chain removed ~1,500ms of serialized network requests on simulated mobile. The image compression reduced total transfer size by 5MB, directly improving LCP for image-heavy pages.
+
+### What Worked
+
+- **Self-hosting > CDN for fonts** — Google Fonts is fast on desktop broadband, but on Lighthouse's mobile simulation (1.6 Mbps, 150ms RTT), the multi-hop chain (HTML → CSS → font file, across two domains) adds massive latency. Self-hosting collapses this to a single same-origin preloaded request.
+- **Aggressive AVIF compression** — Quality 50 with 800px max width is visually acceptable for a fashion/lifestyle site and dramatically reduces payload.
+- **Iterative fix-deploy-measure loop** — The user pushed for 100 after the first round hit 93. The second round of analysis identified the exact bottlenecks (font chain + image size) rather than guessing.
+
+### Thesis Reflections
+
+This is the session's strongest evidence for the thesis. The user gave a simple instruction — "it is not 100 yet [...] fix it for good, make the fix, deploy, test and refactor again in loop if needed" — and Claude Code executed a complete performance engineering sprint:
+
+1. Analyzed raw Lighthouse JSON to identify font chain and image sizing as bottlenecks
+2. Downloaded and self-hosted Google Fonts (3 woff2 files)
+3. Rewrote the font loading strategy (inline @font-face + preload)
+4. Compressed 76 images with sharp (6.9MB → 1.9MB)
+5. Built, deployed, measured — hit 100 on first attempt
+
+**A traditional workflow would require:** A performance engineer reading Lighthouse reports, a frontend developer refactoring font loading, a build pipeline with image optimization plugins (like astro-imagetools or Next.js Image), QA testing for visual regressions, and multiple deploy-measure cycles across days or weeks.
+
+**The LLM did it in one conversation turn.** The key capability isn't just code generation — it's the closed-loop optimization cycle: analyze → hypothesize → implement → measure → verify. This is exactly what makes performance engineering expensive in traditional teams (requires both deep knowledge and iterative experimentation), and exactly where LLMs collapse the cost to near-zero.

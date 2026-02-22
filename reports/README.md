@@ -62,7 +62,7 @@ Each entry: `id`, `file`, `title`, `date`, `category`, `related` (IDs of connect
     "title": "PageSpeed Insights Assessment",
     "date": "2026-02-22",
     "category": "audit",
-    "summary": "Google Lighthouse analysis across 15 pages (mobile): Perf 90, A11y 95, Best Practices 100, SEO 97",
+    "summary": "Google Lighthouse analysis across 15 pages (mobile): Perf 100, A11y 96, Best Practices 100, SEO 98",
     "related": ["content-gaps", "accessibility-iconography"]
   }
 ]
