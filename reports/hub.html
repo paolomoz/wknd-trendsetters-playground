@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Reports Hub — WKND Trendsetters</title>
+<script src="https://unpkg.com/cytoscape@3.30.4/dist/cytoscape.min.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F8F8F8; color: #292929; line-height: 1.6; }
@@ -49,21 +50,39 @@
   .timeline-view { display: block; }
   .timeline-view.hidden { display: none; }
 
-  .map-container { position: relative; min-height: 500px; }
-  .map-node { position: absolute; background: #fff; border: 2px solid #E1E1E1; border-radius: 12px; padding: 1rem 1.25rem; min-width: 200px; max-width: 260px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); cursor: pointer; text-decoration: none; color: inherit; transition: all 150ms ease; }
-  .map-node:hover { border-color: #3B63FB; transform: scale(1.03); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
-  .map-node-title { font-size: 0.9rem; font-weight: 700; color: #131313; }
-  .map-node-desc { font-size: 0.75rem; color: #717171; margin-top: 0.25rem; }
-  .map-center { position: absolute; background: #131313; color: #fff; border-radius: 16px; padding: 1.25rem 1.5rem; text-align: center; box-shadow: 0 8px 24px rgba(0,0,0,0.15); z-index: 2; }
-  .map-center-title { font-size: 1.1rem; font-weight: 800; }
-  .map-center-sub { font-size: 0.8rem; color: rgba(255,255,255,0.7); margin-top: 0.25rem; }
+  #cy {
+    width: 100%;
+    height: 560px;
+    background: #fff;
+    border: 1px solid #E1E1E1;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
 
-  /* SVG connections */
-  .map-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
-  .map-line { stroke: #E1E1E1; stroke-width: 2; fill: none; stroke-dasharray: 6 4; }
+  /* Tooltip */
+  .cy-tooltip {
+    position: absolute;
+    background: #131313;
+    color: #fff;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    max-width: 260px;
+    pointer-events: none;
+    z-index: 100;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: opacity 150ms ease;
+  }
+  .cy-tooltip.visible { opacity: 1; }
+  .cy-tooltip-title { font-weight: 700; margin-bottom: 0.15rem; }
+  .cy-tooltip-desc { color: rgba(255,255,255,0.7); font-size: 0.75rem; }
 
-  /* Empty state */
-  .empty-note { text-align: center; padding: 3rem; color: #717171; font-size: 0.9rem; }
+  /* Legend */
+  .map-legend { display: flex; gap: 1.5rem; margin-top: 1rem; justify-content: center; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; color: #717171; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .legend-line { width: 20px; height: 2px; border-radius: 1px; }
 </style>
 </head>
 <body>
@@ -140,74 +159,18 @@
 
   <!-- ============ MIND MAP VIEW ============ -->
   <div class="mindmap" id="mindmap-view">
-    <div class="map-container" style="height: 520px;">
-
-      <svg class="map-svg" viewBox="0 0 1200 520" preserveAspectRatio="xMidYMid meet">
-        <!-- Center to Content Gaps -->
-        <line class="map-line" x1="520" y1="260" x2="160" y2="120" />
-        <!-- Center to Brand Assessment -->
-        <line class="map-line" x1="680" y1="260" x2="880" y2="120" />
-        <!-- Content Gaps to Brand Assessment (related) -->
-        <line class="map-line" x1="300" y1="120" x2="820" y2="120" style="stroke: #3B63FB; opacity: 0.3;" />
-        <!-- Brand Assessment to Brand Validation -->
-        <line class="map-line" x1="940" y1="170" x2="940" y2="350" style="stroke: #D97706;" />
-        <!-- Center to Brand Validation -->
-        <line class="map-line" x1="680" y1="290" x2="880" y2="400" />
-        <!-- Center to A11y & Iconography -->
-        <line class="map-line" x1="520" y1="290" x2="160" y2="400" />
-        <!-- Brand Validation to A11y & Iconography (direct origin) -->
-        <line class="map-line" x1="820" y1="400" x2="360" y2="400" style="stroke: #D97706;" />
-        <!-- Brand Assessment to A11y & Iconography -->
-        <line class="map-line" x1="820" y1="170" x2="300" y2="400" style="stroke: #D97706; opacity: 0.4;" />
-        <line class="map-line" x1="600" y1="310" x2="540" y2="440" style="opacity: 0.2;" />
-      </svg>
-
-      <!-- Center node -->
-      <div class="map-center" style="left: 50%; top: 50%; transform: translate(-50%, -50%);">
-        <div class="map-center-title">WKND Trendsetters</div>
-        <div class="map-center-sub">Site Management via LLM</div>
-      </div>
-
-      <!-- Content Gaps -->
-      <a href="content-gaps.html" class="map-node" style="left: 60px; top: 70px;">
-        <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.25rem;">
-          <span class="badge badge-audit">Audit</span>
-        </div>
-        <div class="map-node-title">Content Gaps</div>
-        <div class="map-node-desc">9 missing pages, 15 dead links, 3 orphan pages</div>
-      </a>
-
-      <!-- Brand Assessment -->
-      <a href="brand-assessment.html" class="map-node" style="right: 60px; top: 70px;">
-        <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.25rem;">
-          <span class="badge badge-brand">Brand</span>
-        </div>
-        <div class="map-node-title">Brand Assessment</div>
-        <div class="map-node-desc">Identity coverage, voice & visual analysis, guidelines proposal</div>
-      </a>
-
-      <!-- Accessibility & Iconography -->
-      <a href="accessibility-iconography.html" class="map-node" style="left: 60px; bottom: 50px;">
-        <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.25rem;">
-          <span class="badge badge-validation">Validation</span>
-        </div>
-        <div class="map-node-title">A11y & Iconography</div>
-        <div class="map-node-desc">WCAG AA, focus rings, ARIA, icon system</div>
-      </a>
-
-      <a href="brand-validation.html" class="map-node" style="right: 60px; bottom: 50px;">
-        <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.25rem;">
-          <span class="badge badge-validation">Validation</span>
-        </div>
-        <div class="map-node-title">Brand Validation</div>
-        <div class="map-node-desc">Benchmark 7.5, GPT-4o 8.5, Maturity L3/5</div>
-      </a>
-
-      <div class="map-node" style="left: 50%; bottom: 30px; transform: translateX(-50%); opacity: 0.3; pointer-events: none; border-style: dashed;">
-        <div class="map-node-title" style="color: #aaa;">Infrastructure</div>
-        <div class="map-node-desc">Upcoming</div>
-      </div>
-
+    <div id="cy"></div>
+    <div class="cy-tooltip" id="cy-tooltip">
+      <div class="cy-tooltip-title"></div>
+      <div class="cy-tooltip-desc"></div>
+    </div>
+    <div class="map-legend">
+      <div class="legend-item"><div class="legend-dot" style="background: #131313;"></div> Hub</div>
+      <div class="legend-item"><div class="legend-dot" style="background: #2563EB;"></div> Audit</div>
+      <div class="legend-item"><div class="legend-dot" style="background: #7C3AED;"></div> Brand</div>
+      <div class="legend-item"><div class="legend-dot" style="background: #D97706;"></div> Validation</div>
+      <div class="legend-item"><div class="legend-line" style="background: #D97706;"></div> Derived from</div>
+      <div class="legend-item"><div class="legend-line" style="background: #E1E1E1;"></div> Related</div>
     </div>
   </div>
 
@@ -226,8 +189,288 @@ function showView(view) {
     document.getElementById('timeline-view').classList.add('hidden');
     document.getElementById('mindmap-view').classList.add('active');
     tabs[1].classList.add('active');
+    // Re-fit after display change
+    if (window._cy) setTimeout(() => window._cy.fit(undefined, 50), 50);
   }
 }
+
+// ── Cytoscape Mind Map ──
+document.addEventListener('DOMContentLoaded', () => {
+  const categoryColors = {
+    hub: '#131313',
+    audit: '#2563EB',
+    brand: '#7C3AED',
+    validation: '#D97706',
+    infrastructure: '#EA580C',
+    placeholder: '#CCCCCC',
+  };
+
+  const cy = cytoscape({
+    container: document.getElementById('cy'),
+    elements: [
+      // ── Nodes ──
+      {
+        data: {
+          id: 'hub',
+          label: 'WKND\nTrendsetters',
+          desc: 'Site Management via LLM',
+          category: 'hub',
+          href: null,
+        },
+      },
+      {
+        data: {
+          id: 'content-gaps',
+          label: 'Content Gaps',
+          desc: '9 missing pages, 15 dead links, 3 orphan pages',
+          category: 'audit',
+          href: 'content-gaps.html',
+        },
+      },
+      {
+        data: {
+          id: 'brand-assessment',
+          label: 'Brand\nAssessment',
+          desc: 'Identity coverage, voice & visual analysis, guidelines proposal',
+          category: 'brand',
+          href: 'brand-assessment.html',
+        },
+      },
+      {
+        data: {
+          id: 'brand-validation',
+          label: 'Brand\nValidation',
+          desc: 'Benchmark 7.5, GPT-4o 8.5, Maturity L3/5',
+          category: 'validation',
+          href: 'brand-validation.html',
+        },
+      },
+      {
+        data: {
+          id: 'a11y-icons',
+          label: 'A11y &\nIconography',
+          desc: 'WCAG AA, focus rings, ARIA, icon system. Scores: 2→8, 0→7',
+          category: 'validation',
+          href: 'accessibility-iconography.html',
+        },
+      },
+      {
+        data: {
+          id: 'infrastructure',
+          label: 'Infrastructure',
+          desc: 'Upcoming',
+          category: 'placeholder',
+          href: null,
+        },
+      },
+
+      // ── Edges ──
+      // Hub connections (gray, related)
+      { data: { id: 'e-hub-cg', source: 'hub', target: 'content-gaps', relation: 'related' } },
+      { data: { id: 'e-hub-ba', source: 'hub', target: 'brand-assessment', relation: 'related' } },
+      { data: { id: 'e-hub-bv', source: 'hub', target: 'brand-validation', relation: 'related' } },
+      { data: { id: 'e-hub-a11y', source: 'hub', target: 'a11y-icons', relation: 'related' } },
+      { data: { id: 'e-hub-infra', source: 'hub', target: 'infrastructure', relation: 'related' } },
+
+      // Derivation chains (orange, "derived from")
+      { data: { id: 'e-cg-ba', source: 'content-gaps', target: 'brand-assessment', relation: 'derived' } },
+      { data: { id: 'e-ba-bv', source: 'brand-assessment', target: 'brand-validation', relation: 'derived' } },
+      { data: { id: 'e-bv-a11y', source: 'brand-validation', target: 'a11y-icons', relation: 'derived' } },
+      { data: { id: 'e-ba-a11y', source: 'brand-assessment', target: 'a11y-icons', relation: 'derived' } },
+    ],
+
+    style: [
+      // ── Node base ──
+      {
+        selector: 'node',
+        style: {
+          label: 'data(label)',
+          'text-wrap': 'wrap',
+          'text-valign': 'center',
+          'text-halign': 'center',
+          'font-size': '12px',
+          'font-weight': '700',
+          'font-family': '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+          color: '#fff',
+          'text-outline-color': 'data(color)',
+          'text-outline-width': 0,
+          width: 100,
+          height: 100,
+          'background-color': '#fff',
+          'border-width': 2,
+          'border-color': '#E1E1E1',
+          shape: 'round-rectangle',
+          'corner-radius': 12,
+          'padding': '12px',
+          'transition-property': 'border-color, border-width, background-color',
+          'transition-duration': '150ms',
+        },
+      },
+      // Category-specific node styles
+      {
+        selector: 'node[category="hub"]',
+        style: {
+          'background-color': '#131313',
+          color: '#ffffff',
+          'border-color': '#131313',
+          width: 130,
+          height: 80,
+          'font-size': '13px',
+          'font-weight': '800',
+        },
+      },
+      {
+        selector: 'node[category="audit"]',
+        style: {
+          color: '#131313',
+          'border-color': '#2563EB',
+          'border-width': 2.5,
+        },
+      },
+      {
+        selector: 'node[category="brand"]',
+        style: {
+          color: '#131313',
+          'border-color': '#7C3AED',
+          'border-width': 2.5,
+        },
+      },
+      {
+        selector: 'node[category="validation"]',
+        style: {
+          color: '#131313',
+          'border-color': '#D97706',
+          'border-width': 2.5,
+        },
+      },
+      {
+        selector: 'node[category="placeholder"]',
+        style: {
+          color: '#aaaaaa',
+          'border-color': '#ddd',
+          'border-style': 'dashed',
+          'background-color': '#fafafa',
+          opacity: 0.5,
+        },
+      },
+      // Hover state
+      {
+        selector: 'node:active, node:grabbed',
+        style: {
+          'border-width': 3,
+          'overlay-opacity': 0,
+        },
+      },
+
+      // ── Edge base ──
+      {
+        selector: 'edge',
+        style: {
+          width: 1.5,
+          'line-color': '#E1E1E1',
+          'line-style': 'dashed',
+          'line-dash-pattern': [6, 4],
+          'curve-style': 'bezier',
+          'target-arrow-shape': 'none',
+          opacity: 0.6,
+          'transition-property': 'line-color, width, opacity',
+          'transition-duration': '150ms',
+        },
+      },
+      // Derived edges (orange, solid)
+      {
+        selector: 'edge[relation="derived"]',
+        style: {
+          'line-color': '#D97706',
+          'line-style': 'solid',
+          width: 2,
+          opacity: 0.7,
+          'target-arrow-shape': 'triangle',
+          'target-arrow-color': '#D97706',
+          'arrow-scale': 0.8,
+        },
+      },
+      // Highlight connected elements on hover
+      {
+        selector: '.highlight',
+        style: {
+          opacity: 1,
+        },
+      },
+      {
+        selector: '.faded',
+        style: {
+          opacity: 0.15,
+        },
+      },
+    ],
+
+    layout: {
+      name: 'cose',
+      animate: true,
+      animationDuration: 600,
+      animationEasing: 'ease-out',
+      nodeRepulsion: () => 18000,
+      idealEdgeLength: () => 180,
+      gravity: 0.4,
+      numIter: 300,
+      padding: 50,
+      fit: true,
+    },
+
+    // Interaction
+    minZoom: 0.5,
+    maxZoom: 2,
+    wheelSensitivity: 0.3,
+    boxSelectionEnabled: false,
+    selectionType: 'single',
+  });
+
+  window._cy = cy;
+
+  // ── Tooltip ──
+  const tooltip = document.getElementById('cy-tooltip');
+  const tooltipTitle = tooltip.querySelector('.cy-tooltip-title');
+  const tooltipDesc = tooltip.querySelector('.cy-tooltip-desc');
+
+  cy.on('mouseover', 'node', (evt) => {
+    const node = evt.target;
+    if (node.data('category') === 'placeholder') return;
+
+    tooltipTitle.textContent = node.data('label').replace(/\n/g, ' ');
+    tooltipDesc.textContent = node.data('desc');
+
+    const pos = evt.renderedPosition;
+    const container = document.getElementById('cy').getBoundingClientRect();
+    tooltip.style.left = (container.left + pos.x + 15) + 'px';
+    tooltip.style.top = (container.top + pos.y - 10) + 'px';
+    tooltip.classList.add('visible');
+
+    // Highlight neighborhood
+    const neighborhood = node.closedNeighborhood();
+    cy.elements().addClass('faded');
+    neighborhood.removeClass('faded').addClass('highlight');
+  });
+
+  cy.on('mouseout', 'node', () => {
+    tooltip.classList.remove('visible');
+    cy.elements().removeClass('faded').removeClass('highlight');
+  });
+
+  // ── Click to navigate ──
+  cy.on('tap', 'node', (evt) => {
+    const href = evt.target.data('href');
+    if (href) window.location.href = href;
+  });
+
+  // Cursor change for clickable nodes
+  cy.on('mouseover', 'node[href]', () => {
+    document.getElementById('cy').style.cursor = 'pointer';
+  });
+  cy.on('mouseout', 'node', () => {
+    document.getElementById('cy').style.cursor = 'default';
+  });
+});
 </script>
 
 </body>
