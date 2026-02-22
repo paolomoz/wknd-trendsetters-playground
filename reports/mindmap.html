@@ -283,6 +283,7 @@ const NODES = [
   { id: 'pagespeed',         label: 'PageSpeed Insights',   sub: 'Perf 100, A11y 100, BP 100, SEO 100',  cat: 'audit',      catLabel: 'Audit',      href: 'pagespeed.html',               x: 50, y: 92 },
   { id: 'content-nn',       label: 'Content Neural Network', sub: '108 nodes, 4840 edges, semantic graph', cat: 'content',    catLabel: 'Content',    href: 'content-neural-network.html',  x: 50, y: 8 },
   { id: 'brand-alignment', label: 'Brand Alignment',      sub: 'Content audit: 3.4/10, major rework',  cat: 'brand',      catLabel: 'Brand',      href: 'brand-alignment.html',         x: 86, y: 45 },
+  { id: 'brand-rewrite',   label: 'Brand Rewrite',        sub: 'AI rewrite: 3.4\u21969.2/10, cross-validated', cat: 'brand',   catLabel: 'Brand',      href: 'brand-alignment-rewrite.html', x: 86, y: 70 },
 ];
 
 const EDGES = [
@@ -300,6 +301,8 @@ const EDGES = [
   { src: 'hub', tgt: 'content-nn',            type: 'related',  curve: 0 },
   { src: 'brand-assessment', tgt: 'brand-alignment', type: 'derived', curve: 20 },
   { src: 'brand-validation', tgt: 'brand-alignment', type: 'related', curve: -15 },
+  { src: 'brand-alignment', tgt: 'brand-rewrite', type: 'derived', curve: 0 },
+  { src: 'brand-assessment', tgt: 'brand-rewrite', type: 'related', curve: -20 },
 ];
 
 /* ──────────────────────────────

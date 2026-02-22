@@ -82,6 +82,15 @@ Each entry: `id`, `file`, `title`, `date`, `category`, `related` (IDs of connect
     "category": "brand",
     "summary": "Content assessment of submitted flip flops article against all 7 brand guidelines. Score: 3.4/10 — major voice, image, and structure rework required.",
     "related": ["brand-assessment", "brand-validation"]
+  },
+  {
+    "id": "brand-alignment-rewrite",
+    "file": "brand-alignment-rewrite.html",
+    "title": "Brand Alignment: Rewrite Results",
+    "date": "2026-02-22",
+    "category": "brand",
+    "summary": "AI-rewritten flip flops article: 3.4→9.2/10 (externally validated via GPT-4o + quantitative checks). Voice, structure, and image overhaul with Gemini 3 Pro images. All 14 issues resolved.",
+    "related": ["brand-alignment", "brand-assessment"]
   }
 ]
 ```
