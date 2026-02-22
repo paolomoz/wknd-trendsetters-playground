@@ -4,85 +4,248 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Reports Hub — WKND Trendsetters</title>
-<script src="https://unpkg.com/cytoscape@3.30.4/dist/cytoscape.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F8F8F8; color: #292929; line-height: 1.6; }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Instrument Sans', -apple-system, sans-serif; background: #F8F8F8; color: #171717; line-height: 1.6; }
 
-  /* Header */
-  .header { background: #fff; border-bottom: 1px solid #E1E1E1; padding: 1.5rem 2rem; }
-  .header-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-  h1 { font-size: 1.5rem; font-weight: 800; color: #131313; }
-  .header-sub { color: #717171; font-size: 0.85rem; }
+  /* ── Header ── */
+  .header { background: #000; color: #fff; padding: 1.75rem 2rem; }
+  .header-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  h1 { font-family: 'Syncopate', sans-serif; font-size: 1.25rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; }
+  .header-sub { color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-top: 0.15rem; }
 
-  /* Tabs */
-  .tabs { display: flex; gap: 0.5rem; background: #f0f0f0; padding: 4px; border-radius: 8px; }
-  .tab { padding: 0.4rem 1rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #717171; transition: all 150ms ease; }
-  .tab.active { background: #fff; color: #131313; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-  .tab:hover:not(.active) { color: #292929; }
+  /* ── Tabs ── */
+  .tabs { display: flex; gap: 0.25rem; padding: 3px; border: 1px solid rgba(255,255,255,0.15); border-radius: 9999px; }
+  .tab { padding: 0.4rem 1.1rem; border-radius: 9999px; font-size: 0.8rem; font-weight: 600; cursor: pointer; border: none; background: transparent; color: rgba(255,255,255,0.5); transition: all 150ms ease; }
+  .tab.active { background: #F4FE8B; color: #000; }
+  .tab:hover:not(.active) { color: #fff; }
 
-  /* Container */
+  /* ── Container ── */
   .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
 
-  /* Timeline View */
+  /* ── Timeline ── */
   .timeline { position: relative; padding-left: 2rem; }
-  .timeline::before { content: ''; position: absolute; left: 7px; top: 0; bottom: 0; width: 2px; background: #E1E1E1; }
+  .timeline::before { content: ''; position: absolute; left: 7px; top: 0; bottom: 0; width: 2px; background: #e8e8e8; }
   .timeline-item { position: relative; margin-bottom: 1.5rem; }
-  .timeline-dot { position: absolute; left: -2rem; top: 0.6rem; width: 16px; height: 16px; border-radius: 50%; border: 3px solid #3B63FB; background: #fff; z-index: 1; }
-  .timeline-date { font-size: 0.75rem; color: #717171; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem; }
+  .timeline-dot { position: absolute; left: -2rem; top: 0.6rem; width: 16px; height: 16px; border-radius: 50%; background: #000; border: 3px solid #000; z-index: 1; }
+  .timeline-date { font-size: 0.7rem; font-weight: 600; color: #737373; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.25rem; font-family: 'Syncopate', sans-serif; }
 
-  /* Cards */
-  .card { background: #fff; border: 1px solid #E1E1E1; border-radius: 8px; padding: 1.25rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: transform 150ms ease, box-shadow 150ms ease; display: block; text-decoration: none; color: inherit; }
-  .card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
-  .card-title { font-size: 1.1rem; font-weight: 700; color: #131313; margin-bottom: 0.25rem; }
-  .card-summary { font-size: 0.85rem; color: #717171; }
+  /* ── Cards ── */
+  .card { background: #fff; border: 2px solid #000; border-radius: 12px; padding: 1.25rem; box-shadow: 4px 4px 0 0 #000; transition: transform 150ms ease, box-shadow 150ms ease; display: block; text-decoration: none; color: inherit; }
+  .card:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 0 #000; }
+  .card:active { transform: translate(0, 0); box-shadow: 2px 2px 0 0 #000; }
+  .card-title { font-family: 'Syncopate', sans-serif; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: #000; margin-bottom: 0.35rem; }
+  .card-summary { font-size: 0.85rem; color: #737373; line-height: 1.5; }
   .card-footer { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
-  .badge { display: inline-block; padding: 0.15rem 0.6rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
-  .badge-audit { background: #EFF6FF; color: #2563EB; }
-  .badge-brand { background: #F5F3FF; color: #7C3AED; }
-  .badge-content { background: #ECFDF5; color: #059669; }
-  .badge-infrastructure { background: #FFF7ED; color: #EA580C; }
-  .badge-validation { background: #FFFBEB; color: #D97706; }
+  .badge { display: inline-block; padding: 0.2rem 0.65rem; border-radius: 9999px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; border: 1.5px solid; }
+  .badge-audit { color: #6980c5; border-color: #CBD4FF; background: rgba(203,212,255,0.15); }
+  .badge-brand { color: #9b7dc0; border-color: #d4bfed; background: rgba(244,229,252,0.2); }
+  .badge-validation { color: #8a7a20; border-color: #d4d060; background: rgba(244,254,139,0.15); }
 
-  /* Mind Map View */
-  .mindmap { display: none; }
-  .mindmap.active { display: block; }
-  .timeline-view { display: block; }
-  .timeline-view.hidden { display: none; }
+  /* ── View switching ── */
+  .view { display: none; }
+  .view.active { display: block; }
 
-  #cy {
+  /* ══════════════════════════════════
+     MIND MAP — Custom WKND Aesthetic
+     ══════════════════════════════════ */
+  .map-canvas {
+    position: relative;
     width: 100%;
-    height: 560px;
+    height: 600px;
+    background: #0a0a0a;
+    background-image:
+      radial-gradient(ellipse at 50% 48%, rgba(244,254,139,0.035) 0%, transparent 55%),
+      radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 100% 100%, 24px 24px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 2px solid #000;
+    box-shadow: 4px 4px 0 0 #000;
+  }
+
+  /* ── SVG edges ── */
+  .map-edges { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+  .map-edge { fill: none; stroke-linecap: round; transition: opacity 300ms ease; }
+  .map-edge-related { stroke: rgba(255,255,255,0.1); stroke-width: 1.5; stroke-dasharray: 6 8; }
+  .map-edge-derived { stroke: #F4FE8B; stroke-width: 2; stroke-dasharray: 8 8; opacity: 0.7; }
+
+  @keyframes edgeFlow {
+    from { stroke-dashoffset: 16; }
+    to { stroke-dashoffset: 0; }
+  }
+  .map-edge-derived { animation: edgeFlow 0.9s linear infinite; }
+
+  /* ── Node wrappers (positioning) ── */
+  .map-node-w { position: absolute; transform: translate(-50%, -50%); z-index: 2; }
+
+  /* ── Node cards ── */
+  .map-node {
     background: #fff;
-    border: 1px solid #E1E1E1;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    border: 2px solid rgba(255,255,255,0.25);
+    border-radius: 10px;
+    padding: 0.85rem 1.1rem;
+    cursor: pointer;
+    text-decoration: none;
+    color: #000;
+    display: block;
+    min-width: 150px;
+    max-width: 210px;
+    box-shadow: 4px 4px 0 0 rgba(255,255,255,0.08);
+    transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+  }
+  .map-node:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 0 rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.5);
+  }
+  .map-node:active { transform: translate(0, 0); box-shadow: 2px 2px 0 0 rgba(255,255,255,0.06); }
+
+  /* Category top stripe */
+  .map-node.audit { border-top: 3px solid #CBD4FF; }
+  .map-node.brand { border-top: 3px solid #c4b5fd; }
+  .map-node.validation { border-top: 3px solid #F4FE8B; }
+
+  .map-node-cat {
+    font-size: 0.58rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.3rem;
+  }
+  .map-node-cat.audit { color: #8da0e0; }
+  .map-node-cat.brand { color: #b09bd4; }
+  .map-node-cat.validation { color: #9a8e30; }
+  .map-node-cat.hub { color: rgba(0,0,0,0.4); }
+
+  .map-node-title {
+    font-family: 'Syncopate', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 1.3;
+    color: #000;
+  }
+  .map-node-sub {
+    font-size: 0.72rem;
+    color: #737373;
+    margin-top: 0.25rem;
+    line-height: 1.35;
   }
 
-  /* Tooltip */
-  .cy-tooltip {
+  /* ── Hub node ── */
+  .map-node.hub {
+    background: #F4FE8B;
+    border: 2px solid #000;
+    min-width: 180px;
+    box-shadow: 4px 4px 0 0 rgba(0,0,0,0.35);
+    position: relative;
+  }
+  .map-node.hub:hover {
+    box-shadow: 6px 6px 0 0 rgba(0,0,0,0.35);
+    border-color: #000;
+  }
+  .map-node.hub:active { box-shadow: 2px 2px 0 0 rgba(0,0,0,0.3); }
+  .map-node.hub .map-node-title { font-size: 0.85rem; }
+  .map-node.hub .map-node-sub { color: rgba(0,0,0,0.5); }
+
+  /* Hub glow ring */
+  .map-node.hub::before {
+    content: '';
     position: absolute;
-    background: #131313;
-    color: #fff;
-    padding: 0.5rem 0.75rem;
-    border-radius: 8px;
-    font-size: 0.8rem;
-    max-width: 260px;
-    pointer-events: none;
-    z-index: 100;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-    opacity: 0;
-    transition: opacity 150ms ease;
+    inset: -10px;
+    border-radius: 16px;
+    background: rgba(244,254,139,0.12);
+    z-index: -1;
+    animation: hubPulse 3.5s ease-in-out infinite;
   }
-  .cy-tooltip.visible { opacity: 1; }
-  .cy-tooltip-title { font-weight: 700; margin-bottom: 0.15rem; }
-  .cy-tooltip-desc { color: rgba(255,255,255,0.7); font-size: 0.75rem; }
+  @keyframes hubPulse {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.04); }
+  }
 
-  /* Legend */
+  /* ── Placeholder node ── */
+  .map-node.placeholder {
+    background: rgba(255,255,255,0.03);
+    border: 1.5px dashed rgba(255,255,255,0.12);
+    box-shadow: none;
+    cursor: default;
+    min-width: 130px;
+  }
+  .map-node.placeholder:hover { transform: none; box-shadow: none; border-color: rgba(255,255,255,0.12); }
+  .map-node.placeholder .map-node-title { color: rgba(255,255,255,0.2); font-size: 0.65rem; }
+  .map-node.placeholder .map-node-sub { color: rgba(255,255,255,0.1); }
+  .map-node.placeholder .map-node-cat { color: rgba(255,255,255,0.1); }
+
+  /* ── Hover states ── */
+  .map-node-w.faded { opacity: 0.12; transition: opacity 300ms ease; }
+  .map-node-w.faded .map-node { pointer-events: none; }
+  .map-edge.faded { opacity: 0.03 !important; }
+
+  /* ── Entrance animation ── */
+  .map-node-w { opacity: 0; transform: translate(-50%, -50%) scale(0.92); }
+  .map-node-w.entered { opacity: 1; transform: translate(-50%, -50%) scale(1); transition: opacity 0.45s ease-out, transform 0.45s ease-out; }
+  .map-edge { opacity: 0; }
+  .map-edge.entered { transition: opacity 0.4s ease-out; }
+  .map-edge-related.entered { opacity: 0.15; }
+  .map-edge-derived.entered { opacity: 0.7; }
+
+  /* ── Detail popover ── */
+  .map-detail {
+    position: absolute;
+    z-index: 10;
+    background: #171717;
+    border: 1.5px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 0.9rem 1.1rem;
+    width: 260px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px);
+    transition: opacity 200ms ease, transform 200ms ease;
+  }
+  .map-detail.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .map-detail-badge {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.4rem;
+    border: 1.5px solid;
+  }
+  .map-detail-title { font-family: 'Syncopate', sans-serif; font-size: 0.75rem; font-weight: 700; color: #fff; text-transform: uppercase; line-height: 1.3; }
+  .map-detail-desc { font-size: 0.78rem; color: rgba(255,255,255,0.55); margin-top: 0.3rem; line-height: 1.45; }
+  .map-detail-cta { font-size: 0.75rem; font-weight: 600; color: #F4FE8B; margin-top: 0.5rem; }
+
+  /* ── Legend ── */
   .map-legend { display: flex; gap: 1.5rem; margin-top: 1rem; justify-content: center; flex-wrap: wrap; }
-  .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; color: #717171; }
-  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
-  .legend-line { width: 20px; height: 2px; border-radius: 1px; }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.72rem; color: #737373; font-weight: 500; }
+  .legend-swatch { width: 16px; height: 3px; border-radius: 2px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid; }
+
+  /* ── Hint ── */
+  .map-hint { text-align: center; margin-top: 0.75rem; font-size: 0.72rem; color: #a0a0a0; }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .map-canvas { height: 500px; }
+    .map-node { min-width: 120px; max-width: 160px; padding: 0.65rem 0.85rem; }
+    .map-node-title { font-size: 0.6rem; }
+    .map-node.hub { min-width: 150px; }
+    .map-node.hub .map-node-title { font-size: 0.72rem; }
+    .map-detail { width: 220px; }
+    h1 { font-size: 1rem; }
+    .header-inner { flex-direction: column; align-items: flex-start; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; }
+  }
 </style>
 </head>
 <body>
@@ -93,383 +256,301 @@
       <h1>Reports Hub</h1>
       <div class="header-sub">WKND Trendsetters Playground</div>
     </div>
-    <div class="tabs">
-      <button class="tab active" onclick="showView('timeline')">Timeline</button>
-      <button class="tab" onclick="showView('mindmap')">Mind Map</button>
+    <div class="tabs" role="tablist">
+      <button class="tab active" role="tab" aria-selected="true" data-view="timeline">Timeline</button>
+      <button class="tab" role="tab" aria-selected="false" data-view="mindmap">Mind Map</button>
     </div>
   </div>
 </div>
 
 <div class="container">
 
-  <!-- ============ TIMELINE VIEW ============ -->
-  <div class="timeline-view" id="timeline-view">
+  <!-- ══════ TIMELINE ══════ -->
+  <div class="view active" id="view-timeline">
     <div class="timeline">
-
       <div class="timeline-item">
         <div class="timeline-dot"></div>
-        <div class="timeline-date">February 21, 2026</div>
+        <div class="timeline-date">Feb 21, 2026</div>
         <a href="content-gaps.html" class="card">
           <div class="card-title">Content Gap Assessment</div>
           <div class="card-summary">Navigation link audit: 9 missing pages, 15 dead links, 3 orphan pages. Identified duplicate nav items and non-functional footer.</div>
-          <div class="card-footer">
-            <span class="badge badge-audit">Audit</span>
-          </div>
+          <div class="card-footer"><span class="badge badge-audit">Audit</span></div>
         </a>
       </div>
-
       <div class="timeline-item">
         <div class="timeline-dot"></div>
-        <div class="timeline-date">February 21, 2026</div>
+        <div class="timeline-date">Feb 21, 2026</div>
         <a href="brand-assessment.html" class="card">
           <div class="card-title">Brand Assessment</div>
-          <div class="card-summary">Brand identity coverage analysis across 8 dimensions. Found strong voice and visual identity. Proposed 7-file brand guidelines system.</div>
-          <div class="card-footer">
-            <span class="badge badge-brand">Brand</span>
-          </div>
+          <div class="card-summary">Brand identity coverage across 8 dimensions. Strong voice and visual identity. Proposed 7-file brand guidelines system.</div>
+          <div class="card-footer"><span class="badge badge-brand">Brand</span></div>
         </a>
       </div>
-
       <div class="timeline-item">
         <div class="timeline-dot"></div>
-        <div class="timeline-date">February 21, 2026</div>
+        <div class="timeline-date">Feb 21, 2026</div>
         <a href="brand-validation.html" class="card">
           <div class="card-title">Brand Guidelines Validation</div>
           <div class="card-summary">External validation via enterprise benchmarking (7.5/10), GPT-4o independent review (8.5/10), and industry maturity frameworks (Level 3/5).</div>
-          <div class="card-footer">
-            <span class="badge badge-validation">Validation</span>
-          </div>
+          <div class="card-footer"><span class="badge badge-validation">Validation</span></div>
         </a>
       </div>
-
       <div class="timeline-item">
         <div class="timeline-dot"></div>
-        <div class="timeline-date">February 22, 2026</div>
+        <div class="timeline-date">Feb 22, 2026</div>
         <a href="accessibility-iconography.html" class="card">
-          <div class="card-title">Accessibility & Iconography Compliance</div>
-          <div class="card-summary">WCAG 2.1 AA compliance: accessibility 2&rarr;8, iconography 0&rarr;7. CSS enforcement layer, ARIA fixes across all components, automated validation scripts.</div>
-          <div class="card-footer">
-            <span class="badge badge-validation">Validation</span>
-          </div>
+          <div class="card-title">Accessibility & Iconography</div>
+          <div class="card-summary">WCAG 2.1 AA compliance: accessibility 2&rarr;8, iconography 0&rarr;7. CSS enforcement, ARIA fixes, automated validation scripts.</div>
+          <div class="card-footer"><span class="badge badge-validation">Validation</span></div>
         </a>
       </div>
-
     </div>
   </div>
 
-  <!-- ============ MIND MAP VIEW ============ -->
-  <div class="mindmap" id="mindmap-view">
-    <div id="cy"></div>
-    <div class="cy-tooltip" id="cy-tooltip">
-      <div class="cy-tooltip-title"></div>
-      <div class="cy-tooltip-desc"></div>
+  <!-- ══════ MIND MAP ══════ -->
+  <div class="view" id="view-mindmap">
+    <div class="map-canvas" id="map-canvas">
+      <svg class="map-edges" id="map-edges"></svg>
+      <!-- Nodes injected by JS -->
+    </div>
+    <div class="map-detail" id="map-detail">
+      <div class="map-detail-badge" id="detail-badge"></div>
+      <div class="map-detail-title" id="detail-title"></div>
+      <div class="map-detail-desc" id="detail-desc"></div>
+      <div class="map-detail-cta" id="detail-cta"></div>
     </div>
     <div class="map-legend">
-      <div class="legend-item"><div class="legend-dot" style="background: #131313;"></div> Hub</div>
-      <div class="legend-item"><div class="legend-dot" style="background: #2563EB;"></div> Audit</div>
-      <div class="legend-item"><div class="legend-dot" style="background: #7C3AED;"></div> Brand</div>
-      <div class="legend-item"><div class="legend-dot" style="background: #D97706;"></div> Validation</div>
-      <div class="legend-item"><div class="legend-line" style="background: #D97706;"></div> Derived from</div>
-      <div class="legend-item"><div class="legend-line" style="background: #E1E1E1;"></div> Related</div>
+      <div class="legend-item"><div class="legend-dot" style="background: #F4FE8B; border-color: #000;"></div> Hub</div>
+      <div class="legend-item"><div class="legend-dot" style="border-color: #CBD4FF; background: rgba(203,212,255,0.3);"></div> Audit</div>
+      <div class="legend-item"><div class="legend-dot" style="border-color: #c4b5fd; background: rgba(196,181,253,0.3);"></div> Brand</div>
+      <div class="legend-item"><div class="legend-dot" style="border-color: #F4FE8B; background: rgba(244,254,139,0.3);"></div> Validation</div>
+      <div class="legend-item"><div class="legend-swatch" style="background: #F4FE8B;"></div> Derived from</div>
+      <div class="legend-item"><div class="legend-swatch" style="background: rgba(255,255,255,0.2);"></div> Related</div>
     </div>
+    <div class="map-hint">Hover to explore connections &middot; Click to open report</div>
   </div>
 
 </div>
 
 <script>
-function showView(view) {
-  const tabs = document.querySelectorAll('.tab');
-  tabs.forEach(t => t.classList.remove('active'));
+/* ──────────────────────────────
+   DATA
+   ────────────────────────────── */
+const NODES = [
+  { id: 'hub', label: 'WKND Trendsetters', sub: 'Site Management via LLM', cat: 'hub', catLabel: 'Hub', href: null, x: 50, y: 48 },
+  { id: 'content-gaps', label: 'Content Gaps', sub: '9 missing pages, 15 dead links', cat: 'audit', catLabel: 'Audit', href: 'content-gaps.html', x: 15, y: 22 },
+  { id: 'brand-assessment', label: 'Brand Assessment', sub: 'Voice & visual analysis, 7-file system', cat: 'brand', catLabel: 'Brand', href: 'brand-assessment.html', x: 78, y: 18 },
+  { id: 'brand-validation', label: 'Brand Validation', sub: 'Benchmark 7.5, GPT-4o 8.5, L3/5', cat: 'validation', catLabel: 'Validation', href: 'brand-validation.html', x: 82, y: 72 },
+  { id: 'a11y-icons', label: 'A11y & Iconography', sub: 'WCAG AA, ARIA, icons. 2\u21928, 0\u21927', cat: 'validation', catLabel: 'Validation', href: 'accessibility-iconography.html', x: 17, y: 76 },
+  { id: 'infrastructure', label: 'Infrastructure', sub: 'Upcoming', cat: 'placeholder', catLabel: '', href: null, x: 50, y: 92 },
+];
 
-  if (view === 'timeline') {
-    document.getElementById('timeline-view').classList.remove('hidden');
-    document.getElementById('mindmap-view').classList.remove('active');
-    tabs[0].classList.add('active');
-  } else {
-    document.getElementById('timeline-view').classList.add('hidden');
-    document.getElementById('mindmap-view').classList.add('active');
-    tabs[1].classList.add('active');
-    // Re-fit after display change
-    if (window._cy) setTimeout(() => window._cy.fit(undefined, 50), 50);
-  }
+const EDGES = [
+  { src: 'hub', tgt: 'content-gaps', type: 'related', curve: 0 },
+  { src: 'hub', tgt: 'brand-assessment', type: 'related', curve: 0 },
+  { src: 'hub', tgt: 'infrastructure', type: 'related', curve: 0 },
+  { src: 'content-gaps', tgt: 'brand-assessment', type: 'derived', curve: -35 },
+  { src: 'brand-assessment', tgt: 'brand-validation', type: 'derived', curve: 25 },
+  { src: 'brand-validation', tgt: 'a11y-icons', type: 'derived', curve: -45 },
+  { src: 'brand-assessment', tgt: 'a11y-icons', type: 'derived', curve: 20 },
+];
+
+/* ──────────────────────────────
+   BUILD ADJACENCY
+   ────────────────────────────── */
+const adj = {};
+NODES.forEach(n => adj[n.id] = new Set());
+EDGES.forEach(e => { adj[e.src].add(e.tgt); adj[e.tgt].add(e.src); });
+
+/* ──────────────────────────────
+   RENDER NODES
+   ────────────────────────────── */
+const canvas = document.getElementById('map-canvas');
+const edgesSvg = document.getElementById('map-edges');
+const detail = document.getElementById('map-detail');
+const wrappers = [];
+
+NODES.forEach((n, i) => {
+  const w = document.createElement('div');
+  w.className = 'map-node-w';
+  w.dataset.id = n.id;
+  w.style.left = n.x + '%';
+  w.style.top = n.y + '%';
+
+  const isLink = n.href && n.cat !== 'placeholder';
+  const tag = isLink ? 'a' : 'div';
+  const node = document.createElement(tag);
+  node.className = `map-node ${n.cat}`;
+  if (isLink) node.href = n.href;
+
+  node.innerHTML = `
+    <div class="map-node-cat ${n.cat}">${n.catLabel}</div>
+    <div class="map-node-title">${n.label}</div>
+    ${n.sub ? `<div class="map-node-sub">${n.sub}</div>` : ''}
+  `;
+
+  w.appendChild(node);
+  canvas.appendChild(w);
+  wrappers.push(w);
+
+  // Hover interactions (skip placeholder)
+  if (n.cat === 'placeholder') return;
+
+  w.addEventListener('mouseenter', () => {
+    const connected = adj[n.id];
+    // Fade unconnected nodes
+    wrappers.forEach(ow => {
+      const oid = ow.dataset.id;
+      if (oid !== n.id && !connected.has(oid)) ow.classList.add('faded');
+    });
+    // Fade unconnected edges
+    document.querySelectorAll('.map-edge').forEach(path => {
+      const s = path.dataset.src, t = path.dataset.tgt;
+      if (s !== n.id && t !== n.id) path.classList.add('faded');
+    });
+    // Show detail
+    if (n.cat !== 'hub') showDetail(n, w);
+  });
+
+  w.addEventListener('mouseleave', () => {
+    wrappers.forEach(ow => ow.classList.remove('faded'));
+    document.querySelectorAll('.map-edge').forEach(p => p.classList.remove('faded'));
+    hideDetail();
+  });
+});
+
+/* ──────────────────────────────
+   DETAIL POPOVER
+   ────────────────────────────── */
+const badgeColors = {
+  audit: { color: '#8da0e0', border: '#CBD4FF', bg: 'rgba(203,212,255,0.15)' },
+  brand: { color: '#b09bd4', border: '#c4b5fd', bg: 'rgba(196,181,253,0.15)' },
+  validation: { color: '#9a8e30', border: '#d4d060', bg: 'rgba(244,254,139,0.15)' },
+};
+
+function showDetail(n, wrapper) {
+  const bc = badgeColors[n.cat] || badgeColors.validation;
+  const badge = document.getElementById('detail-badge');
+  badge.textContent = n.catLabel;
+  badge.style.color = bc.color;
+  badge.style.borderColor = bc.border;
+  badge.style.background = bc.bg;
+
+  document.getElementById('detail-title').textContent = n.label;
+  document.getElementById('detail-desc').textContent = n.sub;
+  document.getElementById('detail-cta').textContent = n.href ? 'View report \u2192' : '';
+
+  // Position below node
+  const wr = wrapper.getBoundingClientRect();
+  const cr = canvas.getBoundingClientRect();
+  let left = wr.left + wr.width / 2 - cr.left;
+  let top = wr.bottom - cr.top + 12;
+
+  // Flip up if off-bottom
+  if (top + 140 > cr.height) top = wr.top - cr.top - 140;
+  // Clamp horizontal
+  left = Math.max(140, Math.min(cr.width - 140, left));
+
+  detail.style.left = left + 'px';
+  detail.style.top = top + 'px';
+  detail.classList.add('visible');
 }
 
-// ── Cytoscape Mind Map ──
-document.addEventListener('DOMContentLoaded', () => {
-  const categoryColors = {
-    hub: '#131313',
-    audit: '#2563EB',
-    brand: '#7C3AED',
-    validation: '#D97706',
-    infrastructure: '#EA580C',
-    placeholder: '#CCCCCC',
-  };
+function hideDetail() { detail.classList.remove('visible'); }
 
-  const cy = cytoscape({
-    container: document.getElementById('cy'),
-    elements: [
-      // ── Nodes ──
-      {
-        data: {
-          id: 'hub',
-          label: 'WKND\nTrendsetters',
-          desc: 'Site Management via LLM',
-          category: 'hub',
-          href: null,
-        },
-      },
-      {
-        data: {
-          id: 'content-gaps',
-          label: 'Content Gaps',
-          desc: '9 missing pages, 15 dead links, 3 orphan pages',
-          category: 'audit',
-          href: 'content-gaps.html',
-        },
-      },
-      {
-        data: {
-          id: 'brand-assessment',
-          label: 'Brand\nAssessment',
-          desc: 'Identity coverage, voice & visual analysis, guidelines proposal',
-          category: 'brand',
-          href: 'brand-assessment.html',
-        },
-      },
-      {
-        data: {
-          id: 'brand-validation',
-          label: 'Brand\nValidation',
-          desc: 'Benchmark 7.5, GPT-4o 8.5, Maturity L3/5',
-          category: 'validation',
-          href: 'brand-validation.html',
-        },
-      },
-      {
-        data: {
-          id: 'a11y-icons',
-          label: 'A11y &\nIconography',
-          desc: 'WCAG AA, focus rings, ARIA, icon system. Scores: 2→8, 0→7',
-          category: 'validation',
-          href: 'accessibility-iconography.html',
-        },
-      },
-      {
-        data: {
-          id: 'infrastructure',
-          label: 'Infrastructure',
-          desc: 'Upcoming',
-          category: 'placeholder',
-          href: null,
-        },
-      },
+/* ──────────────────────────────
+   RENDER EDGES (SVG bezier)
+   ────────────────────────────── */
+function drawEdges() {
+  const cw = canvas.offsetWidth;
+  const ch = canvas.offsetHeight;
+  edgesSvg.setAttribute('viewBox', `0 0 ${cw} ${ch}`);
+  edgesSvg.innerHTML = '';
 
-      // ── Edges ──
-      // Hub connections (gray, related)
-      { data: { id: 'e-hub-cg', source: 'hub', target: 'content-gaps', relation: 'related' } },
-      { data: { id: 'e-hub-ba', source: 'hub', target: 'brand-assessment', relation: 'related' } },
-      { data: { id: 'e-hub-bv', source: 'hub', target: 'brand-validation', relation: 'related' } },
-      { data: { id: 'e-hub-a11y', source: 'hub', target: 'a11y-icons', relation: 'related' } },
-      { data: { id: 'e-hub-infra', source: 'hub', target: 'infrastructure', relation: 'related' } },
+  const nodePos = {};
+  NODES.forEach(n => { nodePos[n.id] = { x: n.x / 100 * cw, y: n.y / 100 * ch }; });
 
-      // Derivation chains (orange, "derived from")
-      { data: { id: 'e-cg-ba', source: 'content-gaps', target: 'brand-assessment', relation: 'derived' } },
-      { data: { id: 'e-ba-bv', source: 'brand-assessment', target: 'brand-validation', relation: 'derived' } },
-      { data: { id: 'e-bv-a11y', source: 'brand-validation', target: 'a11y-icons', relation: 'derived' } },
-      { data: { id: 'e-ba-a11y', source: 'brand-assessment', target: 'a11y-icons', relation: 'derived' } },
-    ],
+  EDGES.forEach((e, i) => {
+    const s = nodePos[e.src];
+    const t = nodePos[e.tgt];
+    const dx = t.x - s.x;
+    const dy = t.y - s.y;
+    const len = Math.sqrt(dx * dx + dy * dy);
 
-    style: [
-      // ── Node base ──
-      {
-        selector: 'node',
-        style: {
-          label: 'data(label)',
-          'text-wrap': 'wrap',
-          'text-valign': 'center',
-          'text-halign': 'center',
-          'font-size': '12px',
-          'font-weight': '700',
-          'font-family': '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-          color: '#fff',
-          'text-outline-color': 'data(color)',
-          'text-outline-width': 0,
-          width: 100,
-          height: 100,
-          'background-color': '#fff',
-          'border-width': 2,
-          'border-color': '#E1E1E1',
-          shape: 'round-rectangle',
-          'corner-radius': 12,
-          'padding': '12px',
-          'transition-property': 'border-color, border-width, background-color',
-          'transition-duration': '150ms',
-        },
-      },
-      // Category-specific node styles
-      {
-        selector: 'node[category="hub"]',
-        style: {
-          'background-color': '#131313',
-          color: '#ffffff',
-          'border-color': '#131313',
-          width: 130,
-          height: 80,
-          'font-size': '13px',
-          'font-weight': '800',
-        },
-      },
-      {
-        selector: 'node[category="audit"]',
-        style: {
-          color: '#131313',
-          'border-color': '#2563EB',
-          'border-width': 2.5,
-        },
-      },
-      {
-        selector: 'node[category="brand"]',
-        style: {
-          color: '#131313',
-          'border-color': '#7C3AED',
-          'border-width': 2.5,
-        },
-      },
-      {
-        selector: 'node[category="validation"]',
-        style: {
-          color: '#131313',
-          'border-color': '#D97706',
-          'border-width': 2.5,
-        },
-      },
-      {
-        selector: 'node[category="placeholder"]',
-        style: {
-          color: '#aaaaaa',
-          'border-color': '#ddd',
-          'border-style': 'dashed',
-          'background-color': '#fafafa',
-          opacity: 0.5,
-        },
-      },
-      // Hover state
-      {
-        selector: 'node:active, node:grabbed',
-        style: {
-          'border-width': 3,
-          'overlay-opacity': 0,
-        },
-      },
+    // Perpendicular offset for curve
+    const px = -dy / len * e.curve;
+    const py = dx / len * e.curve;
+    const mx = (s.x + t.x) / 2 + px;
+    const my = (s.y + t.y) / 2 + py;
 
-      // ── Edge base ──
-      {
-        selector: 'edge',
-        style: {
-          width: 1.5,
-          'line-color': '#E1E1E1',
-          'line-style': 'dashed',
-          'line-dash-pattern': [6, 4],
-          'curve-style': 'bezier',
-          'target-arrow-shape': 'none',
-          opacity: 0.6,
-          'transition-property': 'line-color, width, opacity',
-          'transition-duration': '150ms',
-        },
-      },
-      // Derived edges (orange, solid)
-      {
-        selector: 'edge[relation="derived"]',
-        style: {
-          'line-color': '#D97706',
-          'line-style': 'solid',
-          width: 2,
-          opacity: 0.7,
-          'target-arrow-shape': 'triangle',
-          'target-arrow-color': '#D97706',
-          'arrow-scale': 0.8,
-        },
-      },
-      // Highlight connected elements on hover
-      {
-        selector: '.highlight',
-        style: {
-          opacity: 1,
-        },
-      },
-      {
-        selector: '.faded',
-        style: {
-          opacity: 0.15,
-        },
-      },
-    ],
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', `M ${s.x} ${s.y} Q ${mx} ${my} ${t.x} ${t.y}`);
+    path.classList.add('map-edge', e.type === 'derived' ? 'map-edge-derived' : 'map-edge-related');
+    path.dataset.src = e.src;
+    path.dataset.tgt = e.tgt;
+    edgesSvg.appendChild(path);
+  });
+}
 
-    layout: {
-      name: 'cose',
-      animate: true,
-      animationDuration: 600,
-      animationEasing: 'ease-out',
-      nodeRepulsion: () => 18000,
-      idealEdgeLength: () => 180,
-      gravity: 0.4,
-      numIter: 300,
-      padding: 50,
-      fit: true,
-    },
+/* ──────────────────────────────
+   ENTRANCE ANIMATION
+   ────────────────────────────── */
+let hasAnimated = false;
 
-    // Interaction
-    minZoom: 0.5,
-    maxZoom: 2,
-    wheelSensitivity: 0.3,
-    boxSelectionEnabled: false,
-    selectionType: 'single',
+function animateEntrance() {
+  if (hasAnimated) {
+    wrappers.forEach(w => w.classList.add('entered'));
+    document.querySelectorAll('.map-edge').forEach(p => p.classList.add('entered'));
+    return;
+  }
+  hasAnimated = true;
+
+  // Hub first, then others staggered
+  const hubIdx = wrappers.findIndex(w => w.dataset.id === 'hub');
+  const order = [hubIdx, ...wrappers.map((_, i) => i).filter(i => i !== hubIdx)];
+
+  order.forEach((idx, seq) => {
+    setTimeout(() => wrappers[idx].classList.add('entered'), seq * 130);
   });
 
-  window._cy = cy;
+  // Edges after nodes
+  const edgeDelay = order.length * 130 + 200;
+  setTimeout(() => {
+    document.querySelectorAll('.map-edge').forEach((p, i) => {
+      setTimeout(() => p.classList.add('entered'), i * 70);
+    });
+  }, edgeDelay);
+}
 
-  // ── Tooltip ──
-  const tooltip = document.getElementById('cy-tooltip');
-  const tooltipTitle = tooltip.querySelector('.cy-tooltip-title');
-  const tooltipDesc = tooltip.querySelector('.cy-tooltip-desc');
+/* ──────────────────────────────
+   TAB SWITCHING
+   ────────────────────────────── */
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+    tab.classList.add('active');
+    tab.setAttribute('aria-selected', 'true');
 
-  cy.on('mouseover', 'node', (evt) => {
-    const node = evt.target;
-    if (node.data('category') === 'placeholder') return;
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    const target = tab.dataset.view;
+    document.getElementById('view-' + target).classList.add('active');
 
-    tooltipTitle.textContent = node.data('label').replace(/\n/g, ' ');
-    tooltipDesc.textContent = node.data('desc');
-
-    const pos = evt.renderedPosition;
-    const container = document.getElementById('cy').getBoundingClientRect();
-    tooltip.style.left = (container.left + pos.x + 15) + 'px';
-    tooltip.style.top = (container.top + pos.y - 10) + 'px';
-    tooltip.classList.add('visible');
-
-    // Highlight neighborhood
-    const neighborhood = node.closedNeighborhood();
-    cy.elements().addClass('faded');
-    neighborhood.removeClass('faded').addClass('highlight');
+    if (target === 'mindmap') {
+      drawEdges();
+      requestAnimationFrame(() => animateEntrance());
+    }
   });
+});
 
-  cy.on('mouseout', 'node', () => {
-    tooltip.classList.remove('visible');
-    cy.elements().removeClass('faded').removeClass('highlight');
-  });
-
-  // ── Click to navigate ──
-  cy.on('tap', 'node', (evt) => {
-    const href = evt.target.data('href');
-    if (href) window.location.href = href;
-  });
-
-  // Cursor change for clickable nodes
-  cy.on('mouseover', 'node[href]', () => {
-    document.getElementById('cy').style.cursor = 'pointer';
-  });
-  cy.on('mouseout', 'node', () => {
-    document.getElementById('cy').style.cursor = 'default';
-  });
+/* ──────────────────────────────
+   RESIZE HANDLER
+   ────────────────────────────── */
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    if (document.getElementById('view-mindmap').classList.contains('active')) drawEdges();
+  }, 150);
 });
 </script>
 
