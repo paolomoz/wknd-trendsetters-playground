@@ -24,3 +24,6 @@ Astro static site on Cloudflare Pages (Wrangler). Project name: `wknd-trendsette
 
 - Dev server: `nohup npx astro dev --port 4325 > /tmp/astro-playground.log 2>&1 &` (nohup required — background tasks without it get killed)
 - **Accessibility & icons:** When modifying components, reference `brand/accessibility.md` and `brand/iconography.md`. Run `npm run validate` before committing component changes.
+- **Live domain:** `wknd-trendsetters.pages.dev` (not `-playground` — the CF Pages project is `wknd-trendsetters`)
+- **PSI API key:** `GOOGLE_PSI_API_KEY` in `.env`. Required for PageSpeed Insights — anonymous quota is unreliable.
+- **Report HTML polish:** Reports must match hub/mindmap patterns: Source Sans Pro font via Google Fonts, CSS custom properties (design tokens), `:focus-visible`, `prefers-reduced-motion`, `shadow-emphasized` on cards.

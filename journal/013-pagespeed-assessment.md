@@ -69,3 +69,35 @@ This session demonstrates an LLM performing a task that traditionally requires e
 **Key insight:** The resilience pattern matters. When the API rate-limited, then returned wrong-domain errors, then had a transient 500, the LLM diagnosed each issue and adapted: added API key support, fixed the domain, retried with cache awareness. This iterative debugging loop — the same thing a developer would do — happened naturally in conversation. A CI pipeline would have just failed with an opaque error.
 
 **Performance story:** The site scores remarkably well — 90 avg Performance, 95 A11y, 100 BP, 97 SEO on mobile. This is notable because the entire site was built and managed through Claude Code conversations. LLM-generated code isn't just functional; it produces Lighthouse-green pages by default because the underlying framework (Astro) and the design decisions (minimal JS, semantic HTML) align with web performance best practices.
+
+---
+
+## Polish Pass
+
+After the initial build, a systematic `/impeccable:polish` pass was applied to the report. 13 issues were identified and fixed:
+
+### Design System Alignment
+- **Font stack:** Added Source Sans Pro via Google Fonts to match hub and mindmap reports
+- **CSS custom properties:** Replaced all hardcoded colors with design tokens (`--bg`, `--fg-heading`, `--primary`, `--border`, `--score-good`, etc.)
+- **Shadow elevation:** Added `shadow-emphasized` to score blocks and detail cards (was missing)
+- **Score value colors:** Ring numbers now match their ring color for visual reinforcement
+
+### Accessibility
+- **`:focus-visible`:** Added keyboard focus indicators on all interactive elements (back-link, details/summary)
+- **`prefers-reduced-motion`:** Added media query to disable transitions for motion-sensitive users
+
+### Data Visualization Fixes
+- **CLS bar chart:** Changed scale from max-value-based (0.028 = 100%) to threshold-based (0.25 = 100%), making bars 10% width instead of invisible 2%
+- **TBT all-zero:** Replaced 15 empty green bars with a compact "All 15 pages: 0 ms (Good)" note
+- **Bar labels:** Changed from raw slugs (`fashion-trends-young-adults-casual-sport`) to title-cased readable names (`Fashion Trends Young Adults Casual Sport`)
+
+### Code Quality
+- **Inline styles eliminated:** Moved all `font-size`, `text-align`, `font-weight` inline styles to CSS classes (`page-name`, `metric-cell`, `group-header`, `th-right`, `td-savings`, etc.)
+- **Detail body padding:** Added `padding-top: 16px` so content doesn't touch the border
+- **Transitions:** Added hover transition on back-link, box-shadow transition on detail cards
+- **Detail scores alignment:** Pushed badge scores to the right with `margin-left: auto`
+
+### CLAUDE.md Updates
+- Added live domain (`wknd-trendsetters.pages.dev`, not `-playground`)
+- Added PSI API key reference
+- Added report HTML polish conventions for future reports

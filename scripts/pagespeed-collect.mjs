@@ -218,7 +218,13 @@ function generateReport(summary) {
   }
   const topOpps = Object.values(oppMap).sort((a, b) => b.totalSavingsMs - a.totalSavingsMs).slice(0, 12);
 
-  // SVG ring helper
+  // Human-readable page name
+  function displayName(p) {
+    if (p.path === '/') return 'Home';
+    return p.path.replace(/^\/blog\//, '').replace(/^\//, '').replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  // SVG ring helper — score value inherits ring color
   function ring(score, label, sub) {
     const c = score >= 90 ? '#059669' : score >= 50 ? '#D97706' : '#DC2626';
     const circumference = 2 * Math.PI * 42; // ~264
@@ -231,7 +237,7 @@ function generateReport(summary) {
             <circle class="fill" cx="50" cy="50" r="42" stroke="${c}"
               stroke-dasharray="${circumference.toFixed(0)}" stroke-dashoffset="${offset.toFixed(0)}"/>
           </svg>
-          <div class="score-value">${score}</div>
+          <div class="score-value" style="color:${c}">${score}</div>
         </div>
         <div class="score-label">${label}</div>
         <div class="score-source">${sub}</div>
@@ -240,7 +246,7 @@ function generateReport(summary) {
 
   // Score cell helper
   function sc(val) {
-    if (val == null) return '<td class="score-cell">—</td>';
+    if (val == null) return '<td class="score-cell">\u2014</td>';
     const cls = val >= 90 ? 'score-high' : val >= 50 ? 'score-mid' : 'score-low';
     return `<td class="score-cell ${cls}">${val}</td>`;
   }
@@ -248,36 +254,49 @@ function generateReport(summary) {
   // Table rows grouped
   function tableRows(group, label) {
     const groupPages = pages.filter(p => p.group === group);
-    let html = `<tr><td colspan="8" style="background:#f8f8f8;font-weight:700;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.04em;color:#717171;padding:0.6rem 0.75rem;">${label}</td></tr>`;
+    let html = `<tr><td colspan="8" class="group-header">${label}</td></tr>`;
     for (const p of groupPages) {
       const name = p.path === '/' ? 'Home (/)' : p.path;
       html += `<tr>
-        <td style="font-weight:600;font-size:0.8rem;">${name}</td>
+        <td class="page-name">${name}</td>
         ${sc(p.scores.performance)}
         ${sc(p.scores.accessibility)}
         ${sc(p.scores.bestPractices)}
         ${sc(p.scores.seo)}
-        <td style="font-size:0.8rem;text-align:center;">${formatMs(p.cwv.fcp)}</td>
-        <td style="font-size:0.8rem;text-align:center;">${formatMs(p.cwv.lcp)}</td>
-        <td style="font-size:0.8rem;text-align:center;">${formatCLS(p.cwv.cls)}</td>
+        <td class="metric-cell">${formatMs(p.cwv.fcp)}</td>
+        <td class="metric-cell">${formatMs(p.cwv.lcp)}</td>
+        <td class="metric-cell">${formatCLS(p.cwv.cls)}</td>
       </tr>`;
     }
     return html;
   }
 
-  // CWV bar chart helper
+  // CWV bar chart helper — uses threshold-based scales for CLS
   function cwvBars(metric, label, unit, formatter) {
-    let html = `<h3>${label}</h3><div class="card" style="margin-bottom:1.5rem;">`;
     const values = pages.map(p => p.cwv[metric]).filter(v => v != null);
-    const maxVal = Math.max(...values, 1);
+    const allZero = values.every(v => v === 0);
+
+    // For all-zero metrics, show a compact "all passing" note instead of 15 empty bars
+    if (allZero) {
+      return `<h3>${label}</h3>
+      <div class="card cwv-card">
+        <div class="all-pass">All ${pages.length} pages: <strong>0 ${unit}</strong> <span class="badge badge-green">Good</span></div>
+      </div>`;
+    }
+
+    let html = `<h3>${label}</h3><div class="card cwv-card">`;
+
+    // For CLS, use the "poor" threshold (0.25) as max to show meaningful bars
+    // For time metrics, use the max value
+    const scaleMax = metric === 'cls' ? 0.25 : Math.max(...values, 1);
 
     for (const p of pages) {
       const val = p.cwv[metric];
       if (val == null) continue;
       const rating = cwvRating(metric, val);
       const color = rating === 'good' ? 'green' : rating === 'needs-improvement' ? 'yellow' : 'red';
-      const pct = Math.min((val / maxVal) * 100, 100);
-      const name = p.path === '/' ? 'Home' : p.path.split('/').pop();
+      const pct = Math.max(Math.min((val / scaleMax) * 100, 100), val > 0 ? 2 : 0);
+      const name = displayName(p);
       html += `
         <div class="bar-row">
           <div class="bar-label">${name}</div>
@@ -314,11 +333,11 @@ function generateReport(summary) {
             <div><strong>Speed Index:</strong> ${formatMs(p.cwv.si)}</div>
           </div>
           ${p.opportunities.length ? `
-          <h4 style="margin-top:1rem;font-size:0.85rem;">Improvement Opportunities</h4>
-          <table style="margin-top:0.5rem;">
-            <tr><th>Opportunity</th><th style="text-align:right;">Est. Savings</th></tr>
-            ${p.opportunities.map(o => `<tr><td style="font-size:0.8rem;">${o.title}</td><td style="font-size:0.8rem;text-align:right;font-weight:600;">${formatMs(o.savingsMs)}</td></tr>`).join('')}
-          </table>` : '<p style="color:#717171;font-size:0.85rem;margin-top:0.75rem;">No improvement opportunities flagged.</p>'}
+          <h4 class="opp-heading">Improvement Opportunities</h4>
+          <table>
+            <tr><th>Opportunity</th><th class="th-right">Est. Savings</th></tr>
+            ${p.opportunities.map(o => `<tr><td>${o.title}</td><td class="td-savings">${formatMs(o.savingsMs)}</td></tr>`).join('')}
+          </table>` : '<p class="no-opps">No improvement opportunities flagged.</p>'}
         </div>
       </details>`;
     }
@@ -327,13 +346,13 @@ function generateReport(summary) {
 
   // Opportunity rows
   function oppRows() {
-    if (!topOpps.length) return '<p style="color:#717171;">No improvement opportunities found.</p>';
-    let html = '<table><tr><th>Opportunity</th><th style="text-align:right;">Total Est. Savings</th><th style="text-align:center;">Pages Affected</th></tr>';
+    if (!topOpps.length) return '<p class="muted">No improvement opportunities found.</p>';
+    let html = '<table><tr><th>Opportunity</th><th class="th-right">Total Est. Savings</th><th class="th-center">Pages Affected</th></tr>';
     for (const o of topOpps) {
       html += `<tr>
-        <td style="font-size:0.85rem;"><strong>${o.title}</strong></td>
-        <td style="font-size:0.85rem;text-align:right;font-weight:700;">${formatMs(o.totalSavingsMs)}</td>
-        <td style="font-size:0.8rem;text-align:center;">${o.affectedPages.length} / ${pages.length}</td>
+        <td><strong>${o.title}</strong></td>
+        <td class="td-savings">${formatMs(o.totalSavingsMs)}</td>
+        <td class="td-center">${o.affectedPages.length} / ${pages.length}</td>
       </tr>`;
     }
     html += '</table>';
@@ -345,75 +364,126 @@ function generateReport(summary) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PageSpeed Insights Assessment &mdash; WKND Trendsetters</title>
+<title>PageSpeed Insights Assessment \u2014 WKND Trendsetters</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F8F8F8; color: #292929; line-height: 1.6; }
-  .header { background: #fff; border-bottom: 1px solid #E1E1E1; padding: 1.5rem 2rem; }
-  .header-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
-  h1 { font-size: 2rem; font-weight: 800; color: #131313; }
-  .subtitle { color: #717171; margin-top: 0.25rem; }
-  .back-link { font-size: 0.85rem; color: #3B63FB; text-decoration: none; font-weight: 600; }
-  .back-link:hover { text-decoration: underline; }
-  .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
-  h2 { font-size: 1.3rem; font-weight: 700; color: #131313; margin: 2.5rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #3B63FB; display: inline-block; }
-  h3 { font-size: 1rem; font-weight: 700; color: #131313; margin: 1.25rem 0 0.5rem; }
-  .card { background: #fff; border: 1px solid #E1E1E1; border-radius: 8px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+  /* \u2500\u2500\u2500 Design System: Spectrum 2 (DESIGN.md) \u2500\u2500\u2500 */
+  :root {
+    --bg:             #F8F8F8;
+    --bg-2:           #FFFFFF;
+    --primary:        #3B63FB;
+    --primary-fg:     #FFFFFF;
+    --fg:             #292929;
+    --fg-heading:     #131313;
+    --fg-muted:       #717171;
+    --border:         #E1E1E1;
+    --border-subtle:  #f0f0f0;
+    --shadow-emphasized: 0 2px 8px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04), 0 0 1px rgba(0,0,0,0.08);
+    --shadow-elevated:  0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08), 0 0 1px rgba(0,0,0,0.08);
+    --font: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --score-good:     #059669;
+    --score-mid:      #D97706;
+    --score-poor:     #DC2626;
+  }
 
-  /* Scores */
-  .score-hero { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin: 1.5rem 0; }
-  .score-block { background: #fff; border: 1px solid #E1E1E1; border-radius: 12px; padding: 1.25rem; text-align: center; }
-  .score-ring { width: 100px; height: 100px; margin: 0 auto 0.75rem; position: relative; }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); background: var(--bg); color: var(--fg); line-height: 1.5; font-size: 14px; }
+
+  /* \u2500\u2500\u2500 Focus \u2500\u2500\u2500 */
+  :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+  /* \u2500\u2500\u2500 Header \u2500\u2500\u2500 */
+  .header { background: var(--bg-2); border-bottom: 1px solid var(--border); padding: 16px 24px; }
+  .header-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  h1 { font-size: 25px; font-weight: 800; line-height: 30px; color: var(--fg-heading); }
+  .subtitle { color: var(--fg-muted); font-size: 14px; margin-top: 2px; }
+  .back-link { font-size: 14px; color: var(--primary); text-decoration: none; font-weight: 600; transition: color 150ms ease-out; }
+  .back-link:hover { color: var(--fg-heading); }
+
+  /* \u2500\u2500\u2500 Container \u2500\u2500\u2500 */
+  .container { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+  h2 { font-size: 18px; font-weight: 700; color: var(--fg-heading); margin: 40px 0 12px; padding-bottom: 8px; border-bottom: 2px solid var(--primary); display: inline-block; }
+  h3 { font-size: 14px; font-weight: 700; color: var(--fg-heading); margin: 20px 0 8px; }
+
+  /* \u2500\u2500\u2500 Cards \u2500\u2500\u2500 */
+  .card { background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow-emphasized); }
+
+  /* \u2500\u2500\u2500 Score Rings \u2500\u2500\u2500 */
+  .score-hero { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin: 24px 0; }
+  .score-block { background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; box-shadow: var(--shadow-emphasized); }
+  .score-ring { width: 100px; height: 100px; margin: 0 auto 12px; position: relative; }
   .score-ring svg { transform: rotate(-90deg); }
   .score-ring circle { fill: none; stroke-width: 8; }
-  .score-ring .bg { stroke: #f0f0f0; }
+  .score-ring .bg { stroke: var(--border-subtle); }
   .score-ring .fill { stroke-linecap: round; }
-  .score-value { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.75rem; font-weight: 800; }
-  .score-label { font-size: 0.8rem; color: #717171; text-transform: uppercase; letter-spacing: 0.05em; }
-  .score-source { font-size: 0.75rem; color: #aaa; margin-top: 0.25rem; }
+  .score-value { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 28px; font-weight: 800; }
+  .score-label { font-size: 12px; color: var(--fg-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+  .score-source { font-size: 12px; color: var(--fg-muted); margin-top: 4px; opacity: 0.7; }
 
-  /* Table */
-  table { width: 100%; border-collapse: collapse; margin: 0.75rem 0; }
-  th { text-align: left; padding: 0.5rem 0.75rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #717171; border-bottom: 1px solid #E1E1E1; }
-  td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #f0f0f0; font-size: 0.85rem; }
-  .score-cell { font-weight: 700; text-align: center; width: 60px; }
-  .score-high { color: #059669; }
-  .score-mid { color: #D97706; }
-  .score-low { color: #DC2626; }
+  /* \u2500\u2500\u2500 Table \u2500\u2500\u2500 */
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+  th { text-align: left; padding: 8px 12px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--fg-muted); border-bottom: 1px solid var(--border); font-weight: 600; }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border-subtle); font-size: 14px; }
+  tr:hover td { background: rgba(59, 99, 251, 0.02); }
+  .score-cell { font-weight: 700; text-align: center; width: 56px; }
+  .score-high { color: var(--score-good); }
+  .score-mid { color: var(--score-mid); }
+  .score-low { color: var(--score-poor); }
+  .page-name { font-weight: 600; font-size: 13px; }
+  .metric-cell { font-size: 13px; text-align: center; color: var(--fg-muted); }
+  .group-header { background: var(--bg); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--fg-muted); padding: 10px 12px; }
+  .th-right { text-align: right; }
+  .th-center { text-align: center; }
+  .td-savings { text-align: right; font-weight: 600; }
+  .td-center { text-align: center; }
+  .muted { color: var(--fg-muted); }
 
-  /* Badges */
-  .badge { display: inline-block; padding: 0.15rem 0.6rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 600; }
-  .badge-green { background: #ECFDF5; color: #059669; }
-  .badge-orange { background: #FFFBEB; color: #D97706; }
-  .badge-red { background: #FEF2F2; color: #DC2626; }
+  /* \u2500\u2500\u2500 Badges \u2500\u2500\u2500 */
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 9999px; font-size: 12px; font-weight: 600; }
+  .badge-green { background: #ECFDF5; color: var(--score-good); }
+  .badge-orange { background: #FFFBEB; color: var(--score-mid); }
+  .badge-red { background: #FEF2F2; color: var(--score-poor); }
 
-  /* Bar chart */
-  .bar-row { display: flex; align-items: center; gap: 0.75rem; margin: 0.4rem 0; }
-  .bar-label { width: 200px; font-size: 0.8rem; font-weight: 500; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .bar-track { flex: 1; height: 20px; background: #f0f0f0; border-radius: 4px; overflow: hidden; }
-  .bar-fill { height: 100%; border-radius: 4px; }
-  .bar-fill.green { background: #059669; }
-  .bar-fill.yellow { background: #D97706; }
-  .bar-fill.red { background: #DC2626; }
-  .bar-value { width: 55px; font-size: 0.8rem; font-weight: 700; text-align: right; flex-shrink: 0; }
+  /* \u2500\u2500\u2500 Bar Chart \u2500\u2500\u2500 */
+  .cwv-card { margin-bottom: 24px; }
+  .bar-row { display: flex; align-items: center; gap: 12px; padding: 4px 0; }
+  .bar-label { width: 200px; font-size: 13px; font-weight: 500; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar-track { flex: 1; height: 20px; background: var(--border-subtle); border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; min-width: 0; }
+  .bar-fill.green { background: var(--score-good); }
+  .bar-fill.yellow { background: var(--score-mid); }
+  .bar-fill.red { background: var(--score-poor); }
+  .bar-value { width: 56px; font-size: 13px; font-weight: 700; text-align: right; flex-shrink: 0; }
+  .all-pass { font-size: 14px; color: var(--fg); display: flex; align-items: center; gap: 8px; }
 
-  /* Details */
-  .page-detail { background: #fff; border: 1px solid #E1E1E1; border-radius: 8px; margin-bottom: 0.75rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-  .page-detail summary { padding: 1rem 1.25rem; cursor: pointer; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  /* \u2500\u2500\u2500 Details \u2500\u2500\u2500 */
+  .page-detail { background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; box-shadow: var(--shadow-emphasized); transition: box-shadow 150ms ease-out; }
+  .page-detail:hover { box-shadow: var(--shadow-elevated); }
+  .page-detail summary { padding: 16px 20px; cursor: pointer; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; list-style: none; }
   .page-detail summary::-webkit-details-marker { display: none; }
-  .page-detail summary::before { content: '▸'; font-size: 0.85rem; color: #717171; transition: transform 150ms; }
+  .page-detail summary::before { content: '\\25B8'; font-size: 12px; color: var(--fg-muted); transition: transform 150ms ease-out; flex-shrink: 0; }
   .page-detail[open] summary::before { transform: rotate(90deg); }
-  .detail-scores { display: flex; gap: 6px; flex-wrap: wrap; }
-  .detail-body { padding: 0 1.25rem 1.25rem; border-top: 1px solid #f0f0f0; }
-  .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.5rem; margin-top: 1rem; font-size: 0.85rem; }
+  .detail-scores { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
+  .detail-body { padding: 16px 20px 20px; border-top: 1px solid var(--border-subtle); }
+  .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; font-size: 14px; }
+  .opp-heading { margin-top: 16px; font-size: 13px; font-weight: 700; color: var(--fg-heading); }
+  .no-opps { color: var(--fg-muted); font-size: 14px; margin-top: 12px; }
 
-  .footer-note { color: #717171; font-size: 0.8rem; margin-top: 3rem; text-align: center; border-top: 1px solid #E1E1E1; padding-top: 1rem; }
+  /* \u2500\u2500\u2500 Footer \u2500\u2500\u2500 */
+  .footer-note { color: var(--fg-muted); font-size: 13px; margin-top: 48px; text-align: center; border-top: 1px solid var(--border); padding-top: 16px; }
 
+  /* \u2500\u2500\u2500 Responsive \u2500\u2500\u2500 */
   @media (max-width: 768px) {
     .score-hero { grid-template-columns: repeat(2, 1fr); }
-    .container { padding: 1.5rem 1rem; }
-    .bar-label { width: 120px; }
+    .container { padding: 24px 16px; }
+    .bar-label { width: 120px; font-size: 12px; }
     .header-inner { flex-direction: column; align-items: flex-start; }
+    .detail-scores { margin-left: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; }
   }
 </style>
 </head>
@@ -423,15 +493,15 @@ function generateReport(summary) {
   <div class="header-inner">
     <div>
       <h1>PageSpeed Insights Assessment</h1>
-      <p class="subtitle">Google Lighthouse analysis across all ${pages.length} pages (mobile) &mdash; ${date}</p>
+      <p class="subtitle">Google Lighthouse analysis across all ${pages.length} pages (mobile) \u2014 ${date}</p>
     </div>
-    <a href="hub.html" class="back-link">&larr; Reports Hub</a>
+    <a href="hub.html" class="back-link">\u2190 Reports Hub</a>
   </div>
 </div>
 
 <div class="container">
 
-<!-- ═══════ SITE-WIDE AVERAGES ═══════ -->
+<!-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550 SITE-WIDE AVERAGES \u2550\u2550\u2550\u2550\u2550\u2550\u2550 -->
 <h2>Site-Wide Averages</h2>
 <div class="score-hero">
   ${ring(avg.performance, 'Performance', `${pages.length}-page avg`)}
@@ -440,44 +510,44 @@ function generateReport(summary) {
   ${ring(avg.seo, 'SEO', `${pages.length}-page avg`)}
 </div>
 
-<!-- ═══════ PER-PAGE SCORES ═══════ -->
+<!-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550 PER-PAGE SCORES \u2550\u2550\u2550\u2550\u2550\u2550\u2550 -->
 <h2>Per-Page Scores</h2>
 <div class="card">
   <table>
     <tr>
       <th>Page</th>
-      <th style="text-align:center;">Perf</th>
-      <th style="text-align:center;">A11y</th>
-      <th style="text-align:center;">BP</th>
-      <th style="text-align:center;">SEO</th>
-      <th style="text-align:center;">FCP</th>
-      <th style="text-align:center;">LCP</th>
-      <th style="text-align:center;">CLS</th>
+      <th class="th-center">Perf</th>
+      <th class="th-center">A11y</th>
+      <th class="th-center">BP</th>
+      <th class="th-center">SEO</th>
+      <th class="th-center">FCP</th>
+      <th class="th-center">LCP</th>
+      <th class="th-center">CLS</th>
     </tr>
     ${tableRows('static', 'Static Pages')}
     ${tableRows('blog', 'Blog Posts')}
   </table>
 </div>
 
-<!-- ═══════ CORE WEB VITALS ═══════ -->
+<!-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550 CORE WEB VITALS \u2550\u2550\u2550\u2550\u2550\u2550\u2550 -->
 <h2>Core Web Vitals Breakdown</h2>
 ${cwvBars('fcp', 'First Contentful Paint (FCP)', 'ms', formatMs)}
 ${cwvBars('lcp', 'Largest Contentful Paint (LCP)', 'ms', formatMs)}
 ${cwvBars('cls', 'Cumulative Layout Shift (CLS)', '', formatCLS)}
 ${cwvBars('tbt', 'Total Blocking Time (TBT)', 'ms', formatMs)}
 
-<!-- ═══════ TOP OPPORTUNITIES ═══════ -->
+<!-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550 TOP OPPORTUNITIES \u2550\u2550\u2550\u2550\u2550\u2550\u2550 -->
 <h2>Top Improvement Opportunities</h2>
-<p style="font-size:0.85rem;color:#717171;margin-bottom:1rem;">Aggregated across all pages, sorted by total estimated savings.</p>
+<p class="muted" style="margin-bottom:16px;">Aggregated across all pages, sorted by total estimated savings.</p>
 <div class="card">
   ${oppRows()}
 </div>
 
-<!-- ═══════ PER-PAGE DETAILS ═══════ -->
+<!-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550 PER-PAGE DETAILS \u2550\u2550\u2550\u2550\u2550\u2550\u2550 -->
 <h2>Per-Page Details</h2>
 ${pageDetails()}
 
-<p class="footer-note">Generated by Claude Code &mdash; WKND Trendsetters Playground &mdash; Session 013</p>
+<p class="footer-note">Generated by Claude Code \u2014 WKND Trendsetters Playground \u2014 Session 013</p>
 
 </div>
 </body>
