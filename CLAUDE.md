@@ -32,7 +32,7 @@ Astro static site on Cloudflare Pages (Wrangler). Project name: `wknd-trendsette
 - **Fonts are self-hosted:** woff2 files in `public/fonts/`, `@font-face` inlined in `BaseLayout.astro`. Do NOT re-add Google Fonts external links.
 - **Images:** All .avif at 800px max width, quality 50. Use `sharp` for resizing/compression.
 - **Color contrast:** `--color-gray-500` is `#666666` globally but overridden to `#999999` inside `.inverse-footer` for WCAG AA on black backgrounds. Don't use a single gray for both light and dark contexts.
-- **PageSpeed status:** All 16 pages score 100/100/100/100 (Perf/A11y/BP/SEO). Run `node scripts/pagespeed-collect.mjs --force` after any change that could affect scores. New pages must be added to the `PAGES` list in `scripts/pagespeed-collect.mjs`.
+- **PageSpeed status:** All pages score 100/100/100/100 (Perf/A11y/BP/SEO). Run `node scripts/pagespeed-collect.mjs --force` after any change that could affect scores. New pages must be added to the `PAGES` list in `scripts/pagespeed-collect.mjs`.
 - **Content graph:** Run `npm run content-graph` after adding/changing content to rebuild the semantic graph and report. Uses Voyage AI embeddings (`VOYAGE_API_KEY` in `.env`).
 - **Content generation targets:** When writing blog posts, hit these quantitative baselines (learned from cross-validation against existing on-brand posts):
   - Word count: 600–1000
@@ -43,4 +43,6 @@ Astro static site on Cloudflare Pages (Wrangler). Project name: `wknd-trendsette
   - Personas: >=2 named references with direct quotes
   - Inline body images: >=2 (hero in frontmatter does not count)
   - Required structural elements: subheadings every 2-3 paragraphs, >=1 blockquote, community CTA ending
-- **Image generation:** Use Gemini 3 Pro Image (`gemini-3-pro-image-preview` model, `GOOGLE_API_KEY` in `.env`). Convert outputs to AVIF via `sharp` (800px, quality 50). Follow `brand/photography.md`: candid, natural light, diverse subjects, young energy, real settings.
+- **Image generation:** Use Gemini 3 Pro Image (`gemini-3-pro-image-preview` model, `GOOGLE_API_KEY` in `.env`). Convert outputs to AVIF via `sharp` (800px, quality 50). Follow `brand/photography.md`: candid, natural light, diverse subjects, young energy, real settings. Reusable script: `node scripts/generate-images.mjs` — uses REST API directly (the `@google/generative-ai` SDK doesn't support `responseModalities` for image generation). Add prompts to the `prompts` array; existing images are skipped automatically.
+- **PageSpeed page count:** Currently 18 pages (including `/blog`). Update the `PAGES` list in `scripts/pagespeed-collect.mjs` when adding new pages.
+- **Component library:** `reports/component-library.html` documents all 11 Astro components + design tokens with live previews. Update it when components change (props, structure, or CSS). Preview HTML is hardcoded — not auto-generated from source.

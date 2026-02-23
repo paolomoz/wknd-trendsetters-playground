@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Component Library — WKND Trendsetters</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Source+Sans+Pro:wght@400;600;700&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ─── Report Chrome: Spectrum 2 ─── */
+:root {
+  --bg:             #F8F8F8;
+  --bg-2:           #FFFFFF;
+  --primary:        #3B63FB;
+  --primary-fg:     #FFFFFF;
+  --fg:             #292929;
+  --fg-heading:     #131313;
+  --fg-muted:       #717171;
+  --border:         #E1E1E1;
+  --border-subtle:  #f0f0f0;
+  --shadow-emphasized: 0 2px 8px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04), 0 0 1px rgba(0,0,0,0.08);
+  --shadow-elevated:  0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08), 0 0 1px rgba(0,0,0,0.08);
+  --font: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font); background: var(--bg); color: var(--fg); line-height: 1.5; font-size: 14px; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+/* ─── Header ─── */
+.header { background: var(--bg-2); border-bottom: 1px solid var(--border); padding: 16px 24px; position: sticky; top: 0; z-index: 50; }
+.header-inner { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+h1 { font-size: 22px; font-weight: 700; line-height: 28px; color: var(--fg-heading); }
+.header-sub { color: var(--fg-muted); font-size: 13px; margin-top: 2px; }
+.back-link { font-size: 14px; color: var(--primary); text-decoration: none; font-weight: 600; white-space: nowrap; }
+.back-link:hover { text-decoration: underline; }
+
+/* ─── Layout ─── */
+.page-layout { display: flex; max-width: 1400px; margin: 0 auto; min-height: calc(100vh - 65px); }
+
+/* ─── Sidebar ─── */
+.sidebar { width: 220px; flex-shrink: 0; border-right: 1px solid var(--border); background: var(--bg-2); position: sticky; top: 65px; height: calc(100vh - 65px); overflow-y: auto; padding: 16px 0; }
+.sidebar-label { font-size: 11px; font-weight: 700; color: var(--fg-muted); text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 20px 4px; }
+.sidebar a {
+  display: block; padding: 6px 20px; font-size: 13px; font-weight: 500;
+  color: var(--fg-muted); text-decoration: none; border-left: 3px solid transparent;
+  transition: all 120ms ease-out;
+}
+.sidebar a:hover { color: var(--fg-heading); background: rgba(0,0,0,0.03); }
+.sidebar a.active { color: var(--primary); border-left-color: var(--primary); font-weight: 600; background: rgba(59,99,251,0.06); }
+
+/* ─── Main Content ─── */
+.main { flex: 1; min-width: 0; padding: 32px 40px 80px; }
+.component-section { margin-bottom: 56px; scroll-margin-top: 80px; }
+.component-section:last-child { margin-bottom: 0; }
+.section-title { font-size: 20px; font-weight: 700; color: var(--fg-heading); margin-bottom: 6px; }
+.section-desc { font-size: 14px; color: var(--fg-muted); line-height: 1.5; margin-bottom: 20px; max-width: 680px; }
+.subsection-title { font-size: 15px; font-weight: 700; color: var(--fg-heading); margin: 24px 0 12px; }
+
+/* ─── Props Table ─── */
+.props-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 24px; }
+.props-table th { text-align: left; padding: 8px 12px; font-weight: 600; color: var(--fg-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 2px solid var(--border); background: var(--bg); }
+.props-table td { padding: 8px 12px; border-bottom: 1px solid var(--border-subtle); vertical-align: top; }
+.props-table tr:last-child td { border-bottom: none; }
+.props-table code { font-size: 12px; background: #f0f0f0; padding: 1px 6px; border-radius: 4px; font-family: "SF Mono", "Fira Code", monospace; }
+.props-table .required { color: #D7373F; font-size: 10px; font-weight: 700; }
+
+/* ─── Preview Container ─── */
+.preview-label { font-size: 11px; font-weight: 600; color: var(--fg-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px; }
+.preview-wrap { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-emphasized); margin-bottom: 16px; }
+
+/* ─── Design Tokens ─── */
+.token-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; margin-bottom: 24px; }
+.color-swatch { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.color-swatch-fill { height: 56px; }
+.color-swatch-info { padding: 8px 10px; font-size: 11px; background: var(--bg-2); }
+.color-swatch-name { font-weight: 600; color: var(--fg-heading); margin-bottom: 2px; }
+.color-swatch-hex { color: var(--fg-muted); font-family: "SF Mono", "Fira Code", monospace; font-size: 11px; }
+
+.type-sample { margin-bottom: 12px; padding: 12px 16px; border: 1px solid var(--border-subtle); border-radius: 6px; background: var(--bg-2); }
+.type-sample-label { font-size: 11px; color: var(--fg-muted); margin-bottom: 4px; font-family: var(--font); }
+
+.spacing-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.spacing-bar { height: 20px; background: rgba(59,99,251,0.15); border: 1px solid rgba(59,99,251,0.3); border-radius: 4px; min-width: 4px; }
+.spacing-label { font-size: 12px; color: var(--fg-muted); font-family: "SF Mono", "Fira Code", monospace; white-space: nowrap; min-width: 100px; }
+.spacing-value { font-size: 12px; color: var(--fg-heading); font-weight: 600; min-width: 60px; }
+
+.radius-grid { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+.radius-sample { width: 72px; height: 72px; background: rgba(59,99,251,0.1); border: 2px solid var(--primary); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--primary); }
+
+.shadow-grid { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 24px; }
+.shadow-sample { width: 120px; height: 72px; background: var(--bg-2); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--fg-muted); border-radius: 8px; }
+
+/* ═══════════════════════════════════════
+   WKND Brand CSS — scoped to .wknd-preview
+   ═══════════════════════════════════════ */
+.wknd-preview {
+  /* Colors */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-yellow: #f4fe8b;
+  --color-lavender: #cbd4ff;
+  --color-purple: #f4e5fc;
+  --color-gray-100: #f5f5f5;
+  --color-gray-200: #e8e8e8;
+  --color-gray-300: #d4d4d4;
+  --color-gray-500: #666666;
+  --color-gray-700: #404040;
+  --color-gray-900: #171717;
+  /* Typography */
+  --font-heading: 'Syncopate', sans-serif;
+  --font-body: 'Instrument Sans', sans-serif;
+  --text-xs: 0.75rem; --text-sm: 0.875rem; --text-base: 1rem; --text-lg: 1.125rem;
+  --text-xl: 1.25rem; --text-2xl: 1.5rem; --text-3xl: 2rem; --text-4xl: 2.5rem; --text-5xl: 3.5rem;
+  --leading-tight: 1.1; --leading-snug: 1.3; --leading-normal: 1.6;
+  /* Spacing */
+  --space-xxs: 0.25rem; --space-xs: 0.5rem; --space-sm: 0.75rem; --space-md: 1rem;
+  --space-lg: 1.5rem; --space-xl: 2rem; --space-2xl: 3rem; --space-3xl: 4rem; --space-4xl: 5rem; --space-5xl: 8rem;
+  /* Layout */
+  --container-max: 1200px; --container-padding: 1.5rem;
+  --radius-sm: 0.375rem; --radius-md: 0.5rem; --radius-lg: 1rem; --radius-card: 1.25rem; --radius-full: 9999px;
+  /* Shadows */
+  --shadow-button: 4px 4px 0 0 var(--color-black);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
+  /* Transitions */
+  --transition-fast: 150ms ease; --transition-normal: 300ms ease;
+  /* Focus */
+  --focus-ring-color: var(--color-black); --focus-ring-width: 2px; --focus-ring-offset: 2px;
+  /* Icon */
+  --icon-xs: 0.75rem; --icon-sm: 1rem; --icon-md: 1.5rem; --icon-lg: 2rem; --icon-xl: 3rem;
+
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--color-black);
+  background-color: var(--color-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.wknd-preview *, .wknd-preview *::before, .wknd-preview *::after { box-sizing: border-box; margin: 0; padding: 0; }
+.wknd-preview img { max-width: 100%; height: auto; display: block; }
+.wknd-preview a { color: inherit; text-decoration: none; }
+.wknd-preview ul, .wknd-preview ol { list-style: none; }
+
+/* Typography */
+.wknd-preview h1, .wknd-preview h2, .wknd-preview h3, .wknd-preview h4, .wknd-preview h5, .wknd-preview h6,
+.wknd-preview .h1-heading, .wknd-preview .h2-heading, .wknd-preview .h3-heading,
+.wknd-preview .h4-heading, .wknd-preview .h5-heading, .wknd-preview .h6-heading {
+  font-family: var(--font-heading); font-weight: 700; line-height: var(--leading-tight); text-transform: uppercase;
+}
+.wknd-preview .h1-heading, .wknd-preview h1 { font-size: var(--text-5xl); letter-spacing: -0.02em; }
+.wknd-preview .h2-heading, .wknd-preview h2 { font-size: var(--text-4xl); }
+.wknd-preview .h3-heading, .wknd-preview h3 { font-size: var(--text-3xl); }
+.wknd-preview .h4-heading, .wknd-preview h4 { font-size: var(--text-2xl); }
+.wknd-preview .h5-heading, .wknd-preview h5 { font-size: var(--text-xl); }
+.wknd-preview .h6-heading, .wknd-preview h6 { font-size: var(--text-sm); letter-spacing: 0.05em; }
+.wknd-preview .subheading { font-family: var(--font-body); font-size: var(--text-lg); line-height: var(--leading-normal); font-weight: 400; }
+.wknd-preview .paragraph-xl { font-size: var(--text-xl); line-height: var(--leading-normal); }
+.wknd-preview .paragraph-lg { font-size: var(--text-lg); line-height: var(--leading-normal); }
+.wknd-preview .paragraph-sm { font-size: var(--text-sm); line-height: var(--leading-normal); }
+
+/* Layout */
+.wknd-preview .container { max-width: var(--container-max); margin-inline: auto; padding-inline: var(--container-padding); }
+.wknd-preview .section { padding-block: var(--space-3xl); }
+.wknd-preview .secondary-section { background-color: var(--color-gray-100); }
+.wknd-preview .inverse-section { background-color: var(--color-black); color: var(--color-white); }
+.wknd-preview .accent-section { background-color: var(--color-yellow); }
+
+/* Grid */
+.wknd-preview .grid-layout { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-xl); }
+.wknd-preview .grid-layout.desktop-1-column { grid-template-columns: 1fr; }
+.wknd-preview .grid-layout.desktop-3-column { grid-template-columns: repeat(3, 1fr); }
+.wknd-preview .grid-layout.desktop-4-column { grid-template-columns: repeat(4, 1fr); }
+.wknd-preview .grid-gap-xs { gap: var(--space-xs); }
+.wknd-preview .grid-gap-sm { gap: var(--space-sm); }
+.wknd-preview .grid-gap-md { gap: var(--space-md); }
+.wknd-preview .grid-gap-xxl { gap: var(--space-3xl); }
+
+/* Flex */
+.wknd-preview .flex-horizontal { display: flex; align-items: center; }
+.wknd-preview .flex-vertical { display: flex; flex-direction: column; }
+.wknd-preview .flex-gap-xxs { gap: var(--space-xxs); }
+.wknd-preview .flex-gap-xs { gap: var(--space-xs); }
+.wknd-preview .flex-gap-sm { gap: var(--space-sm); }
+.wknd-preview .flex-gap-md { gap: var(--space-md); }
+.wknd-preview .y-center { align-items: center; }
+.wknd-preview .x-left { align-items: flex-start; }
+
+/* Buttons */
+.wknd-preview .button {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0.75rem 1.5rem; font-family: var(--font-body); font-size: var(--text-sm); font-weight: 600;
+  border-radius: var(--radius-full); border: 2px solid var(--color-black);
+  background-color: var(--color-black); color: var(--color-white); cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  box-shadow: var(--shadow-button); text-decoration: none;
+}
+.wknd-preview .button:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 0 var(--color-black); }
+.wknd-preview .secondary-button { background-color: var(--color-white); color: var(--color-black); }
+.wknd-preview .inverse-button { background-color: var(--color-white); color: var(--color-black); border-color: var(--color-white); box-shadow: 4px 4px 0 0 rgba(255,255,255,0.3); }
+.wknd-preview .button-group { display: flex; flex-wrap: wrap; gap: var(--space-md); margin-top: var(--space-xl); }
+.wknd-preview .button-label { font-weight: 600; }
+.wknd-preview .text-button { display: inline-flex; align-items: center; gap: var(--space-xs); font-weight: 600; font-size: var(--text-sm); }
+.wknd-preview .button-icon { width: 1rem; height: 1rem; display: flex; align-items: center; }
+.wknd-preview .button-icon svg { width: 100%; height: 100%; }
+
+/* Cards */
+.wknd-preview .card { border-radius: var(--radius-card); overflow: hidden; background: var(--color-white); border: 1px solid var(--color-gray-200); transition: transform var(--transition-normal), box-shadow var(--transition-normal); }
+.wknd-preview .card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+.wknd-preview .card-link { display: block; text-decoration: none; color: inherit; }
+.wknd-preview .inverse-card-link { background-color: var(--color-black); color: var(--color-white); border-radius: var(--radius-card); overflow: hidden; }
+.wknd-preview .card-body { padding: var(--space-xl); }
+
+/* Images */
+.wknd-preview .cover-image { width: 100%; height: 100%; object-fit: cover; }
+.wknd-preview .utility-aspect-1x1 { aspect-ratio: 1/1; overflow: hidden; border-radius: var(--radius-card); }
+
+/* Avatar */
+.wknd-preview .avatar { width: 3rem; height: 3rem; border-radius: var(--radius-full); overflow: hidden; flex-shrink: 0; }
+.wknd-preview .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Tags */
+.wknd-preview .tag { display: inline-flex; align-items: center; padding: 0.25rem 0.75rem; font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; border-radius: var(--radius-full); background-color: var(--color-yellow); color: var(--color-black); }
+
+/* Icons */
+.wknd-preview .icon-small { width: 1rem; height: 1rem; display: flex; align-items: center; justify-content: center; }
+.wknd-preview .icon-medium { width: 1.5rem; height: 1.5rem; display: flex; align-items: center; justify-content: center; }
+.wknd-preview .icon-small svg, .wknd-preview .icon-medium svg { width: 100%; height: 100%; }
+.wknd-preview .icon { width: var(--icon-md); height: var(--icon-md); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.wknd-preview .icon svg { width: 100%; height: 100%; }
+
+/* Overlay */
+.wknd-preview .utility-position-relative { position: relative; }
+.wknd-preview .overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%); }
+.wknd-preview .utility-overlay { position: absolute; inset: 0; }
+.wknd-preview .utility-text-on-overlay { position: relative; z-index: 2; }
+.wknd-preview .utility-z-index-1 { z-index: 1; }
+.wknd-preview .utility-radius-card { border-radius: var(--radius-card); }
+.wknd-preview .utility-radius-all-0 { border-radius: 0; }
+.wknd-preview .utility-overflow-clip { overflow: hidden; }
+.wknd-preview .utility-max-width-lg { max-width: 42rem; }
+
+/* Utilities */
+.wknd-preview .utility-margin-bottom-0 { margin-bottom: 0; }
+.wknd-preview .utility-margin-bottom-8rem { margin-bottom: 4rem; }
+.wknd-preview .utility-text-secondary { color: var(--color-gray-500); }
+.wknd-preview .utility-text-inverse-secondary { color: rgba(255,255,255,0.7); }
+.wknd-preview .utility-text-align-center { text-align: center; }
+.wknd-preview .utility-text-all-caps { text-transform: uppercase; }
+
+/* Article Card */
+.wknd-preview .article-card { display: block; border-radius: var(--radius-card); overflow: hidden; border: 1px solid var(--color-gray-200); transition: transform 300ms ease, box-shadow 300ms ease; }
+.wknd-preview .article-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+.wknd-preview .article-card-image { aspect-ratio: 16/10; overflow: hidden; }
+.wknd-preview .article-card-image img { transition: transform 300ms ease; }
+.wknd-preview .article-card:hover .article-card-image img { transform: scale(1.05); }
+.wknd-preview .article-card-body { padding: var(--space-lg); }
+.wknd-preview .article-card-meta { display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-sm); }
+
+/* Trend Card */
+.wknd-preview .trend-card { display: block; border-radius: var(--radius-card); overflow: hidden; border: 1px solid var(--color-gray-200); transition: transform 300ms ease, box-shadow 300ms ease; }
+.wknd-preview .trend-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+.wknd-preview .trend-card-image { aspect-ratio: 4/3; overflow: hidden; }
+.wknd-preview .trend-card-image img { transition: transform 300ms ease; }
+.wknd-preview .trend-card:hover .trend-card-image img { transform: scale(1.05); }
+.wknd-preview .trend-card-body { padding: var(--space-lg); }
+
+/* Testimonial Card */
+.wknd-preview .testimonial-card { padding: var(--space-xl); border: 1px solid var(--color-gray-200); border-radius: var(--radius-card); height: 100%; }
+
+/* Navbar */
+.wknd-preview .navbar { position: relative; top: auto; z-index: 10; background-color: var(--color-white); border-bottom: 1px solid var(--color-gray-200); }
+.wknd-preview .nav-inner { display: flex; align-items: center; justify-content: space-between; padding-block: var(--space-md); gap: var(--space-xl); }
+.wknd-preview .logo { display: flex; align-items: center; gap: var(--space-xs); text-decoration: none; flex-shrink: 0; }
+.wknd-preview .nav-logo-icon { width: 2rem; height: 2rem; }
+.wknd-preview .nav-logo-icon svg { width: 100%; height: 100%; }
+.wknd-preview .nav-menu { display: flex; align-items: center; gap: var(--space-lg); }
+.wknd-preview .nav-menu-list { display: flex; align-items: center; gap: var(--space-xs); }
+.wknd-preview .nav-link { display: flex; align-items: center; gap: var(--space-xxs); padding: var(--space-xs) var(--space-sm); font-size: var(--text-sm); font-weight: 500; border-radius: var(--radius-md); transition: background-color var(--transition-fast); }
+.wknd-preview .nav-link:hover { background-color: var(--color-gray-100); }
+.wknd-preview .nav-caret { width: 0.75rem; height: 0.75rem; }
+.wknd-preview .nav-right { display: flex; align-items: center; gap: var(--space-md); }
+.wknd-preview .nav-right .button-group { margin-top: 0; }
+.wknd-preview .nav-mobile-menu-button { display: none; }
+.wknd-preview .mega-menu { display: none; }
+.wknd-preview .nav-menu-dropdown-list { display: none; }
+
+/* Footer */
+.wknd-preview .footer { padding-block: var(--space-3xl); }
+.wknd-preview .inverse-footer { background-color: var(--color-black); color: var(--color-white); --color-gray-500: #999999; }
+.wknd-preview .footer-link { display: block; padding-block: var(--space-xs); font-size: var(--text-sm); color: var(--color-gray-500); transition: color var(--transition-fast); }
+.wknd-preview .footer-link:hover, .wknd-preview .footer-link-on-inverse:hover { color: var(--color-white); }
+.wknd-preview .footer-icons-group { display: flex; gap: var(--space-sm); }
+.wknd-preview .footer-icon-link { display: flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; border-radius: var(--radius-full); background-color: var(--color-gray-700); color: var(--color-white); transition: background-color var(--transition-fast); }
+.wknd-preview .footer-icon-link:hover { background-color: var(--color-gray-500); }
+
+/* Tabs */
+.wknd-preview .tabs-wrapper { /* container */ }
+.wknd-preview .tab-menu { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-md); }
+.wknd-preview .tab-menu-link { display: block; padding: var(--space-md); border-radius: var(--radius-lg); border: 1px solid var(--color-gray-200); cursor: pointer; transition: border-color var(--transition-fast), background-color var(--transition-fast); background: none; font-family: var(--font-body); font-size: var(--text-base); color: var(--color-black); text-align: left; width: 100%; }
+.wknd-preview .tab-menu-link:hover { border-color: var(--color-gray-300); }
+.wknd-preview .tab-menu-link.is-active { border-color: var(--color-black); background-color: var(--color-gray-100); }
+.wknd-preview .tab-pane { display: none; }
+.wknd-preview .tab-pane.is-active { display: block; }
+
+/* FAQ */
+.wknd-preview .faq-list { display: flex; flex-direction: column; gap: var(--space-xs); }
+.wknd-preview .faq-item { border: 1px solid var(--color-gray-200); border-radius: var(--radius-lg); overflow: hidden; }
+.wknd-preview .faq-question { display: flex; align-items: center; justify-content: space-between; padding: var(--space-lg) var(--space-xl); cursor: pointer; font-weight: 600; font-size: var(--text-lg); list-style: none; transition: background-color 150ms ease; font-family: var(--font-body); }
+.wknd-preview .faq-question:hover { background-color: var(--color-gray-100); }
+.wknd-preview .faq-question::-webkit-details-marker { display: none; }
+.wknd-preview .faq-icon { flex-shrink: 0; transition: transform 300ms ease; }
+.wknd-preview details[open] .faq-icon { transform: rotate(45deg); }
+.wknd-preview .faq-answer { padding: 0 var(--space-xl) var(--space-xl); color: var(--color-gray-700); line-height: 1.7; }
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .mobile-nav { display: block !important; }
+  .main { padding: 24px 16px 60px; }
+  .header-inner { flex-direction: column; align-items: flex-start; }
+  .wknd-preview .grid-layout { grid-template-columns: 1fr; }
+  .wknd-preview .grid-layout.desktop-3-column,
+  .wknd-preview .grid-layout.desktop-4-column { grid-template-columns: 1fr; }
+  .wknd-preview .h1-heading, .wknd-preview h1 { font-size: 2rem; }
+  .wknd-preview .h2-heading, .wknd-preview h2 { font-size: 1.75rem; }
+  .wknd-preview .tab-menu { grid-template-columns: 1fr; }
+}
+
+/* ─── Mobile Nav (pill bar) ─── */
+.mobile-nav { display: none; position: sticky; top: 65px; z-index: 40; background: var(--bg-2); border-bottom: 1px solid var(--border); padding: 8px 16px; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+.mobile-nav a { display: inline-block; padding: 4px 12px; margin-right: 4px; font-size: 12px; font-weight: 600; border-radius: 9999px; border: 1px solid var(--border); color: var(--fg-muted); text-decoration: none; transition: all 120ms; }
+.mobile-nav a.active { background: var(--primary); color: var(--primary-fg); border-color: var(--primary); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─── Header ─── -->
+<div class="header">
+  <div class="header-inner">
+    <div>
+      <h1>Component Library</h1>
+      <div class="header-sub">11 components + design tokens — February 23, 2026</div>
+    </div>
+    <a href="hub.html" class="back-link">&larr; Reports Hub</a>
+  </div>
+</div>
+
+<!-- ─── Mobile Nav (pill bar, visible < 768px) ─── -->
+<div class="mobile-nav" id="mobile-nav">
+  <a href="#tokens">Tokens</a>
+  <a href="#hero">Hero</a>
+  <a href="#navbar">Navbar</a>
+  <a href="#footer">Footer</a>
+  <a href="#article-card">ArticleCard</a>
+  <a href="#trend-card">TrendCard</a>
+  <a href="#cta-section">CTASection</a>
+  <a href="#image-gallery">ImageGallery</a>
+  <a href="#testimonial-card">TestimonialCard</a>
+  <a href="#section-heading">SectionHeading</a>
+  <a href="#tab-section">TabSection</a>
+  <a href="#faq-accordion">FAQAccordion</a>
+</div>
+
+<div class="page-layout">
+
+<!-- ─── Sidebar ─── -->
+<nav class="sidebar" id="sidebar" aria-label="Component navigation">
+  <div class="sidebar-label">Foundation</div>
+  <a href="#tokens">Design Tokens</a>
+  <div class="sidebar-label" style="margin-top: 12px;">Components</div>
+  <a href="#hero">Hero</a>
+  <a href="#navbar">Navbar</a>
+  <a href="#footer">Footer</a>
+  <a href="#article-card">ArticleCard</a>
+  <a href="#trend-card">TrendCard</a>
+  <a href="#cta-section">CTASection</a>
+  <a href="#image-gallery">ImageGallery</a>
+  <a href="#testimonial-card">TestimonialCard</a>
+  <a href="#section-heading">SectionHeading</a>
+  <a href="#tab-section">TabSection</a>
+  <a href="#faq-accordion">FAQAccordion</a>
+</nav>
+
+<!-- ─── Main ─── -->
+<main class="main" id="main">
+
+<!-- ════════════════════════════════════
+     DESIGN TOKENS
+     ════════════════════════════════════ -->
+<section class="component-section" id="tokens">
+  <h2 class="section-title">Design Tokens</h2>
+  <p class="section-desc">The WKND Trendsetters brand system: colors, typography, spacing, shape, and shadows. All values are CSS custom properties defined in <code>global.css</code>.</p>
+
+  <!-- Colors -->
+  <h3 class="subsection-title">Colors</h3>
+  <div class="token-grid">
+    <div class="color-swatch"><div class="color-swatch-fill" style="background:#000000;"></div><div class="color-swatch-info"><div class="color-swatch-name">Black</div><div class="color-swatch-hex">#000000</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-fill" style="background:#ffffff; border-bottom: 1px solid #e8e8e8;"></div><div class="color-swatch-info"><div class="color-swatch-name">White</div><div class="color-swatch-hex">#FFFFFF</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-fill" style="background:#f4fe8b;"></div><div class="color-swatch-info"><div class="color-swatch-name">Yellow</div><div class="color-swatch-hex">#F4FE8B</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-fill" style="background:#cbd4ff;"></div><div class="color-swatch-info"><div class="color-swatch-name">Lavender</div><div class="color-swatch-hex">#CBD4FF</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-fill" style="background:#f4e5fc;"></div><div class="color-swatch-info"><div class="color-swatch-name">Purple</div><div class="color-swatch-hex">#F4E5FC</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-fill" style="background:#f5f5f5;"></div><div class="color-swatch-info"><div class="color-swatch-name">Gray 100</div><div class="color-swatch-hex">#F5F5F5</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-fill" style="background:#e8e8e8;"></div><div class="color-swatch-info"><div class="color-swatch-name">Gray 200</div><div class="color-swatch-hex">#E8E8E8</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-fill" style="background:#d4d4d4;"></div><div class="color-swatch-info"><div class="color-swatch-name">Gray 300</div><div class="color-swatch-hex">#D4D4D4</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-fill" style="background:#666666;"></div><div class="color-swatch-info"><div class="color-swatch-name">Gray 500</div><div class="color-swatch-hex">#666666</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-fill" style="background:#404040;"></div><div class="color-swatch-info"><div class="color-swatch-name">Gray 700</div><div class="color-swatch-hex">#404040</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-fill" style="background:#171717;"></div><div class="color-swatch-info"><div class="color-swatch-name">Gray 900</div><div class="color-swatch-hex">#171717</div></div></div>
+  </div>
+
+  <!-- Typography -->
+  <h3 class="subsection-title">Typography</h3>
+  <div class="type-sample"><div class="type-sample-label">Syncopate 700 — Headings (--text-5xl: 3.5rem)</div><div style="font-family: 'Syncopate', sans-serif; font-weight: 700; font-size: 2.5rem; text-transform: uppercase; line-height: 1.1; letter-spacing: -0.02em;">FRESH LOOKS</div></div>
+  <div class="type-sample"><div class="type-sample-label">Syncopate 700 — H2 (--text-4xl: 2.5rem)</div><div style="font-family: 'Syncopate', sans-serif; font-weight: 700; font-size: 2rem; text-transform: uppercase; line-height: 1.1;">BOLD MOVES</div></div>
+  <div class="type-sample"><div class="type-sample-label">Syncopate 700 — H3 (--text-3xl: 2rem)</div><div style="font-family: 'Syncopate', sans-serif; font-weight: 700; font-size: 1.5rem; text-transform: uppercase; line-height: 1.1;">REAL LIFE</div></div>
+  <div class="type-sample"><div class="type-sample-label">Syncopate 400 — H6/Label (--text-sm: 0.875rem)</div><div style="font-family: 'Syncopate', sans-serif; font-weight: 400; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em;">Category Label</div></div>
+  <div class="type-sample"><div class="type-sample-label">Instrument Sans 400 — Body (--text-base: 1rem)</div><div style="font-family: 'Instrument Sans', sans-serif; font-weight: 400; font-size: 1rem; line-height: 1.6;">Dive into our latest style adventures — see how young trendsetters own every moment, from courtside to the dance floor.</div></div>
+  <div class="type-sample"><div class="type-sample-label">Instrument Sans 600 — Button (--text-sm: 0.875rem)</div><div style="font-family: 'Instrument Sans', sans-serif; font-weight: 600; font-size: 0.875rem;">Subscribe Now</div></div>
+
+  <!-- Spacing -->
+  <h3 class="subsection-title">Spacing</h3>
+  <div style="margin-bottom: 24px;">
+    <div class="spacing-row"><div class="spacing-label">--space-xxs</div><div class="spacing-value">0.25rem</div><div class="spacing-bar" style="width: 4px;"></div></div>
+    <div class="spacing-row"><div class="spacing-label">--space-xs</div><div class="spacing-value">0.5rem</div><div class="spacing-bar" style="width: 8px;"></div></div>
+    <div class="spacing-row"><div class="spacing-label">--space-sm</div><div class="spacing-value">0.75rem</div><div class="spacing-bar" style="width: 12px;"></div></div>
+    <div class="spacing-row"><div class="spacing-label">--space-md</div><div class="spacing-value">1rem</div><div class="spacing-bar" style="width: 16px;"></div></div>
+    <div class="spacing-row"><div class="spacing-label">--space-lg</div><div class="spacing-value">1.5rem</div><div class="spacing-bar" style="width: 24px;"></div></div>
+    <div class="spacing-row"><div class="spacing-label">--space-xl</div><div class="spacing-value">2rem</div><div class="spacing-bar" style="width: 32px;"></div></div>
+    <div class="spacing-row"><div class="spacing-label">--space-2xl</div><div class="spacing-value">3rem</div><div class="spacing-bar" style="width: 48px;"></div></div>
+    <div class="spacing-row"><div class="spacing-label">--space-3xl</div><div class="spacing-value">4rem</div><div class="spacing-bar" style="width: 64px;"></div></div>
+    <div class="spacing-row"><div class="spacing-label">--space-4xl</div><div class="spacing-value">5rem</div><div class="spacing-bar" style="width: 80px;"></div></div>
+    <div class="spacing-row"><div class="spacing-label">--space-5xl</div><div class="spacing-value">8rem</div><div class="spacing-bar" style="width: 128px;"></div></div>
+  </div>
+
+  <!-- Shape -->
+  <h3 class="subsection-title">Border Radius</h3>
+  <div class="radius-grid">
+    <div style="text-align: center;"><div class="radius-sample" style="border-radius: 0.375rem;">sm</div><div style="font-size:11px; color: var(--fg-muted); margin-top: 4px;">0.375rem</div></div>
+    <div style="text-align: center;"><div class="radius-sample" style="border-radius: 0.5rem;">md</div><div style="font-size:11px; color: var(--fg-muted); margin-top: 4px;">0.5rem</div></div>
+    <div style="text-align: center;"><div class="radius-sample" style="border-radius: 1rem;">lg</div><div style="font-size:11px; color: var(--fg-muted); margin-top: 4px;">1rem</div></div>
+    <div style="text-align: center;"><div class="radius-sample" style="border-radius: 1.25rem;">card</div><div style="font-size:11px; color: var(--fg-muted); margin-top: 4px;">1.25rem</div></div>
+    <div style="text-align: center;"><div class="radius-sample" style="border-radius: 9999px;">full</div><div style="font-size:11px; color: var(--fg-muted); margin-top: 4px;">9999px</div></div>
+  </div>
+
+  <!-- Shadows -->
+  <h3 class="subsection-title">Shadows</h3>
+  <div class="shadow-grid">
+    <div style="text-align: center;"><div class="shadow-sample" style="box-shadow: 4px 4px 0 0 #000; border: 2px solid #000; border-radius: 9999px;">Button</div><div style="font-size:11px; color: var(--fg-muted); margin-top: 8px;">4px 4px 0 0 black</div></div>
+    <div style="text-align: center;"><div class="shadow-sample" style="box-shadow: 0 2px 8px rgba(0,0,0,0.08);">Card</div><div style="font-size:11px; color: var(--fg-muted); margin-top: 8px;">0 2px 8px rgba(0,0,0,.08)</div></div>
+    <div style="text-align: center;"><div class="shadow-sample" style="box-shadow: 0 8px 24px rgba(0,0,0,0.1);">Hover</div><div style="font-size:11px; color: var(--fg-muted); margin-top: 8px;">0 8px 24px rgba(0,0,0,.1)</div></div>
+    <div style="text-align: center;"><div class="shadow-sample" style="box-shadow: 0 16px 48px rgba(0,0,0,0.12);">Mega Menu</div><div style="font-size:11px; color: var(--fg-muted); margin-top: 8px;">0 16px 48px rgba(0,0,0,.12)</div></div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     HERO
+     ════════════════════════════════════ -->
+<section class="component-section" id="hero">
+  <h2 class="section-title">Hero</h2>
+  <p class="section-desc">Full-width page header with headline, subtitle, CTAs, and optional image grid. Used on every landing page as the primary entry point.</p>
+
+  <table class="props-table">
+    <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>title</code> <span class="required">REQ</span></td><td><code>string</code></td><td>—</td><td>Main headline (rendered as h1)</td></tr>
+      <tr><td><code>subtitle</code></td><td><code>string</code></td><td>—</td><td>Supporting paragraph below headline</td></tr>
+      <tr><td><code>primaryCta</code></td><td><code>{text, href}</code></td><td>—</td><td>Primary button (dark, offset shadow)</td></tr>
+      <tr><td><code>secondaryCta</code></td><td><code>{text, href}</code></td><td>—</td><td>Secondary button (white with dark border)</td></tr>
+      <tr><td><code>images</code></td><td><code>{src, alt}[]</code></td><td><code>[]</code></td><td>Image grid displayed beside the text</td></tr>
+    </tbody>
+  </table>
+
+  <div class="preview-label">Preview — Homepage Hero</div>
+  <div class="preview-wrap">
+    <div class="wknd-preview">
+      <header class="section secondary-section">
+        <div class="container">
+          <div class="grid-layout" style="align-items: center; gap: 3rem;">
+            <div>
+              <h1 class="h1-heading">Fresh looks, bold stories, real life</h1>
+              <p class="subheading" style="margin-top: 1.5rem;">Dive into our latest style adventures — see how young trendsetters own every moment, from courtside to the dance floor.</p>
+              <div class="button-group">
+                <a href="#" class="button">See case</a>
+                <a href="#" class="button secondary-button">All stories</a>
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
+              <img src="https://wknd-trendsetters.pages.dev/images/hero-hiphop-dance.avif" alt="Hip-hop dance style" class="cover-image" style="border-radius: 1.25rem; aspect-ratio: 3/2;" />
+              <img src="https://wknd-trendsetters.pages.dev/images/fundraising-event.avif" alt="Fundraising event" class="cover-image" style="border-radius: 1.25rem; aspect-ratio: 3/2;" />
+              <img src="https://wknd-trendsetters.pages.dev/images/hero-family-vacation.avif" alt="Family vacation style" class="cover-image" style="border-radius: 1.25rem; aspect-ratio: 3/2;" />
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     NAVBAR
+     ════════════════════════════════════ -->
+<section class="component-section" id="navbar">
+  <h2 class="section-title">Navbar</h2>
+  <p class="section-desc">Sticky navigation bar with logo, mega menu under "Trends", dropdown under "Support", and a subscribe CTA. Collapses to a hamburger on mobile.</p>
+
+  <table class="props-table">
+    <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td colspan="4" style="color: var(--fg-muted); font-style: italic;">No props — uses <code>Astro.url.pathname</code> internally for active link detection.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="preview-label">Preview — Default State</div>
+  <div class="preview-wrap">
+    <div class="wknd-preview">
+      <div class="navbar">
+        <div class="container">
+          <div class="nav-inner">
+            <a href="#" class="logo">
+              <div class="nav-logo-icon">
+                <svg width="100%" height="100%" viewBox="0 0 33 33" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+                  <path d="M28,0H5C2.24,0,0,2.24,0,5v23c0,2.76,2.24,5,5,5h23c2.76,0,5-2.24,5-5V5c0-2.76-2.24-5-5-5ZM29,17c-6.63,0-12,5.37-12,12h-1c0-6.63-5.37-12-12-12v-1c6.63,0,12-5.37,12-12h1c0,6.63,5.37,12,12,12v1Z" fill="currentColor"></path>
+                </svg>
+              </div>
+              <div style="font-family: 'Syncopate', sans-serif; font-weight: 700; font-size: 0.875rem; text-transform: uppercase;">Fashion Blog</div>
+            </a>
+            <nav class="nav-menu" aria-label="Main navigation">
+              <ul class="nav-menu-list">
+                <li><a class="nav-link"><div>Trends</div><div class="nav-caret"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></div></a></li>
+                <li><a class="nav-link"><div>About</div></a></li>
+                <li><a class="nav-link"><div>Blog</div></a></li>
+                <li><a class="nav-link"><div>Support</div><div class="nav-caret"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></div></a></li>
+              </ul>
+            </nav>
+            <div class="nav-right">
+              <div class="button-group" style="margin-top: 0;">
+                <a href="#" class="button"><div class="button-label">Subscribe</div></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     FOOTER
+     ════════════════════════════════════ -->
+<section class="component-section" id="footer">
+  <h2 class="section-title">Footer</h2>
+  <p class="section-desc">Dark inverse footer with brand logo, social media icons (Facebook, Instagram, X, LinkedIn, YouTube), and three navigation columns. Static content — no props.</p>
+
+  <table class="props-table">
+    <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td colspan="4" style="color: var(--fg-muted); font-style: italic;">No props — static layout with hardcoded columns (Trends, Inspire, Explore).</td></tr>
+    </tbody>
+  </table>
+
+  <div class="preview-label">Preview</div>
+  <div class="preview-wrap">
+    <div class="wknd-preview">
+      <footer class="footer inverse-footer">
+        <div class="container">
+          <div class="grid-layout desktop-4-column" style="gap: 3rem;">
+            <div class="flex-vertical flex-gap-sm x-left">
+              <a href="#" class="logo" style="color: #fff;">
+                <div class="nav-logo-icon">
+                  <svg width="100%" height="100%" viewBox="0 0 33 33" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+                    <path d="M28,0H5C2.24,0,0,2.24,0,5v23c0,2.76,2.24,5,5,5h23c2.76,0,5-2.24,5-5V5c0-2.76-2.24-5-5-5ZM29,17c-6.63,0-12,5.37-12,12h-1c0-6.63-5.37-12-12-12v-1c6.63,0,12-5.37,12-12h1c0,6.63,5.37,12,12,12v1Z" fill="currentColor"></path>
+                  </svg>
+                </div>
+                <div style="font-family: 'Syncopate', sans-serif; font-weight: 700; font-size: 0.875rem; text-transform: uppercase;">Fashion Blog</div>
+              </a>
+              <ul class="footer-icons-group" style="margin-top: auto; padding-top: 2rem;">
+                <li><a href="#" class="footer-icon-link" aria-label="Facebook"><div class="icon-small"><svg width="100%" height="100%" viewBox="0 0 16 16" aria-hidden="true"><path d="M16,8.048a8,8,0,1,0-9.25,7.9V10.36H4.719V8.048H6.75V6.285A2.822,2.822,0,0,1,9.771,3.173a12.2,12.2,0,0,1,1.791.156V5.3H10.554a1.155,1.155,0,0,0-1.3,1.25v1.5h2.219l-.355,2.312H9.25v5.591A8,8,0,0,0,16,8.048Z" fill="currentColor"></path></svg></div></a></li>
+                <li><a href="#" class="footer-icon-link" aria-label="Instagram"><div class="icon-small"><svg width="100%" height="100%" viewBox="0 0 16 16" aria-hidden="true"><path d="M8,1.441c2.136,0,2.389.009,3.233.047a4.419,4.419,0,0,1,1.485.276,2.472,2.472,0,0,1,.92.6,2.472,2.472,0,0,1,.6.92,4.419,4.419,0,0,1,.276,1.485c.038.844.047,1.1.047,3.233s-.009,2.389-.047,3.233a4.419,4.419,0,0,1-.276,1.485,2.644,2.644,0,0,1-1.518,1.518,4.419,4.419,0,0,1-1.485.276c-.844.038-1.1.047-3.233.047s-2.389-.009-3.233-.047a4.419,4.419,0,0,1-1.485-.276,2.472,2.472,0,0,1-.92-.6,2.472,2.472,0,0,1-.6-.92,4.419,4.419,0,0,1-.276-1.485c-.038-.844-.047-1.1-.047-3.233s.009-2.389.047-3.233a4.419,4.419,0,0,1,.276-1.485,2.472,2.472,0,0,1,.6-.92,2.472,2.472,0,0,1,.92-.6,4.419,4.419,0,0,1,1.485-.276c.844-.038,1.1-.047,3.233-.047M8,0C5.827,0,5.555.009,4.7.048A5.868,5.868,0,0,0,2.76.42a3.908,3.908,0,0,0-1.417.923A3.908,3.908,0,0,0,.42,2.76,5.868,5.868,0,0,0,.048,4.7C.009,5.555,0,5.827,0,8s.009,2.445.048,3.3A5.868,5.868,0,0,0,.42,13.24a3.908,3.908,0,0,0,.923,1.417,3.908,3.908,0,0,0,1.417.923,5.868,5.868,0,0,0,1.942.372C5.555,15.991,5.827,16,8,16s2.445-.009,3.3-.048a5.868,5.868,0,0,0,1.942-.372,4.094,4.094,0,0,0,2.34-2.34,5.868,5.868,0,0,0,.372-1.942c.039-.853.048-1.125.048-3.3s-.009-2.445-.048-3.3A5.868,5.868,0,0,0,15.58,2.76a3.908,3.908,0,0,0-.923-1.417A3.908,3.908,0,0,0,13.24.42,5.868,5.868,0,0,0,11.3.048C10.445.009,10.173,0,8,0Z" fill="currentColor"></path><path d="M8,3.892A4.108,4.108,0,1,0,12.108,8,4.108,4.108,0,0,0,8,3.892Zm0,6.775A2.667,2.667,0,1,1,10.667,8,2.667,2.667,0,0,1,8,10.667Z" fill="currentColor"></path><circle cx="12.27" cy="3.73" r="0.96" fill="currentColor"></circle></svg></div></a></li>
+                <li><a href="#" class="footer-icon-link" aria-label="X"><div class="icon-small"><svg width="100%" height="100%" viewBox="0 0 16 16" aria-hidden="true"><path d="M12.3723 1.16992H14.6895L9.6272 6.95576L15.5825 14.829H10.9196L7.26734 10.0539L3.08837 14.829H0.769833L6.18442 8.64037L0.471436 1.16992H5.2528L8.55409 5.53451L12.3723 1.16992ZM11.5591 13.4421H12.843L4.55514 2.48399H3.17733L11.5591 13.4421Z" fill="currentColor"></path></svg></div></a></li>
+                <li><a href="#" class="footer-icon-link" aria-label="LinkedIn"><div class="icon-small"><svg width="100%" height="100%" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M15.3,0H0.7C0.3,0,0,0.3,0,0.7v14.7C0,15.7,0.3,16,0.7,16h14.7c0.4,0,0.7-0.3,0.7-0.7V0.7 C16,0.3,15.7,0,15.3,0z M4.7,13.6H2.4V6h2.4V13.6z M3.6,5C2.8,5,2.2,4.3,2.2,3.6c0-0.8,0.6-1.4,1.4-1.4c0.8,0,1.4,0.6,1.4,1.4 C4.9,4.3,4.3,5,3.6,5z M13.6,13.6h-2.4V9.9c0-0.9,0-2-1.2-2c-1.2,0-1.4,1-1.4,2v3.8H6.2V6h2.3v1h0c0.3-0.6,1.1-1.2,2.2-1.2 c2.4,0,2.8,1.6,2.8,3.6V13.6z"></path></svg></div></a></li>
+                <li><a href="#" class="footer-icon-link" aria-label="YouTube"><div class="icon-small"><svg width="100%" height="100%" viewBox="0 0 16 16" aria-hidden="true"><path d="M15.8,4.8c-0.2-1.3-0.8-2.2-2.2-2.4C11.4,2,8,2,8,2S4.6,2,2.4,2.4C1,2.6,0.3,3.5,0.2,4.8C0,6.1,0,8,0,8 s0,1.9,0.2,3.2c0.2,1.3,0.8,2.2,2.2,2.4C4.6,14,8,14,8,14s3.4,0,5.6-0.4c1.4-0.3,2-1.1,2.2-2.4C16,9.9,16,8,16,8S16,6.1,15.8,4.8z M6,11V5l5,3L6,11z" fill="currentColor"></path></svg></div></a></li>
+              </ul>
+            </div>
+            <nav aria-label="Trends links"><ul><li><h2 class="h6-heading utility-text-secondary">Trends</h2></li><li><a href="#" class="footer-link footer-link-on-inverse"><div>Style</div></a></li><li><a href="#" class="footer-link footer-link-on-inverse"><div>Looks</div></a></li><li><a href="#" class="footer-link footer-link-on-inverse"><div>Events</div></a></li><li><a href="#" class="footer-link footer-link-on-inverse"><div>Brands</div></a></li><li><a href="#" class="footer-link footer-link-on-inverse"><div>Tips</div></a></li></ul></nav>
+            <nav aria-label="Inspire links"><ul><li><h2 class="h6-heading utility-text-secondary">Inspire</h2></li><li><a href="#" class="footer-link footer-link-on-inverse"><div>Stories</div></a></li><li><a href="#" class="footer-link footer-link-on-inverse"><div>People</div></a></li><li><a href="#" class="footer-link footer-link-on-inverse"><div>Culture</div></a></li><li><a href="#" class="footer-link footer-link-on-inverse"><div>Vibes</div></a></li><li><a href="#" class="footer-link footer-link-on-inverse"><div>Fun</div></a></li></ul></nav>
+            <nav aria-label="Explore links"><ul><li><h2 class="h6-heading utility-text-secondary">Explore</h2></li><li><a href="#" class="footer-link footer-link-on-inverse"><div>Travel</div></a></li><li><a href="#" class="footer-link footer-link-on-inverse"><div>Beach</div></a></li><li><a href="#" class="footer-link footer-link-on-inverse"><div>Night</div></a></li><li><a href="#" class="footer-link footer-link-on-inverse"><div>Sport</div></a></li><li><a href="#" class="footer-link footer-link-on-inverse"><div>Chill</div></a></li></ul></nav>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     ARTICLE CARD
+     ════════════════════════════════════ -->
+<section class="component-section" id="article-card">
+  <h2 class="section-title">ArticleCard</h2>
+  <p class="section-desc">Blog article card with 16:10 hero image, category tag, date, and title. Hover lifts the card and zooms the image. Used in article grids and listing pages.</p>
+
+  <table class="props-table">
+    <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>title</code> <span class="required">REQ</span></td><td><code>string</code></td><td>—</td><td>Article headline</td></tr>
+      <tr><td><code>category</code></td><td><code>string</code></td><td>—</td><td>Yellow pill tag above title</td></tr>
+      <tr><td><code>date</code></td><td><code>string</code></td><td>—</td><td>Publication date string</td></tr>
+      <tr><td><code>image</code> <span class="required">REQ</span></td><td><code>string</code></td><td>—</td><td>Hero image source path</td></tr>
+      <tr><td><code>imageAlt</code></td><td><code>string</code></td><td>title</td><td>Image alt text</td></tr>
+      <tr><td><code>href</code> <span class="required">REQ</span></td><td><code>string</code></td><td>—</td><td>Link destination</td></tr>
+    </tbody>
+  </table>
+
+  <div class="preview-label">Preview — 3-Column Grid</div>
+  <div class="preview-wrap">
+    <div class="wknd-preview" style="padding: 2rem;">
+      <div class="grid-layout desktop-3-column">
+        <a href="#" class="article-card card-link">
+          <div class="article-card-image"><img src="https://wknd-trendsetters.pages.dev/images/hero-hiphop-dance.avif" alt="Tennis style, redefined" class="cover-image" loading="lazy" /></div>
+          <div class="article-card-body"><div class="article-card-meta"><span class="tag">Casual Cool</span><span class="paragraph-sm utility-text-secondary">May 12</span></div><h3 class="h4-heading" style="font-size: 1.125rem;">Tennis style, redefined</h3></div>
+        </a>
+        <a href="#" class="article-card card-link">
+          <div class="article-card-image"><img src="https://wknd-trendsetters.pages.dev/images/fundraising-event.avif" alt="Sunkissed and effortless" class="cover-image" loading="lazy" /></div>
+          <div class="article-card-body"><div class="article-card-meta"><span class="tag">Beach Vibes</span><span class="paragraph-sm utility-text-secondary">May 10</span></div><h3 class="h4-heading" style="font-size: 1.125rem;">Sunkissed and effortless</h3></div>
+        </a>
+        <a href="#" class="article-card card-link">
+          <div class="article-card-image"><img src="https://wknd-trendsetters.pages.dev/images/hero-family-vacation.avif" alt="Party fits that pop" class="cover-image" loading="lazy" /></div>
+          <div class="article-card-body"><div class="article-card-meta"><span class="tag">Night Out</span><span class="paragraph-sm utility-text-secondary">May 8</span></div><h3 class="h4-heading" style="font-size: 1.125rem;">Party fits that pop</h3></div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     TREND CARD
+     ════════════════════════════════════ -->
+<section class="component-section" id="trend-card">
+  <h2 class="section-title">TrendCard</h2>
+  <p class="section-desc">Trend feature card with 4:3 image, optional category, title, and description. Similar to ArticleCard but includes a body text excerpt.</p>
+
+  <table class="props-table">
+    <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>title</code> <span class="required">REQ</span></td><td><code>string</code></td><td>—</td><td>Trend title</td></tr>
+      <tr><td><code>description</code> <span class="required">REQ</span></td><td><code>string</code></td><td>—</td><td>Short description text</td></tr>
+      <tr><td><code>image</code> <span class="required">REQ</span></td><td><code>string</code></td><td>—</td><td>Image source (4:3 aspect)</td></tr>
+      <tr><td><code>imageAlt</code></td><td><code>string</code></td><td>title</td><td>Image alt text</td></tr>
+      <tr><td><code>category</code></td><td><code>string</code></td><td>—</td><td>Category tag above title</td></tr>
+      <tr><td><code>href</code></td><td><code>string</code></td><td><code>'#'</code></td><td>Link destination</td></tr>
+    </tbody>
+  </table>
+
+  <div class="preview-label">Preview — 2 Cards Side by Side</div>
+  <div class="preview-wrap">
+    <div class="wknd-preview" style="padding: 2rem;">
+      <div class="grid-layout">
+        <a href="#" class="trend-card card-link">
+          <div class="trend-card-image"><img src="https://wknd-trendsetters.pages.dev/images/beach-destination.avif" alt="Beach Day" class="cover-image" loading="lazy" /></div>
+          <div class="trend-card-body"><span class="tag" style="margin-bottom: 0.75rem;">Beach Vibes</span><h3 class="h4-heading" style="font-size: 1.125rem; margin-bottom: 0.5rem;">Beach Day</h3><p class="paragraph-sm utility-text-secondary utility-margin-bottom-0">Taylor rocks breezy linen and neon shades, catching waves and turning heads all summer long.</p></div>
+        </a>
+        <a href="#" class="trend-card card-link">
+          <div class="trend-card-image"><img src="https://wknd-trendsetters.pages.dev/images/concert-crowd.avif" alt="Night Out" class="cover-image" loading="lazy" /></div>
+          <div class="trend-card-body"><span class="tag" style="margin-bottom: 0.75rem;">Night Out</span><h3 class="h4-heading" style="font-size: 1.125rem; margin-bottom: 0.5rem;">Night Out</h3><p class="paragraph-sm utility-text-secondary utility-margin-bottom-0">Jordan lights up the party in metallics and mesh — glow up after dark.</p></div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     CTA SECTION
+     ════════════════════════════════════ -->
+<section class="component-section" id="cta-section">
+  <h2 class="section-title">CTASection</h2>
+  <p class="section-desc">Call-to-action section with two variants: <strong>overlay</strong> (image background with gradient) and <strong>default</strong> (accent yellow background). Used at the bottom of pages to drive engagement.</p>
+
+  <table class="props-table">
+    <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>title</code> <span class="required">REQ</span></td><td><code>string</code></td><td>—</td><td>Section headline</td></tr>
+      <tr><td><code>subtitle</code></td><td><code>string</code></td><td>—</td><td>Supporting text</td></tr>
+      <tr><td><code>ctaText</code></td><td><code>string</code></td><td><code>'See more'</code></td><td>Button label</td></tr>
+      <tr><td><code>ctaHref</code></td><td><code>string</code></td><td><code>'#'</code></td><td>Button link</td></tr>
+      <tr><td><code>image</code></td><td><code>string</code></td><td>—</td><td>Background image (overlay variant)</td></tr>
+      <tr><td><code>variant</code></td><td><code>'default' | 'overlay'</code></td><td><code>'default'</code></td><td>Visual style variant</td></tr>
+    </tbody>
+  </table>
+
+  <div class="preview-label">Preview — Overlay Variant</div>
+  <div class="preview-wrap">
+    <div class="wknd-preview">
+      <section class="section inverse-section">
+        <div class="container">
+          <div class="grid-layout desktop-1-column">
+            <div class="utility-position-relative utility-radius-card utility-overflow-clip" style="min-height: 22rem; display: flex; align-items: flex-end;">
+              <img src="https://wknd-trendsetters.pages.dev/images/networking-event.avif" alt="" class="cover-image utility-overlay utility-radius-all-0" loading="lazy" />
+              <div class="overlay utility-z-index-1"></div>
+              <div class="card-body utility-max-width-lg utility-text-on-overlay" style="padding: 3rem;">
+                <h2 class="h1-heading">Fresh looks, bold stories, real life</h2>
+                <p class="subheading" style="margin-top: 1rem;">Dive into our latest case study: see how young trendsetters rock new brands from courtside to the dance floor.</p>
+                <div class="button-group"><a href="#" class="button inverse-button">See more</a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="preview-label">Preview — Default (Accent) Variant</div>
+  <div class="preview-wrap">
+    <div class="wknd-preview">
+      <section class="section accent-section">
+        <div class="container">
+          <div class="utility-text-align-center" style="max-width: 36rem; margin: 0 auto;">
+            <h2 class="h2-heading">Ready to join the style squad?</h2>
+            <p class="paragraph-lg" style="margin-top: 1rem;">Inspired by real stories. Fueled by fresh looks. See what our readers are loving — then make your move.</p>
+            <div class="button-group" style="justify-content: center;"><a href="#" class="button">Join now</a></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     IMAGE GALLERY
+     ════════════════════════════════════ -->
+<section class="component-section" id="image-gallery">
+  <h2 class="section-title">ImageGallery</h2>
+  <p class="section-desc">Responsive image grid with optional header. Supports 2, 3, or 4 columns. Images display at 1:1 aspect ratio with cover-fit. Used for lookbooks and style snapshots.</p>
+
+  <table class="props-table">
+    <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>title</code></td><td><code>string</code></td><td>—</td><td>Gallery heading</td></tr>
+      <tr><td><code>subtitle</code></td><td><code>string</code></td><td>—</td><td>Gallery subheading</td></tr>
+      <tr><td><code>images</code> <span class="required">REQ</span></td><td><code>{src, alt}[]</code></td><td>—</td><td>Array of image objects</td></tr>
+      <tr><td><code>columns</code></td><td><code>4 | 3 | 2</code></td><td><code>4</code></td><td>Number of grid columns</td></tr>
+      <tr><td><code>variant</code></td><td><code>'default' | 'secondary'</code></td><td><code>'default'</code></td><td>Section background variant</td></tr>
+    </tbody>
+  </table>
+
+  <div class="preview-label">Preview — 4-Column Default</div>
+  <div class="preview-wrap">
+    <div class="wknd-preview">
+      <section class="section">
+        <div class="container">
+          <div class="utility-text-align-center utility-margin-bottom-8rem">
+            <h2 class="h2-heading">Style in every snapshot</h2>
+            <p class="paragraph-lg" style="margin-top: 0.75rem;">Peek the latest looks in action</p>
+          </div>
+          <div class="grid-layout desktop-4-column" style="gap: 0.75rem;">
+            <div class="utility-aspect-1x1"><img src="https://wknd-trendsetters.pages.dev/images/hero-hiphop-dance.avif" alt="Hip-hop dance" class="cover-image" loading="lazy" /></div>
+            <div class="utility-aspect-1x1"><img src="https://wknd-trendsetters.pages.dev/images/beach-destination.avif" alt="Beach destination" class="cover-image" loading="lazy" /></div>
+            <div class="utility-aspect-1x1"><img src="https://wknd-trendsetters.pages.dev/images/concert-crowd.avif" alt="Concert crowd" class="cover-image" loading="lazy" /></div>
+            <div class="utility-aspect-1x1"><img src="https://wknd-trendsetters.pages.dev/images/campus-life.avif" alt="Campus life" class="cover-image" loading="lazy" /></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     TESTIMONIAL CARD
+     ════════════════════════════════════ -->
+<section class="component-section" id="testimonial-card">
+  <h2 class="section-title">TestimonialCard</h2>
+  <p class="section-desc">Quote card with avatar, name, organization, and testimonial text. Full-height layout for consistent grid alignment. Used in testimonial grids.</p>
+
+  <table class="props-table">
+    <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>name</code> <span class="required">REQ</span></td><td><code>string</code></td><td>—</td><td>Person's display name</td></tr>
+      <tr><td><code>organization</code> <span class="required">REQ</span></td><td><code>string</code></td><td>—</td><td>Organization or affiliation</td></tr>
+      <tr><td><code>quote</code> <span class="required">REQ</span></td><td><code>string</code></td><td>—</td><td>Testimonial text (wrapped in smart quotes)</td></tr>
+      <tr><td><code>avatar</code> <span class="required">REQ</span></td><td><code>string</code></td><td>—</td><td>Avatar image source</td></tr>
+    </tbody>
+  </table>
+
+  <div class="preview-label">Preview — 2 Cards Side by Side</div>
+  <div class="preview-wrap">
+    <div class="wknd-preview" style="padding: 2rem;">
+      <div class="grid-layout">
+        <div class="testimonial-card">
+          <div class="flex-horizontal flex-gap-sm y-center" style="margin-bottom: 1.5rem;">
+            <div class="avatar"><img src="https://wknd-trendsetters.pages.dev/images/testimonial-alex.avif" alt="Alex Rivera" class="cover-image" loading="lazy" /></div>
+            <div><div class="paragraph-sm utility-margin-bottom-0"><strong>Alex Rivera</strong></div><div class="paragraph-sm utility-text-secondary utility-margin-bottom-0">Urban Threads</div></div>
+          </div>
+          <p class="utility-margin-bottom-0">&ldquo;Loved the streetwear tips! Now my weekend fits turn heads at every party.&rdquo;</p>
+        </div>
+        <div class="testimonial-card">
+          <div class="flex-horizontal flex-gap-sm y-center" style="margin-bottom: 1.5rem;">
+            <div class="avatar"><img src="https://wknd-trendsetters.pages.dev/images/testimonial-taylor.avif" alt="Taylor Kim" class="cover-image" loading="lazy" /></div>
+            <div><div class="paragraph-sm utility-margin-bottom-0"><strong>Taylor Kim</strong></div><div class="paragraph-sm utility-text-secondary utility-margin-bottom-0">Neon Lane</div></div>
+          </div>
+          <p class="utility-margin-bottom-0">&ldquo;The trend guides are a game changer. I finally nailed my tennis club vibe.&rdquo;</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     SECTION HEADING
+     ════════════════════════════════════ -->
+<section class="component-section" id="section-heading">
+  <h2 class="section-title">SectionHeading</h2>
+  <p class="section-desc">Simple heading + subtitle combo with configurable alignment. Used before content grids to introduce sections. Adds generous bottom margin for visual breathing room.</p>
+
+  <table class="props-table">
+    <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>title</code> <span class="required">REQ</span></td><td><code>string</code></td><td>—</td><td>Heading text (rendered as h2)</td></tr>
+      <tr><td><code>subtitle</code></td><td><code>string</code></td><td>—</td><td>Supporting paragraph</td></tr>
+      <tr><td><code>align</code></td><td><code>'center' | 'left'</code></td><td><code>'center'</code></td><td>Text alignment</td></tr>
+    </tbody>
+  </table>
+
+  <div class="preview-label">Preview — Centered (default)</div>
+  <div class="preview-wrap">
+    <div class="wknd-preview" style="padding: 2rem 2rem 0;">
+      <div class="utility-text-align-center" style="margin-bottom: 2rem;">
+        <h2 class="h2-heading">Latest articles</h2>
+        <p class="paragraph-lg" style="margin-top: 0.75rem;">Fresh looks, bold moves</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="preview-label">Preview — Left-aligned</div>
+  <div class="preview-wrap">
+    <div class="wknd-preview" style="padding: 2rem 2rem 0;">
+      <div style="margin-bottom: 2rem;">
+        <h2 class="h2-heading">Fresh looks, bold moves</h2>
+        <p class="paragraph-lg" style="margin-top: 0.75rem;">From courtside cool to beachside vibes, see how young trendsetters rock fresh looks.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     TAB SECTION
+     ════════════════════════════════════ -->
+<section class="component-section" id="tab-section">
+  <h2 class="section-title">TabSection</h2>
+  <p class="section-desc">Tabbed testimonial display with avatar buttons. Each tab shows a large image, person info, and quote. Full ARIA support with keyboard navigation (arrow keys, Home, End).</p>
+
+  <table class="props-table">
+    <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>tabs</code> <span class="required">REQ</span></td><td><code>TabItem[]</code></td><td>—</td><td>Array of tab objects</td></tr>
+    </tbody>
+  </table>
+  <table class="props-table" style="margin-top: -8px;">
+    <thead><tr><th colspan="4" style="font-style: italic; text-transform: none; letter-spacing: normal;">TabItem shape</th></tr></thead>
+    <tbody>
+      <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>Person's name</td></tr>
+      <tr><td><code>role</code></td><td><code>string</code></td><td>—</td><td>Job title or role</td></tr>
+      <tr><td><code>quote</code></td><td><code>string</code></td><td>—</td><td>Testimonial quote text</td></tr>
+      <tr><td><code>image</code></td><td><code>string</code></td><td>—</td><td>Large featured image</td></tr>
+      <tr><td><code>avatarImage</code></td><td><code>string</code></td><td>—</td><td>Small avatar for tab button</td></tr>
+    </tbody>
+  </table>
+
+  <div class="preview-label">Preview — Interactive (click tabs)</div>
+  <div class="preview-wrap">
+    <div class="wknd-preview" style="padding: 2rem;">
+      <div class="tabs-wrapper" id="preview-tabs">
+        <div class="tabs-content">
+          <div class="tab-pane is-active" data-tab-index="0" role="tabpanel" id="prev-tabpanel-0" aria-labelledby="prev-tab-0" tabindex="0">
+            <div class="grid-layout" style="align-items: center; gap: 2rem;">
+              <div style="aspect-ratio: 4/3; border-radius: 1.25rem; overflow: hidden;">
+                <img src="https://wknd-trendsetters.pages.dev/images/hero-hiphop-dance.avif" alt="Alex Rivera" class="cover-image" loading="lazy" />
+              </div>
+              <div>
+                <div style="margin-bottom: 2rem;"><div class="paragraph-xl utility-margin-bottom-0"><strong>Alex Rivera</strong></div><div>Streetwear Enthusiast</div></div>
+                <p class="paragraph-xl" style="margin-bottom: 2rem;">&ldquo;Wearing new brands makes every day feel like a runway. I love mixing sporty vibes with bold colors — perfect for tennis or a night out!&rdquo;</p>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane" data-tab-index="1" role="tabpanel" id="prev-tabpanel-1" aria-labelledby="prev-tab-1" tabindex="0" hidden>
+            <div class="grid-layout" style="align-items: center; gap: 2rem;">
+              <div style="aspect-ratio: 4/3; border-radius: 1.25rem; overflow: hidden;">
+                <img src="https://wknd-trendsetters.pages.dev/images/tab-campus.avif" alt="Taylor Kim" class="cover-image" loading="lazy" />
+              </div>
+              <div>
+                <div style="margin-bottom: 2rem;"><div class="paragraph-xl utility-margin-bottom-0"><strong>Taylor Kim</strong></div><div>Casual Style Blogger</div></div>
+                <p class="paragraph-xl" style="margin-bottom: 2rem;">&ldquo;Fresh looks, comfy fits — my go-to for beach days and city strolls. These brands keep my style on point and effortless.&rdquo;</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-menu" role="tablist" aria-label="Testimonials">
+          <button class="tab-menu-link is-active" data-tab-target="0" role="tab" id="prev-tab-0" aria-selected="true" aria-controls="prev-tabpanel-0" tabindex="0">
+            <div class="flex-horizontal y-center flex-gap-xs"><div class="avatar"><img src="https://wknd-trendsetters.pages.dev/images/avatar-alex.avif" alt="" class="cover-image" loading="lazy" /></div><div style="text-align: left;"><div class="paragraph-sm utility-margin-bottom-0"><strong>Alex Rivera</strong></div><div class="paragraph-sm utility-margin-bottom-0">Streetwear Enthusiast</div></div></div>
+          </button>
+          <button class="tab-menu-link" data-tab-target="1" role="tab" id="prev-tab-1" aria-selected="false" aria-controls="prev-tabpanel-1" tabindex="-1">
+            <div class="flex-horizontal y-center flex-gap-xs"><div class="avatar"><img src="https://wknd-trendsetters.pages.dev/images/avatar-taylor.avif" alt="" class="cover-image" loading="lazy" /></div><div style="text-align: left;"><div class="paragraph-sm utility-margin-bottom-0"><strong>Taylor Kim</strong></div><div class="paragraph-sm utility-margin-bottom-0">Casual Style Blogger</div></div></div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     FAQ ACCORDION
+     ════════════════════════════════════ -->
+<section class="component-section" id="faq-accordion">
+  <h2 class="section-title">FAQAccordion</h2>
+  <p class="section-desc">Accessible accordion using native <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> elements. Plus icon rotates 45&deg; to form an &times; when open. No JavaScript required.</p>
+
+  <table class="props-table">
+    <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>items</code> <span class="required">REQ</span></td><td><code>{question, answer}[]</code></td><td>—</td><td>Array of FAQ objects</td></tr>
+    </tbody>
+  </table>
+
+  <div class="preview-label">Preview — Interactive (click to expand)</div>
+  <div class="preview-wrap">
+    <div class="wknd-preview" style="padding: 2rem;">
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>How do I spot the latest trends?</span>
+            <svg class="faq-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          </summary>
+          <div class="faq-answer"><p>We keep it fresh! Check our weekly trend roundups and street style snaps for what's hot right now.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>Can I share my own outfit pics?</span>
+            <svg class="faq-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          </summary>
+          <div class="faq-answer"><p>Absolutely! Tag us on socials or use our upload form to get featured in our next style story.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>Where do you find your style inspo?</span>
+            <svg class="faq-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          </summary>
+          <div class="faq-answer"><p>From city streets to beach parties, we're always on the lookout for bold looks and cool creators.</p></div>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+</div>
+
+<!-- ─── JavaScript ─── -->
+<script>
+/* ──────────────────────────────
+   SCROLL-SPY
+   ────────────────────────────── */
+(function() {
+  const sections = document.querySelectorAll('.component-section');
+  const sidebarLinks = document.querySelectorAll('#sidebar a');
+  const mobileLinks = document.querySelectorAll('#mobile-nav a');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        sidebarLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+        mobileLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+})();
+
+/* ──────────────────────────────
+   TAB SECTION PREVIEW
+   ────────────────────────────── */
+(function() {
+  const wrapper = document.getElementById('preview-tabs');
+  if (!wrapper) return;
+
+  const tabs = Array.from(wrapper.querySelectorAll('[role="tab"]'));
+  const panels = Array.from(wrapper.querySelectorAll('[role="tabpanel"]'));
+
+  function activateTab(tab) {
+    const idx = tab.getAttribute('data-tab-target');
+    if (idx === null) return;
+
+    tabs.forEach(t => {
+      t.classList.remove('is-active');
+      t.setAttribute('aria-selected', 'false');
+      t.setAttribute('tabindex', '-1');
+    });
+    panels.forEach(p => {
+      p.classList.remove('is-active');
+      p.setAttribute('hidden', '');
+    });
+
+    tab.classList.add('is-active');
+    tab.setAttribute('aria-selected', 'true');
+    tab.setAttribute('tabindex', '0');
+    tab.focus();
+
+    const panel = wrapper.querySelector('[data-tab-index="' + idx + '"]');
+    if (panel) {
+      panel.classList.add('is-active');
+      panel.removeAttribute('hidden');
+    }
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => activateTab(tab));
+    tab.addEventListener('keydown', e => {
+      const ci = tabs.indexOf(tab);
+      let ni = -1;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); ni = (ci + 1) % tabs.length; }
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); ni = (ci - 1 + tabs.length) % tabs.length; }
+      else if (e.key === 'Home') { e.preventDefault(); ni = 0; }
+      else if (e.key === 'End') { e.preventDefault(); ni = tabs.length - 1; }
+      if (ni >= 0) activateTab(tabs[ni]);
+    });
+  });
+})();
+</script>
+</body>
+</html>

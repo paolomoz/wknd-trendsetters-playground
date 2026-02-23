@@ -1,0 +1,71 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '../layouts/PageLayout.astro';
+import Hero from '../components/Hero.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import CTASection from '../components/CTASection.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+
+const [featured, ...rest] = posts;
+---
+
+<PageLayout title="Blog — WKND Trendsetters">
+  <Hero
+    title="WKND Trendsetters Blog"
+    subtitle="From tennis courts to neon nights, discover the latest trends, style inspo, and stories from the coolest scenes. Dive into a world where fashion meets fun—your next look starts here."
+    primaryCta={{ text: 'Read now', href: '#articles' }}
+    secondaryCta={{ text: 'See trends', href: '/fashion-trends-of-the-season' }}
+    images={[{ src: '/images/fashion-insights-hero.avif', alt: 'Fashion insights hero' }]}
+  />
+
+  <!-- Featured Article -->
+  <section class="section">
+    <div class="container">
+      <div class="grid-layout tablet-1-column grid-gap-lg" style="align-items: center;">
+        <div>
+          <img src={featured.data.image} alt={featured.data.imageAlt || featured.data.title} class="cover-image utility-aspect-3x2" style="border-radius: var(--radius-card);" loading="lazy" />
+        </div>
+        <div>
+          <div class="flex-horizontal flex-gap-xxs" style="margin-bottom: var(--space-md);">
+            <span class="tag">Featured</span>
+            <span class="paragraph-sm utility-text-secondary">{featured.data.date}</span>
+          </div>
+          <h2 class="h2-heading">{featured.data.title}</h2>
+          <p class="paragraph-lg" style="margin-top: var(--space-md); color: var(--color-gray-700);">{featured.data.description}</p>
+          <div class="button-group">
+            <a href={`/blog/${featured.id}`} class="button">Read the full article</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Articles Grid -->
+  <section class="section secondary-section" id="articles">
+    <div class="container">
+      <SectionHeading title="Latest Articles" subtitle="Fresh looks, bold moves" />
+      <div class="grid-layout desktop-4-column tablet-2-column-1 mobile-portrait-1-column grid-gap-md">
+        {rest.map((post) => (
+          <ArticleCard
+            title={post.data.title}
+            category={post.data.category}
+            date={post.data.date}
+            image={post.data.image}
+            href={`/blog/${post.id}`}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <CTASection
+    title="Fresh looks, bold vibes, endless inspo"
+    subtitle="Stay inspired with the latest trends and stories."
+    ctaText="Subscribe"
+  />
+</PageLayout>

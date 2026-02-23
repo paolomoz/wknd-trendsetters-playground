@@ -91,6 +91,24 @@ Each entry: `id`, `file`, `title`, `date`, `category`, `related` (IDs of connect
     "category": "brand",
     "summary": "AI-rewritten flip flops article: 3.4→9.2/10 (externally validated via GPT-4o + quantitative checks). Voice, structure, and image overhaul with Gemini 3 Pro images. All 14 issues resolved.",
     "related": ["brand-alignment", "brand-assessment"]
+  },
+  {
+    "id": "brand-alignment-ace-polo",
+    "file": "brand-alignment-ace-polo.html",
+    "title": "Brand Compliance: Ace Pro Court Polo",
+    "date": "2026-02-23",
+    "category": "brand",
+    "summary": "Ace Pro Court Polo article: GPT-4o 9.5/10, quantitative 9/10 pass. Zero brand violations. 3 Gemini 3 Pro images, 3 personas, full structural compliance.",
+    "related": ["brand-alignment-rewrite", "brand-assessment"]
+  },
+  {
+    "id": "component-library",
+    "file": "component-library.html",
+    "title": "Component Library",
+    "date": "2026-02-23",
+    "category": "infra",
+    "summary": "Visual reference for all 11 Astro components + design tokens. Live previews with WKND brand CSS, props tables, interactive tabs and accordion.",
+    "related": ["accessibility-iconography"]
   }
 ]
 ```

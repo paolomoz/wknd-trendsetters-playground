@@ -63,8 +63,11 @@ const PAGES = {
     { slug: 'blog-fashion-trends-young-style', path: '/blog/fashion-trends-young-style', file: 'fashion-trends-young-style.md' },
     { slug: 'blog-latest-trends-young-casual-fashion', path: '/blog/latest-trends-young-casual-fashion', file: 'latest-trends-young-casual-fashion.md' },
     { slug: 'blog-street-style-trends', path: '/blog/street-style-trends', file: 'street-style-trends.md' },
+    { slug: 'blog-flip-flop-summer-style', path: '/blog/flip-flop-summer-style', file: 'flip-flop-summer-style.md' },
   ],
 };
+
+const LIVE_BASE = 'https://wknd-trendsetters.pages.dev';
 
 /* ─── Helpers ─── */
 
@@ -156,10 +159,33 @@ function extractHero(template) {
   const subtitleM = propsStr.match(/subtitle="([^"]*)"/);
 
   if (!titleM) return null;
+
+  // Extract first image src from images prop (inline or variable reference)
+  let imageSrc = null;
+  const inlineImgM = propsStr.match(/src:\s*'([^']+)'/);
+  if (inlineImgM) imageSrc = inlineImgM[1];
+
   return {
     title: titleM[1],
     subtitle: subtitleM ? subtitleM[1] : '',
+    imageSrc,
   };
+}
+
+/** Resolve Hero image from a variable name defined in frontmatter */
+function resolveHeroImage(frontmatter, template) {
+  // Match images={varName}
+  const heroTag = template.match(/<Hero\s([^>]*(?:\{[\s\S]*?\}[^>]*)*)\/?\s*>/);
+  if (!heroTag) return null;
+  const varRefM = heroTag[1].match(/images=\{(\w+)\}/);
+  if (!varRefM) return null;
+  const varName = varRefM[1];
+  // Find the variable definition and extract first src
+  const re = new RegExp(`const\\s+${varName}\\s*=\\s*\\[([\\s\\S]*?)\\];`, 'm');
+  const m = frontmatter.match(re);
+  if (!m) return null;
+  const srcM = m[1].match(/src:\s*'([^']+)'/);
+  return srcM ? srcM[1] : null;
 }
 
 /** Extract CTASection component props from template */
@@ -170,11 +196,13 @@ function extractCTA(template) {
   const propsStr = ctaMatch[1];
   const titleM = propsStr.match(/title="([^"]*)"/);
   const subtitleM = propsStr.match(/subtitle="([^"]*)"/);
+  const imageM = propsStr.match(/image="([^"]*)"/);
 
   if (!titleM) return null;
   return {
     title: titleM[1],
     subtitle: subtitleM ? subtitleM[1] : '',
+    image: imageM ? imageM[1] : null,
   };
 }
 
@@ -210,16 +238,21 @@ function extractFromAstroPage(page) {
 
   const { frontmatter, template } = splitAstroFrontmatter(content);
   const nodes = [];
+  const pageUrl = `${LIVE_BASE}${page.path}`;
 
   // Hero
   const hero = extractHero(template);
   if (hero) {
+    // Resolve hero image: try inline first, then variable reference
+    let heroImage = hero.imageSrc || resolveHeroImage(frontmatter, template);
     nodes.push({
       id: nodeId(page.slug, 'hero', hero.title),
       type: 'hero',
       title: hero.title,
       text: hero.subtitle,
       page: page.slug,
+      pageUrl,
+      image: heroImage,
     });
   }
 
@@ -232,6 +265,8 @@ function extractFromAstroPage(page) {
       title: cta.title,
       text: cta.subtitle,
       page: page.slug,
+      pageUrl,
+      image: cta.image,
     });
   }
 
@@ -245,8 +280,10 @@ function extractFromAstroPage(page) {
         title: a.title,
         text: a.category ? `${a.category}. ${a.title}` : a.title,
         page: page.slug,
+        pageUrl,
         category: a.category || null,
         href: a.href || null,
+        image: a.image || null,
       });
     }
   }
@@ -261,8 +298,10 @@ function extractFromAstroPage(page) {
         title: a.title,
         text: a.category ? `${a.category}. ${a.title}` : a.title,
         page: page.slug,
+        pageUrl,
         category: a.category || null,
         href: a.href || null,
+        image: a.image || null,
       });
     }
   }
@@ -277,7 +316,9 @@ function extractFromAstroPage(page) {
         title: c.title,
         text: c.description || '',
         page: page.slug,
+        pageUrl,
         category: c.category || null,
+        image: c.image || null,
       });
     }
   }
@@ -292,7 +333,10 @@ function extractFromAstroPage(page) {
         title: t.name,
         text: `${t.role || ''}. ${t.quote || ''}`,
         page: page.slug,
+        pageUrl,
         persona: t.name,
+        image: t.image || null,
+        avatar: t.avatarImage || null,
       });
     }
   }
@@ -307,7 +351,9 @@ function extractFromAstroPage(page) {
         title: t.name,
         text: `${t.organization || ''}. ${t.quote || ''}`,
         page: page.slug,
+        pageUrl,
         persona: t.name,
+        avatar: t.avatar || null,
       });
     }
   }
@@ -322,6 +368,7 @@ function extractFromAstroPage(page) {
         title: f.question,
         text: f.answer || '',
         page: page.slug,
+        pageUrl,
       });
     }
   }
@@ -336,6 +383,8 @@ function extractFromAstroPage(page) {
         title: l.title,
         text: l.subtitle || '',
         page: page.slug,
+        pageUrl,
+        image: l.image || null,
       });
     }
   }
@@ -350,7 +399,9 @@ function extractFromAstroPage(page) {
         title: `${l.title}: ${l.subtitle || ''}`,
         text: l.description || '',
         page: page.slug,
+        pageUrl,
         category: l.title || null,
+        image: l.image || null,
       });
     }
   }
@@ -365,6 +416,8 @@ function extractFromAstroPage(page) {
         title: m.title,
         text: m.description,
         page: page.slug,
+        pageUrl,
+        image: m.image || null,
       });
     }
   }
@@ -373,6 +426,7 @@ function extractFromAstroPage(page) {
   const galleryImages = extractArray(frontmatter, 'galleryImages');
   if (galleryImages.length > 0) {
     const galleryText = galleryImages.map(g => g.alt || '').filter(Boolean).join(', ');
+    const firstSrc = galleryImages[0].src || null;
     if (galleryText) {
       nodes.push({
         id: nodeId(page.slug, 'gallery', 'style-gallery'),
@@ -380,6 +434,8 @@ function extractFromAstroPage(page) {
         title: 'Style Gallery',
         text: galleryText,
         page: page.slug,
+        pageUrl,
+        image: firstSrc,
       });
     }
   }
@@ -390,6 +446,7 @@ function extractFromAstroPage(page) {
   const existingTitles = new Set(nodes.map(n => n.title.toLowerCase()));
   for (const section of inlineSections) {
     if (!existingTitles.has(section.title.toLowerCase())) {
+      section.pageUrl = pageUrl;
       nodes.push(section);
       existingTitles.add(section.title.toLowerCase());
     }
@@ -417,6 +474,7 @@ function extractFromBlogPost(page) {
   }
 
   const cleanBody = stripMarkdown(body);
+  const pageUrl = `${LIVE_BASE}${page.path}`;
 
   return [{
     id: nodeId(page.slug, 'blog', fm.title || page.slug),
@@ -424,8 +482,10 @@ function extractFromBlogPost(page) {
     title: fm.title || page.slug,
     text: truncate(`${fm.description || ''}. ${cleanBody}`, 2000),
     page: page.slug,
+    pageUrl,
     category: fm.category || null,
     author: fm.author || null,
+    image: fm.image || null,
   }];
 }
 
@@ -658,6 +718,9 @@ function assembleGraph(nodes, semanticEdges, structuralEdges) {
     title: n.title,
     text: n.text,
     page: n.page,
+    pageUrl: n.pageUrl || null,
+    image: n.image || null,
+    avatar: n.avatar || null,
     category: n.category || null,
     persona: n.persona || null,
   }));
@@ -711,6 +774,20 @@ function generateReport(graph) {
     gallery: '#14B8A6',
   };
 
+  const TYPE_ICONS = {
+    hero: '\u2605',
+    article: '\u25A1',
+    trend: '\u2191',
+    testimonial: '\u201C',
+    persona: '\u263A',
+    faq: '?',
+    lookbook: '\u25CB',
+    feature: '\u2606',
+    cta: '\u279C',
+    blog: '\u270E',
+    gallery: '\u25A3',
+  };
+
   const EDGE_COLORS = {
     'same-page': '#94A3B8',
     'same-persona': '#D97706',
@@ -718,17 +795,19 @@ function generateReport(graph) {
     'linked': '#3B63FB',
   };
 
+  const LIVE_BASE = 'https://wknd-trendsetters.pages.dev';
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Content Neural Network \u2014 WKND Trendsetters</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  /* \u2500\u2500\u2500 Design System: Spectrum 2 \u2500\u2500\u2500 */
+  @font-face { font-family: 'Source Sans Pro'; src: url('../public/fonts/SourceSansPro-Regular.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+  @font-face { font-family: 'Source Sans Pro'; src: url('../public/fonts/SourceSansPro-SemiBold.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+  @font-face { font-family: 'Source Sans Pro'; src: url('../public/fonts/SourceSansPro-Bold.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+
   :root {
     --bg:             #F8F8F8;
     --bg-2:           #FFFFFF;
@@ -747,18 +826,17 @@ function generateReport(graph) {
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: var(--font); background: var(--bg); color: var(--fg); line-height: 1.5; font-size: 14px; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
 
-  /* \u2500\u2500\u2500 Focus \u2500\u2500\u2500 */
   :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 
-  /* \u2500\u2500\u2500 Header \u2500\u2500\u2500 */
+  /* --- Header --- */
   .header { background: var(--bg-2); border-bottom: 1px solid var(--border); padding: 12px 24px; flex-shrink: 0; }
   .header-inner { max-width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
-  h1 { font-size: 20px; font-weight: 800; color: var(--fg-heading); }
+  h1 { font-size: 20px; font-weight: 700; color: var(--fg-heading); }
   .subtitle { color: var(--fg-muted); font-size: 13px; }
   .back-link { font-size: 14px; color: var(--primary); text-decoration: none; font-weight: 600; }
   .back-link:hover { color: var(--fg-heading); }
 
-  /* \u2500\u2500\u2500 Controls Bar \u2500\u2500\u2500 */
+  /* --- Controls Bar --- */
   .controls { background: var(--bg-2); border-bottom: 1px solid var(--border); padding: 10px 24px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; flex-shrink: 0; }
   .search-box { padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-family: var(--font); width: 200px; }
   .search-box:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 2px rgba(59,99,251,0.2); }
@@ -781,12 +859,11 @@ function generateReport(graph) {
   .btn-reset { padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; background: var(--bg); border: 1px solid var(--border); color: var(--fg-muted); cursor: pointer; }
   .btn-reset:hover { border-color: var(--primary); color: var(--primary); }
 
-  /* \u2500\u2500\u2500 Graph Area \u2500\u2500\u2500 */
+  /* --- Graph Area --- */
   .graph-area { flex: 1; position: relative; overflow: hidden; background: var(--bg-2); }
   .graph-area::before {
     content: '';
-    position: absolute;
-    inset: 0;
+    position: absolute; inset: 0;
     background-image: radial-gradient(circle, var(--border) 0.75px, transparent 0.75px);
     background-size: 32px 32px;
     opacity: 0.4;
@@ -795,10 +872,23 @@ function generateReport(graph) {
   }
   .graph-area svg { position: absolute; inset: 0; z-index: 1; }
 
-  /* \u2500\u2500\u2500 Zoom Controls \u2500\u2500\u2500 */
+  /* --- Loading overlay --- */
+  .loading-overlay {
+    position: absolute; inset: 0; z-index: 3;
+    background: var(--bg-2);
+    display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px;
+    transition: opacity 400ms ease-out;
+  }
+  .loading-overlay.hidden { opacity: 0; pointer-events: none; }
+  .loading-bar { width: 200px; height: 4px; border-radius: 2px; background: var(--border); overflow: hidden; }
+  .loading-bar-inner { height: 100%; width: 30%; background: var(--primary); border-radius: 2px; animation: shimmer 1.2s ease-in-out infinite; }
+  @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(400%); } }
+  .loading-text { font-size: 13px; color: var(--fg-muted); font-weight: 600; }
+
+  /* --- Zoom Controls --- */
   .zoom-controls {
     position: absolute; bottom: 20px; left: 20px; z-index: 5;
-    display: flex; flex-direction: column; gap: 4px;
+    display: flex; flex-direction: column; gap: 0;
     background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px;
     box-shadow: var(--shadow-emphasized); overflow: hidden;
   }
@@ -818,29 +908,54 @@ function generateReport(graph) {
     background: var(--bg);
   }
 
-  /* \u2500\u2500\u2500 Detail Panel \u2500\u2500\u2500 */
+  /* --- Detail Panel --- */
   .detail-panel {
     position: absolute; top: 0; right: 0; bottom: 0; width: 360px;
     background: var(--bg-2); border-left: 1px solid var(--border);
     box-shadow: var(--shadow-elevated);
     z-index: 10; transform: translateX(100%);
-    transition: transform 200ms ease-out;
+    transition: transform 250ms ease-out;
     overflow-y: auto;
     display: flex; flex-direction: column;
   }
   .detail-panel.open { transform: translateX(0); }
+
+  .detail-hero-img {
+    width: 100%; height: 160px; object-fit: cover; display: block;
+    flex-shrink: 0;
+  }
+  .detail-hero-gradient {
+    width: 100%; height: 80px; flex-shrink: 0;
+    display: flex; align-items: flex-end; padding: 12px 20px;
+  }
+
   .detail-header {
     padding: 16px 20px 12px; border-bottom: 1px solid var(--border-subtle);
     flex-shrink: 0; position: relative;
   }
-  .detail-close { position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 18px; cursor: pointer; color: var(--fg-muted); padding: 4px; }
-  .detail-close:hover { color: var(--fg-heading); }
-  .detail-type { display: inline-block; padding: 2px 10px; border-radius: 9999px; font-size: 11px; font-weight: 700; color: white; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.04em; }
-  .detail-title { font-size: 18px; font-weight: 800; color: var(--fg-heading); margin-bottom: 4px; padding-right: 28px; }
-  .detail-page { font-size: 12px; color: var(--fg-muted); margin-bottom: 0; }
+  .detail-close { position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,0.9); border: none; font-size: 16px; cursor: pointer; color: var(--fg-muted); padding: 4px 8px; border-radius: 4px; z-index: 2; }
+  .detail-close:hover { color: var(--fg-heading); background: white; }
+
+  .detail-badges { display: flex; gap: 6px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
+  .detail-type { display: inline-block; padding: 2px 10px; border-radius: 9999px; font-size: 11px; font-weight: 700; color: white; text-transform: uppercase; letter-spacing: 0.04em; }
+  .detail-page-badge { display: inline-block; padding: 2px 10px; border-radius: 9999px; font-size: 11px; font-weight: 600; color: var(--fg-muted); background: var(--bg); border: 1px solid var(--border); }
+  .detail-title { font-size: 18px; font-weight: 700; color: var(--fg-heading); margin-bottom: 4px; padding-right: 28px; }
+
   .detail-text { font-size: 13px; color: var(--fg); line-height: 1.55; padding: 12px 20px; background: var(--bg); border-bottom: 1px solid var(--border-subtle); flex-shrink: 0; }
 
-  /* \u2500\u2500\u2500 Navigation breadcrumb \u2500\u2500\u2500 */
+  .detail-actions { padding: 12px 20px; border-bottom: 1px solid var(--border-subtle); flex-shrink: 0; }
+  .btn-view-site {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 20px; border-radius: 8px;
+    background: var(--primary); color: white;
+    font-size: 13px; font-weight: 600; font-family: var(--font);
+    text-decoration: none; border: none; cursor: pointer;
+    transition: all 120ms;
+  }
+  .btn-view-site:hover { background: #2a4fd9; }
+  .btn-view-site svg { width: 14px; height: 14px; }
+
+  /* --- Navigation breadcrumb --- */
   .nav-trail {
     display: flex; align-items: center; gap: 4px; padding: 8px 20px;
     border-bottom: 1px solid var(--border-subtle); flex-shrink: 0;
@@ -857,7 +972,7 @@ function generateReport(graph) {
   .trail-crumb.current { background: var(--primary); color: white; cursor: default; }
   .trail-sep { color: var(--fg-muted); font-size: 10px; }
 
-  /* \u2500\u2500\u2500 Connections list \u2500\u2500\u2500 */
+  /* --- Connections list --- */
   .detail-connections { flex: 1; overflow-y: auto; padding: 0; }
   .conn-section { padding: 0; }
   .conn-section-header {
@@ -871,35 +986,65 @@ function generateReport(graph) {
   .conn-section-line { width: 12px; height: 2px; border-radius: 1px; flex-shrink: 0; }
   .conn-section-count { font-weight: 400; color: #b0b0b0; }
   .conn-item {
-    padding: 10px 20px; border-bottom: 1px solid var(--border-subtle);
-    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 20px; border-bottom: 1px solid var(--border-subtle);
+    display: flex; align-items: center; gap: 10px;
     cursor: pointer; transition: background 100ms;
   }
   .conn-item:hover { background: rgba(59,99,251,0.05); }
-  .conn-title { font-size: 13px; font-weight: 600; color: var(--fg-heading); }
+  .conn-thumb {
+    width: 40px; height: 40px; border-radius: 6px; object-fit: cover; flex-shrink: 0;
+    background: var(--border-subtle);
+  }
+  .conn-thumb-placeholder {
+    width: 40px; height: 40px; border-radius: 6px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700; color: white;
+  }
+  .conn-info { flex: 1; min-width: 0; }
+  .conn-title { font-size: 13px; font-weight: 600; color: var(--fg-heading); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .conn-meta { font-size: 11px; color: var(--fg-muted); margin-top: 1px; }
-  .conn-weight { font-size: 11px; font-weight: 700; border-radius: 4px; padding: 2px 7px; flex-shrink: 0; margin-left: 8px; }
-  .conn-item .conn-nav-icon { font-size: 14px; color: var(--fg-muted); margin-left: 4px; transition: transform 120ms; }
+  .conn-right { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+  .conn-weight { font-size: 11px; font-weight: 700; border-radius: 4px; padding: 2px 7px; }
+  .conn-nav-icon { font-size: 14px; color: var(--fg-muted); transition: transform 120ms; }
   .conn-item:hover .conn-nav-icon { transform: translateX(2px); color: var(--primary); }
 
-  /* \u2500\u2500\u2500 Footer \u2500\u2500\u2500 */
-  .footer { background: var(--bg-2); border-top: 1px solid var(--border); padding: 8px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; flex-shrink: 0; }
+  /* --- Detail footer --- */
+  .detail-footer { padding: 12px 20px; border-top: 1px solid var(--border-subtle); font-size: 11px; color: var(--fg-muted); flex-shrink: 0; background: var(--bg); }
+
+  /* --- Stats Bar --- */
+  .stats-bar {
+    background: var(--bg-2); border-top: 1px solid var(--border);
+    padding: 6px 24px; display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 8px; flex-shrink: 0;
+  }
   .legend { display: flex; gap: 12px; flex-wrap: wrap; }
   .legend-item { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--fg-muted); font-weight: 500; }
   .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
   .legend-line { width: 16px; height: 2px; border-radius: 1px; }
   .stats { font-size: 12px; color: var(--fg-muted); }
 
-  /* \u2500\u2500\u2500 Responsive \u2500\u2500\u2500 */
+  /* --- Animations --- */
+  @keyframes pulse-ring {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.15); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.8; }
+  }
+  @keyframes search-pulse {
+    0%, 100% { stroke-opacity: 0.4; }
+    50% { stroke-opacity: 1; }
+  }
+
+  /* --- Responsive --- */
   @media (max-width: 768px) {
     .controls { padding: 8px 12px; gap: 8px; }
     .search-box { width: 140px; }
     .detail-panel { width: 100%; }
-    .footer { padding: 6px 12px; }
+    .stats-bar { padding: 6px 12px; }
     .zoom-controls { bottom: 12px; left: 12px; }
   }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; }
+    .loading-bar-inner { animation: none; width: 100%; }
   }
 </style>
 </head>
@@ -935,12 +1080,17 @@ function generateReport(graph) {
     <label for="threshold">Sim \u2265</label>
     <input type="range" id="threshold" min="0.30" max="0.80" step="0.01" value="${DISPLAY_THRESHOLD}">
     <span class="slider-val" id="threshold-val">${DISPLAY_THRESHOLD}</span>
+    <span class="slider-val" id="edge-count" style="color:var(--fg-muted);font-weight:400"></span>
   </div>
 
   <button class="btn-reset" id="btn-reset" title="Reset zoom & selection">Reset</button>
 </div>
 
 <div class="graph-area" id="graph-area">
+  <div class="loading-overlay" id="loading">
+    <div class="loading-bar"><div class="loading-bar-inner"></div></div>
+    <div class="loading-text">Computing layout\u2026</div>
+  </div>
   <svg id="graph-svg"></svg>
 
   <div class="zoom-controls">
@@ -951,60 +1101,64 @@ function generateReport(graph) {
   </div>
 
   <div class="detail-panel" id="detail-panel">
+    <div id="detail-hero-area"></div>
     <div class="detail-header">
       <button class="detail-close" id="detail-close" aria-label="Close panel">\u2715</button>
       <div id="detail-header-content"></div>
     </div>
-    <div class="nav-trail" id="nav-trail"></div>
     <div id="detail-text-area"></div>
+    <div id="detail-actions-area"></div>
+    <div class="nav-trail" id="nav-trail"></div>
     <div class="detail-connections" id="detail-connections"></div>
+    <div class="detail-footer" id="detail-footer"></div>
   </div>
 </div>
 
-<div class="footer">
+<div class="stats-bar">
   <div class="legend">
     ${Object.entries(TYPE_COLORS).map(([t, c]) => `<div class="legend-item"><div class="legend-dot" style="background:${c}"></div>${t}</div>`).join('\n    ')}
     <div class="legend-item"><div class="legend-line" style="background:#94A3B8"></div>same-page</div>
-    <div class="legend-item"><div class="legend-line" style="background:#D97706"></div>persona</div>
+    <div class="legend-item"><div class="legend-line" style="background:#D97706;height:2px;border-top:1px dashed #D97706;background:none"></div>persona</div>
     <div class="legend-item"><div class="legend-line" style="background:#059669"></div>category</div>
     <div class="legend-item"><div class="legend-line" style="background:#3B63FB"></div>linked</div>
   </div>
-  <div class="stats">${graph.stats.totalNodes} nodes \u00b7 ${graph.semanticEdges.length + graph.structuralEdges.length} edges \u00b7 avg similarity ${graph.stats.avgSimilarity}</div>
+  <div class="stats" id="stats-text">${graph.stats.totalNodes} nodes \u00b7 ${graph.semanticEdges.length + graph.structuralEdges.length} edges \u00b7 avg similarity ${graph.stats.avgSimilarity}</div>
 </div>
 
 <script type="module">
 import * as d3 from 'https://cdn.jsdelivr.net/npm/d3@7/+esm';
 
 const GRAPH_DATA = ${JSON.stringify(graph)};
-
 const TYPE_COLORS = ${JSON.stringify(TYPE_COLORS)};
+const TYPE_ICONS = ${JSON.stringify(TYPE_ICONS)};
 const EDGE_COLORS = ${JSON.stringify(EDGE_COLORS)};
+const LIVE_BASE = '${LIVE_BASE}';
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const container = document.getElementById('graph-area');
 const svg = d3.select('#graph-svg');
 const width = container.clientWidth;
 const height = container.clientHeight;
-
 svg.attr('width', width).attr('height', height);
 
 const g = svg.append('g');
 
-/* \u2500\u2500\u2500 State \u2500\u2500\u2500 */
+/* --- State --- */
 let activeTypes = new Set(Object.keys(TYPE_COLORS));
 let activeEdgeTypes = new Set(['semantic', 'same-persona', 'same-category', 'linked']);
 let simThreshold = ${DISPLAY_THRESHOLD};
 let searchQuery = '';
 let selectedNode = null;
-let navHistory = []; // breadcrumb trail
+let navHistory = [];
+let currentZoom = 1;
 
-/* \u2500\u2500\u2500 Nodes & edges \u2500\u2500\u2500 */
+/* --- Nodes & edges --- */
 const nodes = GRAPH_DATA.nodes.map(n => ({ ...n }));
 const allEdges = [
   ...GRAPH_DATA.semanticEdges.map(e => ({ ...e })),
   ...GRAPH_DATA.structuralEdges.map(e => ({ ...e })),
 ];
 
-// Connection count per node
 const connCount = {};
 nodes.forEach(n => { connCount[n.id] = 0; });
 allEdges.forEach(e => {
@@ -1014,7 +1168,6 @@ allEdges.forEach(e => {
 
 const nodeById = Object.fromEntries(nodes.map(n => [n.id, n]));
 
-// Build adjacency for fast lookup
 const adjacency = {};
 nodes.forEach(n => { adjacency[n.id] = []; });
 allEdges.forEach(e => {
@@ -1024,12 +1177,18 @@ allEdges.forEach(e => {
   adjacency[e.target].push(e);
 });
 
-/* \u2500\u2500\u2500 Scales \u2500\u2500\u2500 */
+/* --- Scales --- */
 const maxConn = Math.max(...Object.values(connCount), 1);
-const radiusScale = d3.scaleSqrt().domain([0, maxConn]).range([5, 18]);
+const radiusScale = d3.scaleSqrt().domain([0, maxConn]).range([8, 24]);
 
-/* \u2500\u2500\u2500 Helpers \u2500\u2500\u2500 */
+/* --- Helpers --- */
 function eid(e, prop) { return typeof e[prop] === 'object' ? e[prop].id : e[prop]; }
+
+function nodeImage(n) {
+  const img = n.image || n.avatar;
+  if (!img) return null;
+  return LIVE_BASE + img;
+}
 
 function isNodeVisible(n) {
   if (!activeTypes.has(n.type)) return false;
@@ -1064,49 +1223,150 @@ function escHtml(str) {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-/* \u2500\u2500\u2500 Build SVG elements \u2500\u2500\u2500 */
-// Glow filter for selected node
-const defs = g.append('defs');
+function countVisibleEdges() {
+  return allEdges.filter(isEdgeVisible).length;
+}
+
+/* --- SVG Defs --- */
+const defs = svg.append('defs');
+
+// Glow filter
 const glowFilter = defs.append('filter').attr('id', 'glow').attr('x', '-50%').attr('y', '-50%').attr('width', '200%').attr('height', '200%');
-glowFilter.append('feGaussianBlur').attr('stdDeviation', '4').attr('result', 'blur');
+glowFilter.append('feGaussianBlur').attr('stdDeviation', '3').attr('result', 'blur');
 glowFilter.append('feComposite').attr('in', 'SourceGraphic').attr('in2', 'blur').attr('operator', 'over');
 
+// Edge glow filter
+const edgeGlow = defs.append('filter').attr('id', 'edge-glow').attr('x', '-20%').attr('y', '-20%').attr('width', '140%').attr('height', '140%');
+edgeGlow.append('feGaussianBlur').attr('stdDeviation', '2').attr('result', 'blur');
+edgeGlow.append('feComposite').attr('in', 'SourceGraphic').attr('in2', 'blur').attr('operator', 'over');
+
+// ClipPath for each node (image circles)
+nodes.forEach(n => {
+  defs.append('clipPath').attr('id', 'clip-' + n.id.replace(/[^a-zA-Z0-9_-]/g, '_'))
+    .append('circle').attr('r', radiusScale(connCount[n.id] || 0));
+});
+
+/* --- Build SVG layers --- */
 const edgeG = g.append('g').attr('class', 'edges');
 const nodeG = g.append('g').attr('class', 'nodes');
+const cardG = g.append('g').attr('class', 'cards');
 const labelG = g.append('g').attr('class', 'labels');
-// Selection ring layer (rendered above nodes)
 const ringG = g.append('g').attr('class', 'rings');
+
+/* --- Edges --- */
+const edgeDashPatterns = {
+  'semantic': 'none',
+  'same-page': '4,4',
+  'same-persona': '8,4',
+  'same-category': '2,6',
+  'linked': 'none',
+};
 
 let linkElements = edgeG.selectAll('line')
   .data(allEdges)
   .join('line')
   .attr('stroke', d => d.type === 'semantic' ? '#CBD5E1' : (EDGE_COLORS[d.type] || '#CBD5E1'))
   .attr('stroke-width', d => d.type === 'semantic' ? Math.max(0.5, d.weight * 3) : 1.5)
-  .attr('stroke-opacity', d => d.type === 'semantic' ? Math.max(0.15, (d.weight - 0.4) * 2) : 0.5)
-  .attr('stroke-dasharray', d => d.type === 'semantic' ? 'none' : '4 3')
+  .attr('stroke-opacity', d => d.type === 'semantic' ? Math.max(0.1, (d.weight - 0.4) * 1.5) : 0.4)
+  .attr('stroke-dasharray', d => edgeDashPatterns[d.type] || 'none')
   .style('display', d => isEdgeVisible(d) ? null : 'none');
 
-let nodeElements = nodeG.selectAll('circle')
+/* --- Nodes (groups with image circles) --- */
+let nodeGroups = nodeG.selectAll('g.node-group')
   .data(nodes)
-  .join('circle')
-  .attr('r', d => radiusScale(connCount[d.id] || 0))
-  .attr('fill', d => TYPE_COLORS[d.type] || '#94A3B8')
-  .attr('stroke', '#fff')
-  .attr('stroke-width', 1.5)
+  .join('g')
+  .attr('class', 'node-group')
   .attr('cursor', 'pointer')
   .style('display', d => isNodeVisible(d) ? null : 'none');
 
+// Outer ring (type color)
+nodeGroups.append('circle')
+  .attr('class', 'node-ring')
+  .attr('r', d => radiusScale(connCount[d.id] || 0) + 2)
+  .attr('fill', 'none')
+  .attr('stroke', d => TYPE_COLORS[d.type] || '#94A3B8')
+  .attr('stroke-width', 2)
+  .attr('opacity', 0.7);
+
+// Image or fallback circle
+nodeGroups.each(function(d) {
+  const group = d3.select(this);
+  const r = radiusScale(connCount[d.id] || 0);
+  const imgUrl = nodeImage(d);
+  const clipId = 'clip-' + d.id.replace(/[^a-zA-Z0-9_-]/g, '_');
+
+  if (imgUrl) {
+    // Background circle (shows while image loads)
+    group.append('circle')
+      .attr('class', 'node-bg')
+      .attr('r', r)
+      .attr('fill', TYPE_COLORS[d.type] || '#94A3B8');
+    // Image clipped to circle
+    group.append('image')
+      .attr('class', 'node-img')
+      .attr('href', imgUrl)
+      .attr('x', -r).attr('y', -r)
+      .attr('width', r * 2).attr('height', r * 2)
+      .attr('clip-path', 'url(#' + clipId + ')')
+      .attr('preserveAspectRatio', 'xMidYMid slice')
+      .on('error', function() { d3.select(this).remove(); });
+  } else {
+    // Colored circle with initial
+    group.append('circle')
+      .attr('class', 'node-bg')
+      .attr('r', r)
+      .attr('fill', TYPE_COLORS[d.type] || '#94A3B8');
+    // Letter initial
+    group.append('text')
+      .attr('class', 'node-initial')
+      .attr('text-anchor', 'middle')
+      .attr('dominant-baseline', 'central')
+      .attr('fill', 'white')
+      .attr('font-size', r * 0.9)
+      .attr('font-weight', 700)
+      .attr('font-family', 'var(--font)')
+      .attr('pointer-events', 'none')
+      .text(TYPE_ICONS[d.type] || d.title.charAt(0).toUpperCase());
+  }
+});
+
+/* --- Labels --- */
 let labelElements = labelG.selectAll('text')
   .data(nodes)
   .join('text')
   .text(d => d.title.length > 22 ? d.title.slice(0, 20) + '\\u2026' : d.title)
   .attr('font-size', 10)
   .attr('font-family', 'var(--font)')
-  .attr('fill', '#717171')
+  .attr('font-weight', 600)
+  .attr('fill', '#555')
   .attr('text-anchor', 'middle')
-  .attr('dy', d => radiusScale(connCount[d.id] || 0) + 12)
+  .attr('dy', d => radiusScale(connCount[d.id] || 0) + 14)
   .attr('pointer-events', 'none')
   .style('display', d => isNodeVisible(d) ? null : 'none');
+
+/* --- foreignObject card layer (for zoom > 3x) --- */
+let cardElements = cardG.selectAll('foreignObject.mini-card')
+  .data(nodes)
+  .join('foreignObject')
+  .attr('class', 'mini-card')
+  .attr('width', 160).attr('height', 100)
+  .attr('x', -80).attr('y', -50)
+  .style('display', 'none')
+  .style('pointer-events', 'none')
+  .html(d => {
+    const imgUrl = nodeImage(d);
+    const color = TYPE_COLORS[d.type] || '#94A3B8';
+    const shortTitle = d.title.length > 30 ? d.title.slice(0, 28) + '\\u2026' : d.title;
+    return '<div style="width:160px;height:100px;background:white;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.12);border-left:3px solid ' + color + ';display:flex;flex-direction:column;font-family:Source Sans Pro,sans-serif">' +
+      (imgUrl ? '<img src="' + imgUrl + '" style="width:100%;height:48px;object-fit:cover" onerror="this.style.display=\\'none\\'">' : '<div style="height:48px;background:linear-gradient(135deg,' + color + '22,' + color + '44)"></div>') +
+      '<div style="padding:4px 8px;flex:1;min-height:0">' +
+        '<div style="font-size:11px;font-weight:700;color:#131313;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + escHtml(shortTitle) + '</div>' +
+        '<div style="display:flex;gap:4px;margin-top:2px">' +
+          '<span style="font-size:9px;padding:1px 5px;border-radius:9999px;background:' + color + ';color:white;font-weight:600;text-transform:uppercase">' + d.type + '</span>' +
+          '<span style="font-size:9px;padding:1px 5px;border-radius:9999px;background:#f0f0f0;color:#717171;font-weight:500">' + d.page + '</span>' +
+        '</div>' +
+      '</div></div>';
+  });
 
 // Selection ring (initially hidden)
 let selectionRing = ringG.append('circle')
@@ -1115,7 +1375,18 @@ let selectionRing = ringG.append('circle')
   .attr('stroke-dasharray', '4 2').attr('opacity', 0)
   .attr('filter', 'url(#glow)');
 
-/* \u2500\u2500\u2500 Force simulation \u2500\u2500\u2500 */
+// Search highlight rings
+let searchRings = ringG.selectAll('circle.search-ring')
+  .data(nodes)
+  .join('circle')
+  .attr('class', 'search-ring')
+  .attr('r', d => radiusScale(connCount[d.id] || 0) + 6)
+  .attr('fill', 'none')
+  .attr('stroke', '#3B63FB')
+  .attr('stroke-width', 2)
+  .attr('opacity', 0);
+
+/* --- Force simulation --- */
 const simulation = d3.forceSimulation(nodes)
   .force('link', d3.forceLink(allEdges).id(d => d.id).distance(d => {
     if (d.type === 'semantic') return Math.max(60, 200 * (1 - d.weight));
@@ -1124,11 +1395,11 @@ const simulation = d3.forceSimulation(nodes)
     if (d.type === 'semantic') return d.weight * 0.3;
     return 0.1;
   }))
-  .force('charge', d3.forceManyBody().strength(-150))
+  .force('charge', d3.forceManyBody().strength(-180))
   .force('center', d3.forceCenter(width / 2, height / 2))
   .force('x', d3.forceX(width / 2).strength(0.03))
   .force('y', d3.forceY(height / 2).strength(0.03))
-  .force('collide', d3.forceCollide().radius(d => radiusScale(connCount[d.id] || 0) + 8))
+  .force('collide', d3.forceCollide().radius(d => radiusScale(connCount[d.id] || 0) + 10))
   .alphaDecay(0.02)
   .on('tick', ticked);
 
@@ -1136,26 +1407,55 @@ function ticked() {
   linkElements
     .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
     .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
-  nodeElements.attr('cx', d => d.x).attr('cy', d => d.y);
+  nodeGroups.attr('transform', d => 'translate(' + d.x + ',' + d.y + ')');
   labelElements.attr('x', d => d.x).attr('y', d => d.y);
-
-  // Keep selection ring tracking
+  cardElements.attr('x', d => d.x - 80).attr('y', d => d.y - 50);
+  searchRings.attr('cx', d => d.x).attr('cy', d => d.y);
   if (selectedNode) {
     selectionRing.attr('cx', selectedNode.x).attr('cy', selectedNode.y);
   }
 }
 
-/* \u2500\u2500\u2500 Zoom & pan \u2500\u2500\u2500 */
+/* --- Adaptive zoom rendering --- */
+function updateZoomLevel(k) {
+  currentZoom = k;
+  const showCards = k > 3;
+  const showLabels = k <= 3;
+
+  nodeGroups.style('display', d => {
+    if (!isNodeVisible(d)) return 'none';
+    return showCards && !selectedNode ? 'none' : null;
+  });
+  labelElements.style('display', d => {
+    if (!isNodeVisible(d)) return 'none';
+    return showLabels ? null : 'none';
+  });
+  cardElements.style('display', d => {
+    if (!isNodeVisible(d)) return 'none';
+    return showCards && !selectedNode ? null : 'none';
+  }).style('pointer-events', showCards && !selectedNode ? 'all' : 'none');
+
+  // Label font size adapts to zoom
+  if (k >= 1.5 && k <= 3) {
+    labelElements.attr('font-size', 10);
+  } else if (k < 1.5) {
+    labelElements.attr('font-size', Math.max(8, 10 / Math.max(k, 0.3)));
+  }
+}
+
+/* --- Zoom & pan --- */
 const zoomBehavior = d3.zoom()
   .scaleExtent([0.15, 8])
   .on('zoom', (event) => {
     g.attr('transform', event.transform);
-    document.getElementById('zoom-level').textContent = event.transform.k.toFixed(1) + 'x';
+    const k = event.transform.k;
+    document.getElementById('zoom-level').textContent = k.toFixed(1) + 'x';
+    updateZoomLevel(k);
+    updateStatsBar();
   });
 
 svg.call(zoomBehavior);
 
-// Zoom buttons
 document.getElementById('zoom-in').addEventListener('click', () => {
   svg.transition().duration(300).call(zoomBehavior.scaleBy, 1.5);
 });
@@ -1166,7 +1466,6 @@ document.getElementById('zoom-fit').addEventListener('click', zoomToFit);
 document.getElementById('btn-reset').addEventListener('click', () => {
   clearSelection();
   svg.transition().duration(500).call(zoomBehavior.transform, d3.zoomIdentity);
-  document.getElementById('zoom-level').textContent = '1.0x';
 });
 
 function zoomToFit() {
@@ -1180,22 +1479,23 @@ function zoomToFit() {
   const scale = Math.min(width / bw, height / bh, 3) * 0.9;
   const tx = width / 2 - (x0 + bw / 2) * scale;
   const ty = height / 2 - (y0 + bh / 2) * scale;
-  svg.transition().duration(600).call(
+  const dur = prefersReducedMotion ? 0 : 600;
+  svg.transition().duration(dur).call(
     zoomBehavior.transform, d3.zoomIdentity.translate(tx, ty).scale(scale)
   );
 }
 
-function panToNode(node, scale) {
-  const k = scale || d3.zoomTransform(svg.node()).k;
-  const targetK = Math.max(k, 1.5); // zoom in at least to 1.5x
-  const tx = width / 2 - node.x * targetK;
-  const ty = height / 2 - node.y * targetK;
-  svg.transition().duration(500).call(
-    zoomBehavior.transform, d3.zoomIdentity.translate(tx, ty).scale(targetK)
+function panToNode(node, targetScale) {
+  const k = targetScale || 3.5;
+  const tx = width / 2 - node.x * k;
+  const ty = height / 2 - node.y * k;
+  const dur = prefersReducedMotion ? 0 : 600;
+  svg.transition().duration(dur).call(
+    zoomBehavior.transform, d3.zoomIdentity.translate(tx, ty).scale(k)
   );
 }
 
-/* \u2500\u2500\u2500 Drag \u2500\u2500\u2500 */
+/* --- Drag --- */
 const drag = d3.drag()
   .on('start', (event, d) => {
     if (!event.active) simulation.alphaTarget(0.1).restart();
@@ -1206,38 +1506,34 @@ const drag = d3.drag()
     if (!event.active) simulation.alphaTarget(0);
   });
 
-nodeElements.call(drag);
-
-nodeElements.on('dblclick', (event, d) => {
+nodeGroups.call(drag);
+nodeGroups.on('dblclick', (event, d) => {
   d.fx = null; d.fy = null;
   simulation.alphaTarget(0.05).restart();
   setTimeout(() => simulation.alphaTarget(0), 500);
 });
 
-/* \u2500\u2500\u2500 Hover (only when nothing is selected) \u2500\u2500\u2500 */
-nodeElements.on('mouseenter', (event, d) => {
-  if (selectedNode) return; // selection overrides hover
+/* --- Hover --- */
+nodeGroups.on('mouseenter', (event, d) => {
+  if (selectedNode) return;
   applyHighlight(d.id);
 });
-
-nodeElements.on('mouseleave', () => {
+nodeGroups.on('mouseleave', () => {
   if (selectedNode) return;
   clearHighlight();
 });
 
 function applyHighlight(nodeId) {
   const connected = getConnectedIds(nodeId);
-  nodeElements
-    .attr('opacity', n => connected.has(n.id) ? 1 : 0.08)
-    .attr('stroke-width', n => n.id === nodeId ? 3 : 1.5);
+  nodeGroups
+    .attr('opacity', n => connected.has(n.id) ? 1 : 0.08);
+  nodeGroups.select('.node-ring')
+    .attr('stroke-width', n => n.id === nodeId ? 3 : 2);
   labelElements.attr('opacity', n => connected.has(n.id) ? 1 : 0.05);
   linkElements
     .attr('stroke-opacity', e => {
       const s = eid(e, 'source'), t = eid(e, 'target');
-      if (s === nodeId || t === nodeId) {
-        // Color-code the highlighted edge by type
-        return 0.9;
-      }
+      if (s === nodeId || t === nodeId) return 0.9;
       return 0.03;
     })
     .attr('stroke-width', e => {
@@ -1254,32 +1550,50 @@ function applyHighlight(nodeId) {
         return EDGE_COLORS[e.type] || '#CBD5E1';
       }
       return e.type === 'semantic' ? '#CBD5E1' : (EDGE_COLORS[e.type] || '#CBD5E1');
+    })
+    .attr('filter', e => {
+      const s = eid(e, 'source'), t = eid(e, 'target');
+      return (s === nodeId || t === nodeId) ? 'url(#edge-glow)' : 'none';
     });
 }
 
 function clearHighlight() {
-  nodeElements.attr('opacity', 1).attr('stroke-width', 1.5);
+  nodeGroups.attr('opacity', 1);
+  nodeGroups.select('.node-ring').attr('stroke-width', 2);
   labelElements.attr('opacity', 1);
   linkElements
     .attr('stroke', d => d.type === 'semantic' ? '#CBD5E1' : (EDGE_COLORS[d.type] || '#CBD5E1'))
     .attr('stroke-width', d => d.type === 'semantic' ? Math.max(0.5, d.weight * 3) : 1.5)
-    .attr('stroke-opacity', d => d.type === 'semantic' ? Math.max(0.15, (d.weight - 0.4) * 2) : 0.5);
+    .attr('stroke-opacity', d => d.type === 'semantic' ? Math.max(0.1, (d.weight - 0.4) * 1.5) : 0.4)
+    .attr('filter', 'none');
 }
 
-/* \u2500\u2500\u2500 Selection (persists on click) \u2500\u2500\u2500 */
+/* --- Selection --- */
 function selectNode(d, addToHistory) {
   selectedNode = d;
 
-  // Manage nav history
   if (addToHistory !== false) {
-    // Remove any existing entry for this node to avoid loops
     navHistory = navHistory.filter(n => n.id !== d.id);
     navHistory.push(d);
     if (navHistory.length > 8) navHistory.shift();
   }
 
-  // Visual: highlight connected, fade rest
+  // Ensure circle nodes visible at zoomed-in level
+  nodeGroups.style('display', n => isNodeVisible(n) ? null : 'none');
+  cardElements.style('display', 'none').style('pointer-events', 'none');
+  labelElements.style('display', n => isNodeVisible(n) ? null : 'none');
+
   applyHighlight(d.id);
+
+  // Pulse connected nodes
+  if (!prefersReducedMotion) {
+    const connected = getConnectedIds(d.id);
+    nodeGroups.filter(n => connected.has(n.id) && n.id !== d.id)
+      .transition().duration(200)
+      .attr('transform', n => 'translate(' + n.x + ',' + n.y + ') scale(1.15)')
+      .transition().duration(200)
+      .attr('transform', n => 'translate(' + n.x + ',' + n.y + ') scale(1)');
+  }
 
   // Selection ring
   const r = radiusScale(connCount[d.id] || 0);
@@ -1288,10 +1602,7 @@ function selectNode(d, addToHistory) {
     .attr('r', r + 6).attr('opacity', 1)
     .attr('stroke', TYPE_COLORS[d.type] || 'var(--primary)');
 
-  // Pan to node
-  panToNode(d);
-
-  // Show detail panel
+  panToNode(d, 3.5);
   showDetail(d);
 }
 
@@ -1300,12 +1611,18 @@ function clearSelection() {
   navHistory = [];
   selectionRing.attr('opacity', 0);
   clearHighlight();
+  updateZoomLevel(currentZoom);
   document.getElementById('detail-panel').classList.remove('open');
   document.getElementById('nav-trail').innerHTML = '';
 }
 
-/* \u2500\u2500\u2500 Click handlers \u2500\u2500\u2500 */
-nodeElements.on('click', (event, d) => {
+/* --- Click handlers --- */
+nodeGroups.on('click', (event, d) => {
+  event.stopPropagation();
+  selectNode(d);
+});
+// Card click handler (for zoom > 3x mode)
+cardElements.on('click', (event, d) => {
   event.stopPropagation();
   selectNode(d);
 });
@@ -1317,28 +1634,57 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') clearSelection();
 });
 
-/* \u2500\u2500\u2500 Detail panel \u2500\u2500\u2500 */
+/* --- Detail panel --- */
 const detailPanel = document.getElementById('detail-panel');
+const detailHeroArea = document.getElementById('detail-hero-area');
 const detailHeaderContent = document.getElementById('detail-header-content');
 const detailTextArea = document.getElementById('detail-text-area');
+const detailActionsArea = document.getElementById('detail-actions-area');
 const detailConns = document.getElementById('detail-connections');
+const detailFooter = document.getElementById('detail-footer');
 const navTrail = document.getElementById('nav-trail');
 
 function showDetail(d) {
   const color = TYPE_COLORS[d.type] || '#94A3B8';
+  const imgUrl = nodeImage(d);
+
+  // Hero image or gradient
+  if (imgUrl) {
+    detailHeroArea.innerHTML = '<img class="detail-hero-img" src="' + imgUrl + '" alt="" onerror="this.outerHTML=\\'<div class=detail-hero-gradient style=background:linear-gradient(135deg,' + color + '22,' + color + '55)></div>\\'">';
+  } else {
+    detailHeroArea.innerHTML = '<div class="detail-hero-gradient" style="background:linear-gradient(135deg,' + color + '22,' + color + '55)"></div>';
+  }
 
   // Header
   detailHeaderContent.innerHTML =
-    '<div class="detail-type" style="background:' + color + '">' + escHtml(d.type) + '</div>' +
-    '<div class="detail-title">' + escHtml(d.title) + '</div>' +
-    '<div class="detail-page">' + escHtml(d.page) + (d.category ? ' \\u00b7 ' + escHtml(d.category) : '') + '</div>';
+    '<div class="detail-badges">' +
+      '<span class="detail-type" style="background:' + color + '">' + escHtml(d.type) + '</span>' +
+      '<span class="detail-page-badge">' + escHtml(d.page) + '</span>' +
+      (d.category ? '<span class="detail-page-badge">' + escHtml(d.category) + '</span>' : '') +
+    '</div>' +
+    '<div class="detail-title">' + escHtml(d.title) + '</div>';
 
-  // Text
-  detailTextArea.innerHTML = d.text
-    ? '<div class="detail-text">' + escHtml(d.text) + '</div>'
-    : '';
+  // Text preview
+  if (d.text) {
+    const preview = d.text.length > 200 ? d.text.slice(0, 200) + '\\u2026' : d.text;
+    detailTextArea.innerHTML = '<div class="detail-text">' + escHtml(preview) + '</div>';
+  } else {
+    detailTextArea.innerHTML = '';
+  }
 
-  // Breadcrumb trail
+  // "View on site" button
+  if (d.pageUrl) {
+    detailActionsArea.innerHTML =
+      '<div class="detail-actions">' +
+        '<a class="btn-view-site" href="' + escHtml(d.pageUrl) + '" target="_blank" rel="noopener">' +
+          '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3H3v10h10v-3M9 2h5v5M7 9l7-7"/></svg>' +
+          'View on site' +
+        '</a>' +
+      '</div>';
+  } else {
+    detailActionsArea.innerHTML = '';
+  }
+
   renderTrail();
 
   // Find visible connections
@@ -1360,13 +1706,10 @@ function showDetail(d) {
     if (!groups[t]) groups[t] = [];
     groups[t].push(c);
   });
-
-  // Sort within groups
   for (const arr of Object.values(groups)) {
     arr.sort((a, b) => (b.edge.weight || 0) - (a.edge.weight || 0));
   }
 
-  // Render grouped connections
   const typeOrder = ['semantic', 'linked', 'same-persona', 'same-category', 'same-page'];
   const typeLabels = {
     semantic: 'Semantic similarity',
@@ -1391,14 +1734,22 @@ function showDetail(d) {
 
     for (const c of items) {
       const nodeColor = TYPE_COLORS[c.node.type] || '#94A3B8';
-      const weightLabel = t === 'semantic' ? c.edge.weight.toFixed(2) : '';
+      const weightLabel = t === 'semantic' ? (c.edge.weight * 100).toFixed(0) + '%' : '';
+      const thumbUrl = nodeImage(c.node);
+
       connHtml += '<div class="conn-item" data-node-id="' + c.node.id + '">';
-      connHtml += '<div><div class="conn-title">' +
-        '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + nodeColor + ';margin-right:6px;vertical-align:middle"></span>' +
-        escHtml(c.node.title) + '</div>';
+
+      // Thumbnail
+      if (thumbUrl) {
+        connHtml += '<img class="conn-thumb" src="' + thumbUrl + '" alt="" onerror="this.outerHTML=\\'<div class=conn-thumb-placeholder style=background:' + nodeColor + '>' + escHtml(c.node.title.charAt(0)) + '</div>\\'">';
+      } else {
+        connHtml += '<div class="conn-thumb-placeholder" style="background:' + nodeColor + '">' + escHtml(c.node.title.charAt(0)) + '</div>';
+      }
+
+      connHtml += '<div class="conn-info"><div class="conn-title">' + escHtml(c.node.title) + '</div>';
       connHtml += '<div class="conn-meta">' + c.node.type + ' \\u00b7 ' + c.node.page + '</div></div>';
-      connHtml += '<div style="display:flex;align-items:center">';
-      if (weightLabel) connHtml += '<div class="conn-weight" style="background:' + edgeColor + '18;color:' + edgeColor + '">' + weightLabel + '</div>';
+      connHtml += '<div class="conn-right">';
+      if (weightLabel) connHtml += '<div class="conn-weight" style="background:' + edgeColor + '15;color:' + edgeColor + '">' + weightLabel + '</div>';
       connHtml += '<span class="conn-nav-icon">\\u203a</span>';
       connHtml += '</div></div>';
     }
@@ -1408,9 +1759,13 @@ function showDetail(d) {
   if (!connHtml) connHtml = '<div style="padding:20px;color:var(--fg-muted);font-size:13px">No visible connections. Try adjusting filters or threshold.</div>';
 
   detailConns.innerHTML = connHtml;
+
+  // Footer metadata
+  detailFooter.innerHTML = 'ID: ' + escHtml(d.id) + '<br>Page: ' + escHtml(d.page) + ' \\u00b7 Type: ' + escHtml(d.type);
+
   detailPanel.classList.add('open');
 
-  // Wire connection clicks — navigate to that node
+  // Wire connection clicks
   detailConns.querySelectorAll('.conn-item').forEach(el => {
     el.addEventListener('click', () => {
       const nid = el.dataset.nodeId;
@@ -1435,14 +1790,13 @@ function renderTrail() {
     btn.addEventListener('click', () => {
       const idx = parseInt(btn.dataset.trailIdx);
       const node = navHistory[idx];
-      // Trim history to this point
       navHistory = navHistory.slice(0, idx);
       selectNode(node);
     });
   });
 }
 
-/* \u2500\u2500\u2500 Type filter pills \u2500\u2500\u2500 */
+/* --- Type filter pills --- */
 const typeFilters = document.getElementById('type-filters');
 const types = [...new Set(GRAPH_DATA.nodes.map(n => n.type))];
 types.forEach(t => {
@@ -1466,12 +1820,12 @@ types.forEach(t => {
       pill.style.borderColor = '';
     }
     updateVisibility();
-    if (selectedNode) showDetail(selectedNode); // refresh connections
+    if (selectedNode) showDetail(selectedNode);
   });
   typeFilters.appendChild(pill);
 });
 
-/* \u2500\u2500\u2500 Edge toggles \u2500\u2500\u2500 */
+/* --- Edge toggles --- */
 document.querySelectorAll('.edge-toggle input').forEach(cb => {
   cb.addEventListener('change', () => {
     const edgeType = cb.dataset.edge;
@@ -1485,7 +1839,7 @@ document.querySelectorAll('.edge-toggle input').forEach(cb => {
   });
 });
 
-/* \u2500\u2500\u2500 Similarity threshold slider \u2500\u2500\u2500 */
+/* --- Similarity threshold slider --- */
 const thresholdSlider = document.getElementById('threshold');
 const thresholdVal = document.getElementById('threshold-val');
 thresholdSlider.addEventListener('input', () => {
@@ -1498,25 +1852,86 @@ thresholdSlider.addEventListener('input', () => {
   }
 });
 
-/* \u2500\u2500\u2500 Search \u2500\u2500\u2500 */
+/* --- Search --- */
 let searchTimer;
 document.getElementById('search').addEventListener('input', (e) => {
   clearTimeout(searchTimer);
   searchTimer = setTimeout(() => {
     searchQuery = e.target.value.trim();
     updateVisibility();
+
+    // Pulsing search rings
+    if (searchQuery) {
+      searchRings
+        .attr('opacity', d => isNodeVisible(d) ? 0.6 : 0)
+        .each(function(d) {
+          if (isNodeVisible(d) && !prefersReducedMotion) {
+            d3.select(this)
+              .attr('opacity', 0.4)
+              .transition().duration(600).ease(d3.easeSinInOut)
+              .attr('opacity', 0.8)
+              .transition().duration(600).ease(d3.easeSinInOut)
+              .attr('opacity', 0.4)
+              .transition().duration(600).ease(d3.easeSinInOut)
+              .attr('opacity', 0);
+          }
+        });
+    } else {
+      searchRings.attr('opacity', 0);
+    }
   }, 300);
 });
 
-/* \u2500\u2500\u2500 Update visibility \u2500\u2500\u2500 */
-function updateVisibility() {
-  nodeElements.style('display', d => isNodeVisible(d) ? null : 'none');
-  labelElements.style('display', d => isNodeVisible(d) ? null : 'none');
-  linkElements.style('display', d => isEdgeVisible(d) ? null : 'none');
+/* --- Stats bar update --- */
+function updateStatsBar() {
+  const visNodes = nodes.filter(isNodeVisible).length;
+  const visEdges = countVisibleEdges();
+  document.getElementById('stats-text').textContent =
+    visNodes + ' nodes \\u00b7 ' + visEdges + ' edges visible | Zoom: ' + currentZoom.toFixed(1) + 'x';
+  document.getElementById('edge-count').textContent = '(' + visEdges + ')';
 }
 
-/* \u2500\u2500\u2500 Initial zoom to fit \u2500\u2500\u2500 */
-simulation.on('end', () => { zoomToFit(); });
+/* --- Update visibility --- */
+function updateVisibility() {
+  if (selectedNode) {
+    nodeGroups.style('display', d => isNodeVisible(d) ? null : 'none');
+  } else {
+    nodeGroups.style('display', d => isNodeVisible(d) ? (currentZoom > 3 ? 'none' : null) : 'none');
+  }
+  labelElements.style('display', d => isNodeVisible(d) ? (currentZoom > 3 && !selectedNode ? 'none' : null) : 'none');
+  cardElements.style('display', d => isNodeVisible(d) ? (currentZoom > 3 && !selectedNode ? null : 'none') : 'none')
+    .style('pointer-events', currentZoom > 3 && !selectedNode ? 'all' : 'none');
+  linkElements.style('display', d => isEdgeVisible(d) ? null : 'none');
+  updateStatsBar();
+}
+
+/* --- Entry animation + loading --- */
+const loadingEl = document.getElementById('loading');
+
+if (!prefersReducedMotion) {
+  // Fade in nodes with stagger
+  nodeGroups.attr('opacity', 0);
+  labelElements.attr('opacity', 0);
+  linkElements.attr('stroke-opacity', 0);
+}
+
+simulation.on('end', () => {
+  loadingEl.classList.add('hidden');
+  setTimeout(() => { loadingEl.style.display = 'none'; }, 400);
+
+  if (!prefersReducedMotion) {
+    nodeGroups.transition().duration(600).delay((d, i) => i * 8).attr('opacity', 1);
+    labelElements.transition().duration(600).delay((d, i) => i * 8).attr('opacity', 1);
+    linkElements.transition().duration(800).delay(200)
+      .attr('stroke-opacity', d => d.type === 'semantic' ? Math.max(0.1, (d.weight - 0.4) * 1.5) : 0.4);
+  } else {
+    nodeGroups.attr('opacity', 1);
+    labelElements.attr('opacity', 1);
+  }
+
+  zoomToFit();
+  updateStatsBar();
+});
 
 </script>
 </body>

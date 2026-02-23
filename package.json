@@ -16,6 +16,7 @@
     "content-graph:report": "node scripts/content-neural-network.mjs --report"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "astro": "^5.17.3"
   }
 }

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brand Compliance: Ace Pro Court Polo — WKND Trendsetters</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:             #F8F8F8;
+    --bg-2:           #FFFFFF;
+    --primary:        #3B63FB;
+    --primary-fg:     #FFFFFF;
+    --fg:             #292929;
+    --fg-heading:     #131313;
+    --fg-muted:       #717171;
+    --border:         #E1E1E1;
+    --positive:       #12805C;
+    --positive-bg:    #ECFDF5;
+    --notice:         #E68619;
+    --notice-bg:      #FFF7ED;
+    --negative:       #D7373F;
+    --negative-bg:    #FEF2F2;
+    --shadow-emphasized: 0 2px 8px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04), 0 0 1px rgba(0,0,0,0.08);
+    --shadow-elevated: 0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08), 0 0 1px rgba(0,0,0,0.08);
+    --font: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); background: var(--bg); color: var(--fg); line-height: 1.6; font-size: 14px; }
+
+  :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+
+  /* ─── Header ─── */
+  .header { background: var(--bg-2); border-bottom: 1px solid var(--border); padding: 16px 24px; }
+  .header-inner { max-width: 960px; margin: 0 auto; }
+  .back-link { display: inline-block; font-size: 13px; color: var(--fg-muted); text-decoration: none; transition: color 150ms; padding: 8px 0; min-height: 44px; line-height: 28px; }
+  .back-link:hover { color: var(--fg-heading); }
+  h1 { font-size: 25px; font-weight: 700; line-height: 1.2; color: var(--fg-heading); margin-top: 8px; }
+  .header-sub { color: var(--fg-muted); font-size: 14px; margin-top: 4px; }
+
+  /* ─── Container ─── */
+  .container { max-width: 960px; margin: 0 auto; padding: 32px 24px; }
+
+  /* ─── Score Ring ─── */
+  .score-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 32px; }
+  .score-block {
+    flex: 1; min-width: 120px; background: var(--bg-2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px; text-align: center; box-shadow: var(--shadow-emphasized);
+  }
+  .score-ring {
+    width: 80px; height: 80px; margin: 0 auto 8px; position: relative;
+  }
+  .score-ring svg { transform: rotate(-90deg); }
+  .score-ring circle { fill: none; stroke-width: 6; }
+  .score-ring .track { stroke: var(--border); }
+  .score-ring .fill { stroke-linecap: round; transition: stroke-dashoffset 800ms cubic-bezier(0.16, 1, 0.3, 1); }
+  .score-value {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 800;
+  }
+  .score-label { font-size: 13px; font-weight: 600; color: var(--fg-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+
+  /* ─── Verdict Banner ─── */
+  .verdict {
+    border-radius: 12px; padding: 20px 24px; margin-bottom: 32px;
+    display: flex; gap: 16px; align-items: flex-start;
+  }
+  .verdict-pass { background: var(--positive-bg); border: 1px solid var(--positive); }
+  .verdict-notice { background: var(--notice-bg); border: 1px solid var(--notice); }
+  .verdict-icon { font-size: 28px; flex-shrink: 0; line-height: 1; }
+  .verdict h2 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .verdict-pass h2 { color: var(--positive); }
+  .verdict p { font-size: 14px; color: var(--fg); }
+
+  /* ─── Section ─── */
+  .section { margin-bottom: 32px; }
+  .section-title { font-size: 18px; font-weight: 700; color: var(--fg-heading); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--border); }
+
+  /* ─── Score Table ─── */
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px 0; }
+  .score-table { width: 100%; border-collapse: collapse; }
+  .score-table th, .score-table td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .score-table td:nth-child(2) { white-space: normal; }
+  .score-table th { font-weight: 700; color: var(--fg-heading); font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+  /* ─── Checklist ─── */
+  .checklist { list-style: none; }
+  .checklist li { padding: 6px 0; font-size: 14px; display: flex; align-items: flex-start; gap: 8px; }
+  .check-pass { color: var(--positive); font-weight: 700; }
+  .check-warn { color: var(--notice); font-weight: 700; }
+
+  /* ─── Summary Grid ─── */
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 16px 0; }
+  .summary-stat {
+    background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 18px; box-shadow: var(--shadow-emphasized);
+  }
+  .summary-stat-value { font-size: 28px; font-weight: 800; color: var(--fg-heading); }
+  .summary-stat-label { font-size: 12px; color: var(--fg-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+
+  /* ─── Card ─── */
+  .card {
+    background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px 20px; margin-bottom: 12px; box-shadow: var(--shadow-emphasized);
+  }
+  .card h3 { font-size: 15px; font-weight: 700; color: var(--fg-heading); margin-bottom: 6px; }
+  .card p { font-size: 14px; line-height: 1.6; }
+
+  /* ─── Image Grid ─── */
+  .image-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 16px 0; }
+  @media (max-width: 600px) { .image-grid { grid-template-columns: 1fr; } }
+  .image-box {
+    border-radius: 8px; overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow-emphasized);
+  }
+  .image-box img { width: 100%; display: block; aspect-ratio: 16/9; object-fit: cover; }
+  .image-caption { padding: 10px 14px; font-size: 12px; color: var(--fg-muted); background: var(--bg-2); }
+  .image-caption strong { display: block; font-size: 13px; margin-bottom: 2px; color: var(--fg-heading); }
+
+  /* ─── Quote ─── */
+  .brand-quote {
+    border-left: 4px solid var(--primary); padding: 12px 20px; margin: 16px 0;
+    background: rgba(59,99,251,0.04); border-radius: 0 8px 8px 0;
+    font-size: 14px; font-style: italic; color: var(--fg-muted);
+  }
+  .brand-quote cite { display: block; margin-top: 4px; font-style: normal; font-weight: 600; font-size: 12px; }
+
+  /* ─── Process Timeline ─── */
+  .process { position: relative; padding-left: 28px; margin: 16px 0; }
+  .process::before { content: ''; position: absolute; left: 7px; top: 0; bottom: 0; width: 2px; background: var(--positive); border-radius: 1px; }
+  .process-step { position: relative; margin-bottom: 16px; }
+  .process-step:last-child { margin-bottom: 0; }
+  .process-dot {
+    position: absolute; left: -28px; top: 4px; width: 16px; height: 16px; border-radius: 50%;
+    border: 3px solid var(--positive); background: var(--bg-2); z-index: 1;
+  }
+  .process-step strong { display: block; font-size: 14px; color: var(--fg-heading); }
+  .process-step span { font-size: 13px; color: var(--fg-muted); }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 768px) {
+    .container { padding: 24px 16px; }
+    .score-row { gap: 10px; }
+    .score-block { min-width: 100px; padding: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <a href="hub.html" class="back-link">&larr; Back to Hub</a>
+    <h1>Brand Compliance: Ace Pro Court Polo</h1>
+    <div class="header-sub">"Court cool, street ready &mdash; the Ace Pro polo" &mdash; February 23, 2026</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- GPT-4o Scores -->
+  <div class="score-row" role="list" aria-label="GPT-4o brand compliance scores">
+    <div class="score-block" role="listitem">
+      <div class="score-ring" role="img" aria-label="Voice score: 9 out of 10">
+        <svg viewBox="0 0 80 80" aria-hidden="true"><circle class="track" cx="40" cy="40" r="34"/><circle class="fill" cx="40" cy="40" r="34" stroke="#12805C" stroke-dasharray="213.6" stroke-dashoffset="21.4"/></svg>
+        <div class="score-value" style="color: var(--positive);" aria-hidden="true">9</div>
+      </div>
+      <div class="score-label">Voice</div>
+    </div>
+    <div class="score-block" role="listitem">
+      <div class="score-ring" role="img" aria-label="Tone score: 10 out of 10">
+        <svg viewBox="0 0 80 80" aria-hidden="true"><circle class="track" cx="40" cy="40" r="34"/><circle class="fill" cx="40" cy="40" r="34" stroke="#12805C" stroke-dasharray="213.6" stroke-dashoffset="0"/></svg>
+        <div class="score-value" style="color: var(--positive);" aria-hidden="true">10</div>
+      </div>
+      <div class="score-label">Tone</div>
+    </div>
+    <div class="score-block" role="listitem">
+      <div class="score-ring" role="img" aria-label="Vocabulary score: 9 out of 10">
+        <svg viewBox="0 0 80 80" aria-hidden="true"><circle class="track" cx="40" cy="40" r="34"/><circle class="fill" cx="40" cy="40" r="34" stroke="#12805C" stroke-dasharray="213.6" stroke-dashoffset="21.4"/></svg>
+        <div class="score-value" style="color: var(--positive);" aria-hidden="true">9</div>
+      </div>
+      <div class="score-label">Vocabulary</div>
+    </div>
+    <div class="score-block" role="listitem">
+      <div class="score-ring" role="img" aria-label="Structure score: 10 out of 10">
+        <svg viewBox="0 0 80 80" aria-hidden="true"><circle class="track" cx="40" cy="40" r="34"/><circle class="fill" cx="40" cy="40" r="34" stroke="#12805C" stroke-dasharray="213.6" stroke-dashoffset="0"/></svg>
+        <div class="score-value" style="color: var(--positive);" aria-hidden="true">10</div>
+      </div>
+      <div class="score-label">Structure</div>
+    </div>
+    <div class="score-block" role="listitem">
+      <div class="score-ring" role="img" aria-label="Personas score: 9 out of 10">
+        <svg viewBox="0 0 80 80" aria-hidden="true"><circle class="track" cx="40" cy="40" r="34"/><circle class="fill" cx="40" cy="40" r="34" stroke="#12805C" stroke-dasharray="213.6" stroke-dashoffset="21.4"/></svg>
+        <div class="score-value" style="color: var(--positive);" aria-hidden="true">9</div>
+      </div>
+      <div class="score-label">Personas</div>
+    </div>
+    <div class="score-block" role="listitem">
+      <div class="score-ring" role="img" aria-label="Overall score: 9.5 out of 10">
+        <svg viewBox="0 0 80 80" aria-hidden="true"><circle class="track" cx="40" cy="40" r="34"/><circle class="fill" cx="40" cy="40" r="34" stroke="#12805C" stroke-dasharray="213.6" stroke-dashoffset="10.7"/></svg>
+        <div class="score-value" style="color: var(--positive);" aria-hidden="true">9.5</div>
+      </div>
+      <div class="score-label">Overall</div>
+    </div>
+  </div>
+
+  <!-- Verdict -->
+  <div class="verdict verdict-pass">
+    <div class="verdict-icon" aria-hidden="true">&#10003;</div>
+    <div>
+      <h2>Brand Compliant &mdash; Zero Violations</h2>
+      <p>GPT-4o scored the article 9.5/10 overall with perfect marks for tone and structure. Quantitative checks pass 9 of 10 targets. No brand violations detected.</p>
+    </div>
+  </div>
+
+  <!-- Summary Stats -->
+  <div class="summary-grid">
+    <div class="summary-stat">
+      <div class="summary-stat-value">613</div>
+      <div class="summary-stat-label">Word Count (600&ndash;1000)</div>
+    </div>
+    <div class="summary-stat">
+      <div class="summary-stat-value">13.2</div>
+      <div class="summary-stat-label">Avg Sentence Length (13&ndash;17)</div>
+    </div>
+    <div class="summary-stat">
+      <div class="summary-stat-value">3.92</div>
+      <div class="summary-stat-label">Power Words / 100w (&gt;3.0)</div>
+    </div>
+    <div class="summary-stat">
+      <div class="summary-stat-value">3</div>
+      <div class="summary-stat-label">Named Personas (&ge;2)</div>
+    </div>
+  </div>
+
+  <!-- Quantitative Checklist -->
+  <div class="section">
+    <h2 class="section-title">Quantitative Metrics</h2>
+    <ul class="checklist">
+      <li><span class="check-pass" aria-hidden="true">&#10003;</span> <strong>Word count:</strong>&nbsp; 613 words (target: 600&ndash;1000)</li>
+      <li><span class="check-pass" aria-hidden="true">&#10003;</span> <strong>Avg sentence length:</strong>&nbsp; 13.2 words (target: 13&ndash;17)</li>
+      <li><span class="check-warn" aria-hidden="true">&#9888;</span> <strong>Contraction density:</strong>&nbsp; 3.26 per 100 words (target: 1.5&ndash;2.5). Slightly over due to persona quotes. Brand voice guide says &ldquo;contractions always&rdquo; &mdash; accepted as minor tension with quantitative baseline.</li>
+      <li><span class="check-pass" aria-hidden="true">&#10003;</span> <strong>Power word density:</strong>&nbsp; 3.92 per 100 words (target: &gt;3.0)</li>
+      <li><span class="check-pass" aria-hidden="true">&#10003;</span> <strong>Max paragraph length:</strong>&nbsp; 4 sentences (target: &le;4)</li>
+      <li><span class="check-pass" aria-hidden="true">&#10003;</span> <strong>Named personas:</strong>&nbsp; 3 &mdash; Alex Rivera, Taylor Kim, Jordan Ellis (target: &ge;2)</li>
+      <li><span class="check-pass" aria-hidden="true">&#10003;</span> <strong>Inline body images:</strong>&nbsp; 2 (target: &ge;2)</li>
+      <li><span class="check-pass" aria-hidden="true">&#10003;</span> <strong>Blockquote:</strong>&nbsp; 1 (Jordan Ellis quote)</li>
+      <li><span class="check-pass" aria-hidden="true">&#10003;</span> <strong>Community CTA ending:</strong>&nbsp; &ldquo;Share your Ace Pro looks with us&rdquo;</li>
+      <li><span class="check-pass" aria-hidden="true">&#10003;</span> <strong>Subheading frequency:</strong>&nbsp; 7 subheadings across 7 sections</li>
+    </ul>
+    <div class="brand-quote">
+      9 of 10 quantitative targets met. The contraction density overshoot (3.26 vs 2.5 max) reflects a deliberate tradeoff: persona quotes use natural contractions per voice.md &ldquo;contractions always&rdquo; directive. Body copy alone is within range.
+    </div>
+  </div>
+
+  <!-- GPT-4o External Validation -->
+  <div class="section">
+    <h2 class="section-title">External Validation (GPT-4o)</h2>
+    <div class="table-wrap">
+      <table class="score-table" aria-label="GPT-4o dimension scores">
+        <thead>
+          <tr><th>Dimension</th><th>Score</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Voice Alignment</td><td style="font-weight:700; color: var(--positive);">9/10</td><td>Embodies Fresh, Bold, Real, and Playful pillars effectively.</td></tr>
+          <tr><td>Tone Match</td><td style="font-weight:700; color: var(--positive);">10/10</td><td>Perfectly conversational and informative, aligned with blog tone guidelines.</td></tr>
+          <tr><td>Vocabulary Compliance</td><td style="font-weight:700; color: var(--positive);">9/10</td><td>Power words used effectively. No corporate speak. Could use more action verbs.</td></tr>
+          <tr><td>Structural Compliance</td><td style="font-weight:700; color: var(--positive);">10/10</td><td>Short paragraphs, frequent subheadings, blockquotes, and community CTA.</td></tr>
+          <tr><td>Persona Integration</td><td style="font-weight:700; color: var(--positive);">9/10</td><td>Three named personas with authentic direct quotes.</td></tr>
+          <tr><td>Overall Brand Fit</td><td style="font-weight:700; color: var(--positive);">10/10</td><td>Fits seamlessly with WKND Trendsetters brand identity.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Strengths (GPT-4o)</h3>
+      <p>Strong conversational tone aligned with brand voice. Effective use of power words and action verbs enhances energy and appeal. Well-organized structure with clear subheadings and engaging content flow.</p>
+    </div>
+    <div class="card">
+      <h3>Improvement Suggestions (GPT-4o)</h3>
+      <p>Increase playful element slightly for more personality and humor. Integrate a few more action verbs to further boost dynamic feel. Consider featuring additional personas for broader perspective.</p>
+    </div>
+    <div class="card">
+      <h3>Brand Violations</h3>
+      <p style="color: var(--positive); font-weight: 600;">None detected.</p>
+    </div>
+  </div>
+
+  <!-- Generated Images -->
+  <div class="section">
+    <h2 class="section-title">Generated Images (Gemini 3 Pro)</h2>
+    <p style="margin-bottom: 12px; color: var(--fg-muted);">All images generated via <code>gemini-3-pro-image-preview</code>, converted to AVIF (800px, quality 50) per brand spec. Photography direction: candid, natural light, diverse subjects, young energy.</p>
+    <div class="image-grid">
+      <div class="image-box">
+        <img src="../public/images/ace-polo-court-style.avif" alt="Young man walking alongside tennis court in navy polo at golden hour" loading="lazy">
+        <div class="image-caption">
+          <strong>Hero: Court Style</strong>
+          Candid, tennis court, golden hour, navy polo. 800&times;436, 52 KB.
+        </div>
+      </div>
+      <div class="image-box">
+        <img src="../public/images/ace-polo-street-transition.avif" alt="Young woman in teal polo on sunny city sidewalk" loading="lazy">
+        <div class="image-caption">
+          <strong>Inline: Street Transition</strong>
+          Court-to-street styling, urban setting. 800&times;436, 38 KB.
+        </div>
+      </div>
+      <div class="image-box">
+        <img src="../public/images/ace-polo-friends-court.avif" alt="Three friends in colorful polos on tennis court" loading="lazy">
+        <div class="image-caption">
+          <strong>Inline: Friends on Court</strong>
+          Group shot, diverse subjects, communal energy. 800&times;436, 23 KB.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Validation Process -->
+  <div class="section">
+    <h2 class="section-title">Validation Process</h2>
+    <div class="process">
+      <div class="process-step">
+        <div class="process-dot"></div>
+        <strong>1. Read brand guidelines</strong>
+        <span>voice.md, content.md, identity.md, photography.md</span>
+      </div>
+      <div class="process-step">
+        <div class="process-dot"></div>
+        <strong>2. Rewrite article for brand compliance</strong>
+        <span>Transformed editorial content into WKND voice: contractions, power words, persona quotes, short paragraphs, community CTA</span>
+      </div>
+      <div class="process-step">
+        <div class="process-dot"></div>
+        <strong>3. Generate images with Gemini 3 Pro</strong>
+        <span>3 images following brand photography.md: candid, natural light, diverse subjects, real settings</span>
+      </div>
+      <div class="process-step">
+        <div class="process-dot"></div>
+        <strong>4. Quantitative analysis</strong>
+        <span>10 metrics computed: word count, sentence length, contractions, power words, paragraphs, personas, images, blockquotes, CTA, subheadings</span>
+      </div>
+      <div class="process-step">
+        <div class="process-dot"></div>
+        <strong>5. External validation via GPT-4o</strong>
+        <span>Full article + brand guidelines sent to GPT-4o for independent scoring. Overall: 9.5/10, zero violations.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Methodology -->
+  <div class="section">
+    <h2 class="section-title">Methodology</h2>
+    <div class="card">
+      <h3>External Validation Principle</h3>
+      <p>Per project rules, Claude does not grade its own work. The article was sent to GPT-4o (via OpenAI API) with the full brand guideline corpus for independent scoring. Quantitative metrics were computed programmatically from the raw markdown, not self-assessed.</p>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
