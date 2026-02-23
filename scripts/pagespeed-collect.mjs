@@ -53,6 +53,7 @@ const PAGES = {
     { slug: 'blog-fashion-trends-young-style', path: '/blog/fashion-trends-young-style' },
     { slug: 'blog-latest-trends-young-casual-fashion', path: '/blog/latest-trends-young-casual-fashion' },
     { slug: 'blog-street-style-trends', path: '/blog/street-style-trends' },
+    { slug: 'blog-flip-flop-summer-style', path: '/blog/flip-flop-summer-style' },
   ],
 };
 

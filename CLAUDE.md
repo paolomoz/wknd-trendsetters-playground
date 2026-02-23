@@ -32,7 +32,7 @@ Astro static site on Cloudflare Pages (Wrangler). Project name: `wknd-trendsette
 - **Fonts are self-hosted:** woff2 files in `public/fonts/`, `@font-face` inlined in `BaseLayout.astro`. Do NOT re-add Google Fonts external links.
 - **Images:** All .avif at 800px max width, quality 50. Use `sharp` for resizing/compression.
 - **Color contrast:** `--color-gray-500` is `#666666` globally but overridden to `#999999` inside `.inverse-footer` for WCAG AA on black backgrounds. Don't use a single gray for both light and dark contexts.
-- **PageSpeed status:** All 15 pages score 100/100/100/100 (Perf/A11y/BP/SEO). Run `node scripts/pagespeed-collect.mjs --force` after any change that could affect scores.
+- **PageSpeed status:** All 16 pages score 100/100/100/100 (Perf/A11y/BP/SEO). Run `node scripts/pagespeed-collect.mjs --force` after any change that could affect scores. New pages must be added to the `PAGES` list in `scripts/pagespeed-collect.mjs`.
 - **Content graph:** Run `npm run content-graph` after adding/changing content to rebuild the semantic graph and report. Uses Voyage AI embeddings (`VOYAGE_API_KEY` in `.env`).
 - **Content generation targets:** When writing blog posts, hit these quantitative baselines (learned from cross-validation against existing on-brand posts):
   - Word count: 600–1000
